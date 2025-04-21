@@ -1,18 +1,40 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/Label";
+import { Label } from "@/components/ui/label";
 import { LogIn, UserRound } from "lucide-react";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { SiDiscord } from "react-icons/si";
 import { TfiMicrosoftAlt } from "react-icons/tfi";
 import { FaApple } from "react-icons/fa";
+import { auth, provider } from "../lib/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { useNavigate } from "react-router-dom"; // at the top
+
+
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
+  };
+  const navigate = useNavigate();
+
+  const handleClick = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const userEmail = result.user.email;
+      if (userEmail) {
+        localStorage.setItem("email", userEmail);
+        localStorage.setItem("photo", result.user.photoURL || "");
+        localStorage.setItem("name", result.user.displayName || "");
+        console.log("Signed in as:", userEmail);
+        navigate("/helpboard");
+      }
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
   };
 
   return (
@@ -69,6 +91,7 @@ const Auth = () => {
                 <div className="flex items-center gap-4">
                   <div>
                     <button
+                      onClick={handleClick}
                       type="button"
                       className="w-10 h-10 rounded-full border border-[#A8D3CC] text-[#A8D3CC] hover:bg-[#A8D3CC]/10 flex items-center justify-center transition"
                       aria-label="Sign in with Google"
