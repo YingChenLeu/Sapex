@@ -1,13 +1,14 @@
 import AboutDev from "./components/AboutDev";
 import AboutInitiative from "./components/AboutInitiative";
 import Community from "./components/Community";
-import HelpBoard from "./components/HelpBoard";
 import LandingPage from "./components/LandingPage";
 import Navbar from "./components/NavBar";
-
 import { Routes, Route } from "react-router-dom";
 import SideBar from "./components/SideBar";
 import Auth from "./components/Auth";
+import HelpBoard from "./components/HelpBoard";
+import PostProblem from "./components/PostProblem";
+
 
 
 function App() {
@@ -19,6 +20,14 @@ function App() {
           element={
             <div>
               <Navbar /> <LandingPage />
+            </div>
+          }
+        />
+        <Route
+          path="/post-problem"
+          element={
+            <div>
+              <PostProblem />
             </div>
           }
         />

@@ -19,7 +19,7 @@ function SideBar() {
         />
         <p className="mb-[20px] text-lg ">Sapex Dashboard</p>
       </div>
-
+      
       <div className="sidebar-icon flex items-center gap-2 ">
         <CircleUserRound className="ml-[20px]" />
         <p className="mr-[20px]">User Profile</p>
@@ -45,6 +45,7 @@ function SideBar() {
 
         <div className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]">
           <LogOut className="ml-[20px]" />
+          
           <p className="mr-[9px] font-semibold">Log Out</p>
         </div>
       </div>
