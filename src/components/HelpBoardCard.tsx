@@ -11,14 +11,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 
+
 type Problem = {
   id: string;
   title: string;
   description: string;
   category: string;
+  course: string;
   urgency: "low" | "medium" | "high";
   image?: string | null;
-  createdAt: any; // Firestore Timestamp
+  createdAt: Date | null;
   user: {
     name: string;
     avatar?: string;
@@ -41,11 +43,11 @@ interface HelpBoardCardProps {
 
 export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
   return (
-    <Card className="bg-discord-card border-discord-border h-full flex flex-col">
+    <Card className="bg-discord-card border-discord-border h-full flex flex-col w-auto">
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start mb-2">
           <Badge className="bg-discord-primary/80 hover:bg-discord-primary">
-            {problem.category}
+            {problem.course}
           </Badge>
           <Badge
             className={`${urgencyColors[problem.urgency]} hover:${
@@ -58,8 +60,8 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
         </div>
         <CardTitle className="text-lg text-white">{problem.title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <p className="text-muted-foreground text-sm">{problem.description}</p>
+      <CardContent className="flex-grow overflow-hidden">
+        <p className="text-muted-foreground text-sm overflow-y-auto h-22 pr-2 custom-scrollbar">{problem.description}</p>
       </CardContent>
       <CardFooter className="flex flex-col border-t border-discord-border pt-4 gap-4">
         <div className="flex items-center justify-between w-full">
@@ -81,9 +83,7 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
             <Clock size={14} />
             <span>
               {problem.createdAt
-                ? formatDistanceToNow(problem.createdAt.toDate(), {
-                    addSuffix: true,
-                  })
+                ? formatDistanceToNow(problem.createdAt, { addSuffix: true })
                 : "Just now"}
             </span>
           </div>
