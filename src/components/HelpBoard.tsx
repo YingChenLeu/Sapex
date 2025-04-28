@@ -7,15 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect } from "react";
-
+  
 type Problem = {
   id: string;
   title: string;
   description: string;
   category: string;
+  course: string;
   urgency: "low" | "medium" | "high";
   image?: string | null;
-  createdAt: string;
+  createdAt: Date | null;
   user: {
     name: string;
     avatar?: string;
@@ -32,20 +33,38 @@ const HelpBoard = () => {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [photo, setPhoto] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProblems = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "problems"));
-        const problemsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Problem[];
+        const problemsData = querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title || "Untitled Problem",
+            description: data.description || "No description provided.",
+            category: data.category || "General",
+            course: data.course || "Unknown Course",
+            urgency: data.urgency || "low",
+            image: data.image ?? null,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : null,
+            user: {
+              name: data.user?.name || "Anonymous",
+              avatar: data.user?.avatar || "",
+              uid: data.user?.uid || "",
+            },
+            responses: data.responses ?? 0,
+            likes: data.likes ?? 0,
+          };
+        });
         setProblems(problemsData);
       } catch (error) {
         console.error("Error fetching problems:", error);
+      } finally {
+        setLoading(false); 
       }
     };
 
