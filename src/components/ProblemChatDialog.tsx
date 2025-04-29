@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import { AtSign, Send, Smile } from "lucide-react";
 import {
   Dialog,
@@ -9,16 +11,31 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 type Message = {
-  id: number;
+  id: string;
   content: string;
-  timestamp: string;
-  isUser: boolean;
+  createdAt: any;
   user: {
     name: string;
     avatar?: string;
-    color?: string;
+    uid?: string;
   };
 };
 
@@ -33,7 +50,6 @@ type ProblemChatDialogProps = {
     user: {
       name: string;
       avatar?: string;
-      color?: string;
     };
   };
 };
@@ -43,39 +59,135 @@ export const ProblemChatDialog = ({
   onClose,
   problem,
 }: ProblemChatDialogProps) => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      content: `Hi there! I need help with my problem: "${problem.description}"`,
-      timestamp: "Just now",
-      isUser: false,
-      user: problem.user,
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [activeUsers, setActiveUsers] = useState<number>(0);
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-  const profilePhoto = localStorage.getItem("photo");
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
 
-  const handleSendMessage = () => {
-    if (!newMessage.trim()) return;
+  // Active users
+  useEffect(() => {
+    if (!problem?.id || !currentUser) return;
 
-    const newMsg: Message = {
-      id: messages.length + 1,
-      content: newMessage,
-      timestamp: "Just now",
-      isUser: true,
-      user: {
-        name: "You",
-        avatar: profilePhoto || undefined,
-        color: "#5865F2",
-      },
+    const activeUserRef = doc(
+      db,
+      "problems",
+      problem.id,
+      "activeUsers",
+      currentUser.uid
+    );
+
+    const setActive = async () => {
+      await setDoc(activeUserRef, {
+        name: currentUser.displayName || "Anonymous",
+        avatar: currentUser.photoURL || null,
+        uid: currentUser.uid,
+        lastActive: serverTimestamp(),
+      });
     };
 
-    setMessages([...messages, newMsg]);
+    setActive();
+
+    return () => {
+      deleteDoc(activeUserRef);
+    };
+  }, [problem?.id, currentUser]);
+
+  // Load messages
+  useEffect(() => {
+    if (!problem?.id) return;
+
+    const messagesRef = collection(db, "problems", problem.id, "messages");
+    const q = query(messagesRef, orderBy("createdAt", "asc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const msgs = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as any),
+      }));
+      setMessages(msgs);
+    });
+
+    return () => unsubscribe();
+  }, [problem?.id]);
+
+  // Auto-scroll
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Active users listener
+  useEffect(() => {
+    if (!problem?.id) return;
+
+    const usersRef = collection(db, "problems", problem.id, "activeUsers");
+
+    const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+      const count = snapshot.docs.length;
+      setActiveUsers(count);
+    });
+
+    return () => unsubscribe();
+  }, [problem?.id]);
+
+  // Typing users with names and 5s timeout
+  useEffect(() => {
+    if (!problem?.id) return;
+
+    const typingRef = collection(db, "problems", problem.id, "typing");
+
+    const unsubscribe = onSnapshot(typingRef, (snap) => {
+      const usersTyping: { [key: string]: string } = {};
+
+      snap.forEach((doc) => {
+        const { name, lastTyped } = doc.data() as {
+          name: string;
+          lastTyped: any;
+        };
+        const secondsAgo = Date.now() / 1000 - lastTyped?.seconds;
+        if (secondsAgo < 5) {
+          usersTyping[doc.id] = name || "Anonymous";
+        }
+      });
+
+      const filtered = Object.entries(usersTyping)
+        .filter(([uid]) => uid !== currentUser?.uid)
+        .map(([, name]) => name);
+
+      setTypingUsers(filtered);
+    });
+
+    return () => unsubscribe();
+  }, [problem?.id, currentUser?.uid]);
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !currentUser) return;
+
+    await addDoc(collection(db, "problems", problem.id, "messages"), {
+      content: newMessage.trim(),
+      createdAt: serverTimestamp(),
+      user: {
+        name: currentUser.displayName || "Anonymous",
+        avatar: currentUser.photoURL || null,
+        uid: currentUser.uid,
+      },
+    });
+
     setNewMessage("");
+    await deleteDoc(doc(db, "problems", problem.id, "typing", currentUser.uid));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!currentUser) return;
+
+    setDoc(doc(db, "problems", problem.id, "typing", currentUser.uid), {
+      name: currentUser.displayName || "Someone",
+      lastTyped: serverTimestamp(),
+    });
+
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -83,13 +195,14 @@ export const ProblemChatDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => onClose()}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl h-[80vh] flex flex-col p-0 bg-[#11141d] text-white animate-in zoom-in-95 fade-in duration-300 rounded-xl">
-        <DialogHeader className="px-6 py-4 border-b border-discord-border flex-shrink-0">
-          <div className="flex justify-between items-center">
-            <DialogTitle className="text-xl font-semibold">
-              {problem.title}
-            </DialogTitle>
+        <DialogHeader className="px-6 py-4 border-b border-discord-border flex-shrink-0 relative">
+          <DialogTitle className="text-xl font-semibold">
+            {problem.title}
+          </DialogTitle>
+          <div className="absolute right-32 top-6 text-sm text-muted-foreground animate-pulse">
+            {activeUsers} online
           </div>
           <div className="text-sm text-muted-foreground mt-1">
             <span className="bg-discord-primary/20 text-discord-primary px-2 py-0.5 rounded mr-2">
@@ -99,7 +212,6 @@ export const ProblemChatDialog = ({
           </div>
         </DialogHeader>
 
-        {/* Chat messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
           {messages.map((message) => (
             <div key={message.id} className="flex items-start gap-3">
@@ -111,7 +223,7 @@ export const ProblemChatDialog = ({
                   />
                 ) : (
                   <AvatarFallback className="bg-discord-primary text-white">
-                    {message.user.name.charAt(0)}
+                    {message.user.name?.charAt(0)}
                   </AvatarFallback>
                 )}
               </Avatar>
@@ -120,25 +232,27 @@ export const ProblemChatDialog = ({
                   <span className="text-sm font-medium text-white">
                     {message.user.name}
                   </span>
-                  <span className="text-xs text-muted-foreground">
-                    {message.timestamp}
+                  <span className="text-xs text-gray-400">
+                    {message.createdAt?.seconds
+                      ? dayjs.unix(message.createdAt.seconds).fromNow()
+                      : "just now"}
                   </span>
                 </div>
-                <div
-                  className={`rounded-2xl px-4 py-2 text-sm max-w-[500px] break-words ${
-                    message.isUser
-                      ? "bg-blue-400/20 text-blue-200"
-                      : "bg-discord-sidebar/70 text-white"
-                  }`}
-                >
+                <div className="rounded-2xl px-4 py-2 text-sm w-fit max-w-[500px] break-words bg-blue-400/20 text-blue-200">
                   {message.content}
                 </div>
               </div>
             </div>
           ))}
+          {typingUsers.length > 0 && (
+            <div className="px-4 text-xs text-muted-foreground animate-pulse">
+              {typingUsers.join(", ")}{" "}
+              {typingUsers.length === 1 ? "is" : "are"} typing...
+            </div>
+          )}
+          <div ref={bottomRef} />
         </div>
 
-        {/* Message input */}
         <div className="p-4 border-t border-discord-border">
           <div className="relative">
             <Textarea
