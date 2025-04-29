@@ -8,6 +8,7 @@ import { db } from "../lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect } from "react";
 
+
 type Problem = {
   id: string;
   title: string;
@@ -90,7 +91,7 @@ const HelpBoard = () => {
       />
 
       <Button
-        className="flex items-center gap-2 bg-discord-primary hover:bg-discord-primary/90 text-white "
+        className="flex items-center gap-2 bg-discord-primary hover:bg-discord-primary/90 text-white bg-[#8a9994] rounded-lg px-4 py-2 mt-4"
         onClick={() => navigate("/post-problem")}
       >
         <PlusCircle size={18} />
