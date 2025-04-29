@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -5,12 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MessageCircle, ThumbsUp, Clock } from "lucide-react";
+import { MessageCircle, Paperclip, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
-
+import { useEffect, useState } from "react";
+import { DisplayImage } from "./DisplayImage";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 type Problem = {
   id: string;
@@ -42,8 +47,23 @@ interface HelpBoardCardProps {
 }
 
 export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
+  const [messageCount, setMessageCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchMessageCount = async () => {
+      if (!problem?.id) return;
+      const messagesRef = collection(db, "problems", problem.id, "messages");
+      const snapshot = await getDocs(messagesRef);
+      setMessageCount(snapshot.size); // snapshot.size = number of docs
+    };
+  
+    fetchMessageCount();
+  }, [problem?.id]);
+
   return (
     <Card className="bg-discord-card border-discord-border h-full flex flex-col w-auto">
+      {/* Header */}
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start mb-2">
           <Badge className="bg-discord-primary/80 hover:bg-discord-primary">
@@ -60,11 +80,27 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
         </div>
         <CardTitle className="text-lg text-white">{problem.title}</CardTitle>
       </CardHeader>
+
+      {/* Content */}
       <CardContent className="flex-grow overflow-hidden">
-        <p className="text-muted-foreground text-sm overflow-y-auto h-22 pr-2 custom-scrollbar">{problem.description}</p>
+        <p className="text-muted-foreground text-sm overflow-y-auto h-22 pr-2 custom-scrollbar">
+          {problem.description}
+        </p>
+
+        {/* Image Popup Dialog */}
+        {problem.image && (
+          <DisplayImage
+            isOpen={isImageDialogOpen}
+            onClose={() => setIsImageDialogOpen(false)}
+            imageUrl={problem.image}
+          />
+        )}
       </CardContent>
+
+      {/* Footer */}
       <CardFooter className="flex flex-col border-t border-discord-border pt-4 gap-4">
         <div className="flex items-center justify-between w-full">
+          {/* User info */}
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
               {problem.user?.avatar ? (
@@ -79,6 +115,8 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
               {problem.user.name}
             </span>
           </div>
+
+          {/* Timestamp */}
           <div className="flex items-center text-muted-foreground text-xs gap-1">
             <Clock size={14} />
             <span>
@@ -88,17 +126,34 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
             </span>
           </div>
         </div>
+
+        {/* Attachments and Help Button */}
         <div className="flex justify-between items-center w-full">
           <div className="flex gap-4">
+            {/* Responses */}
             <div className="flex items-center gap-1 text-muted-foreground text-sm">
               <MessageCircle size={16} />
-              <span>{problem.responses}</span>
+              <span>{messageCount}</span>
             </div>
-            <div className="flex items-center gap-1 text-muted-foreground text-sm">
-              <ThumbsUp size={16} />
-              <span>{problem.likes}</span>
-            </div>
+
+            {/* Attachments */}
+            {problem.image ? (
+              <div
+                onClick={() => setIsImageDialogOpen(true)}
+                className="flex items-center gap-1 text-muted-foreground text-sm cursor-pointer hover:text-white transition-colors"
+              >
+                <Paperclip size={16} />
+                <span>1 Attachment</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                <Paperclip size={16} />
+                <span>No Attachments</span>
+              </div>
+            )}
           </div>
+
+          {/* Help Solve Button */}
           <Button
             variant="default"
             className="bg-discord-primary hover:bg-discord-primary/90"
