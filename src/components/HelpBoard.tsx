@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect } from "react";
-  
+
 type Problem = {
   id: string;
   title: string;
@@ -25,7 +25,6 @@ type Problem = {
   responses: number;
   likes: number;
 };
-
 
 const HelpBoard = () => {
   const profilePhoto = localStorage.getItem("photo");
@@ -64,7 +63,7 @@ const HelpBoard = () => {
       } catch (error) {
         console.error("Error fetching problems:", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
