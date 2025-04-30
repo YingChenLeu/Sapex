@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ImagePlus } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { db } from "../lib/firebase";
 import { getAuth } from "firebase/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { FileUpload } from "@/components/ui/file-upload";
 import {
   Select,
   SelectContent,
@@ -222,33 +223,25 @@ const PostProblem = () => {
 
           {/* Image Upload */}
           <div className="space-y-4">
-            <Label htmlFor="image">Image (optional)</Label>
-            <div className="flex flex-col gap-4 bg-gray-800 mt-[6px]">
-              <Button
-                variant="outline"
-                className="w-full h-32 flex flex-col items-center justify-center gap-2 border-dashed border-gray-700"
-                onClick={() => document.getElementById("image")?.click()}
-              >
-                <ImagePlus className="h-8 w-8 text-gray-400" />
-                <span className="text-gray-400">Click to upload an image</span>
-              </Button>
-              <Input
-                type="file"
-                id="image"
-                className="hidden"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              {selectedImage && (
-                <div className="relative aspect-video w-full">
-                  <img
-                    src={selectedImage}
-                    alt="Selected"
-                    className="rounded-md object-cover w-full h-full"
-                  />
-                </div>
-              )}
-            </div>
+            <Label>Image (optional)</Label>
+            <FileUpload
+
+              onChange={(files) => {
+                if (files && files[0]) {
+                  const imageUrl = URL.createObjectURL(files[0]);
+                  setSelectedImage(imageUrl);
+                }
+              }}
+            />
+            {selectedImage && (
+              <div className="relative aspect-video w-full mt-4">
+                <img
+                  src={selectedImage}
+                  alt="Uploaded"
+                  className="rounded-md object-cover w-full h-full"
+                />
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}
