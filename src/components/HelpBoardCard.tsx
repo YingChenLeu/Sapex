@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { DisplayImage } from "./DisplayImage";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { motion } from "framer-motion";
+
 
 type Problem = {
   id: string;
@@ -62,6 +64,15 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
   }, [problem?.id]);
 
   return (
+    <motion.div
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.4, ease: "easeOut" }}
+    whileHover={{
+      scale: 1.03,
+      transition: { type: "spring", stiffness: 300, damping: 20 },
+    }}
+  >
     <Card className="bg-discord-card border-discord-border h-full flex flex-col w-auto">
       {/* Header */}
       <CardHeader className="pb-2">
@@ -156,7 +167,7 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
           {/* Help Solve Button */}
           <Button
             variant="default"
-            className="bg-discord-primary hover:bg-discord-primary/90"
+            className="bg-discord-primary hover:bg-discord-primary/90 hover:text-white text-[#9abbbf] rounded-lg px-4 py-2"
             onClick={() => onHelpClick(problem)}
           >
             Help Solve
@@ -164,5 +175,6 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
         </div>
       </CardFooter>
     </Card>
+    </motion.div>
   );
 };
