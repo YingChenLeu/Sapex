@@ -8,8 +8,8 @@ import SideBar from "./components/SideBar";
 import Auth from "./components/Auth";
 import HelpBoard from "./components/HelpBoard";
 import PostProblem from "./components/PostProblem";
-
-
+import Contributions from "./components/Contribution";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -58,6 +58,18 @@ function App() {
           }
         />
         <Route
+          path="/contributions"
+          element={
+            <div>
+              <ProtectedRoute>
+                <div>
+                  <Contributions />
+                </div>
+              </ProtectedRoute>
+            </div>
+          }
+        />
+        <Route
           path="/community"
           element={
             <div>
@@ -66,18 +78,18 @@ function App() {
             </div>
           }
         />
-         <Route
+        <Route
           path="/helpboard"
           element={
-            <div>
-              <SideBar />
-              <HelpBoard />
-            </div>
+            <ProtectedRoute>
+              <div>
+                <SideBar />
+                <HelpBoard />
+              </div>
+            </ProtectedRoute>
           }
         />
-
       </Routes>
-      
     </>
   );
 }

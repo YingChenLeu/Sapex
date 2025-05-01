@@ -7,6 +7,7 @@ import {
   LogOut,
 } from "lucide-react";
 import Logo from "@/assets/LeafLogo.png";
+import { Link } from "react-router-dom";
 
 function SideBar() {
   return (
@@ -19,35 +20,43 @@ function SideBar() {
         />
         <p className="mb-[20px] text-lg ">Sapex Dashboard</p>
       </div>
-      
-      <div className="sidebar-icon flex items-center gap-2 ">
+
+      <Link to="/user-profile" className="sidebar-icon flex items-center gap-2">
         <CircleUserRound className="ml-[20px]" />
         <p className="mr-[20px]">User Profile</p>
-      </div>
-      <div className="sidebar-icon flex items-center gap-2 ">
+      </Link>
+
+      <Link to="/sapex-global" className="sidebar-icon flex items-center gap-2">
         <Globe className="ml-[20px]" />
         <p className="mr-[20px]">Sapex Global</p>
-      </div>
-      <div className="sidebar-icon flex items-center gap-2 ">
+      </Link>
+
+      <Link to="/contributions" className="sidebar-icon flex items-center gap-2">
         <ClockFading className="ml-[20px]" />
         <p className="mr-[20px]">Contributions</p>
-      </div>
-      <div className="sidebar-icon flex items-center gap-2 ">
+      </Link>
+
+      <Link to="/wellness-support" className="sidebar-icon flex items-center gap-2">
         <Eclipse className="ml-[10px]" />
-        <p className="mr-[10px]">Wellness Support </p>
-      </div>
+        <p className="mr-[10px]">Wellness Support</p>
+      </Link>
 
       <div className="mt-auto mb-10 flex flex-col gap-4">
-        <div className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]">
+        <Link
+          to="/privacy"
+          className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
+        >
           <Cog className="ml-[20px]" />
           <p className="mr-[9px] font-semibold">Privacy</p>
-        </div>
+        </Link>
 
-        <div className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]">
+        <Link
+          to="/logout"
+          className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
+        >
           <LogOut className="ml-[20px]" />
-          
           <p className="mr-[9px] font-semibold">Log Out</p>
-        </div>
+        </Link>
       </div>
     </div>
   );

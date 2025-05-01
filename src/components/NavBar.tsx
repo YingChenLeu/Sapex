@@ -33,13 +33,7 @@ const Navbar = () => {
             <Users size={20} />
             <span>{isOnCommunity ? "Home" : "Community"}</span>
           </Link>
-          <Link
-            to="/helpboard"
-            className="flex items-center space-x-2 hover:text-[#A8D3CC] transition-colors"
-          >
-            <UserRound size={20} />
-            <span>{"Front End Test"}</span>
-          </Link>
+
         </div>
         <Button
           variant="outline"

@@ -25,7 +25,7 @@ type Problem = {
   likes: number;
 };
 
-const categories = ["All", "Maths", "Sciences", "English", "Social Sciences", "Foreign Languages"];
+const categories = ["All", "Mathematics", "Sciences", "English", "Social Sciences", "Foreign Languages"];
 
 const HelpBoard = () => {
   const profilePhoto = localStorage.getItem("photo");
