@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Logo from "@/assets/LeafLogo.png";
+import MetaBalls from "./MetaBalls";
+import CircularText from "./CircularText";
+import { MacbookScroll } from "./MacbookScroll";
 
 function LandingPage() {
   return (
@@ -15,23 +18,58 @@ function LandingPage() {
           Welcome to <span className="edu-font">Sapex</span>
         </h1>
         <p className="text-xl mb-8 max-w-2xl text-[#D8DEDE]/90">
-        A safe, supportive online community built for your school — where students can ask questions, post problems, and get help from your fellow peers.
+          A safe, supportive online community built for your school — where
+          students can ask questions, post problems, and get help from your
+          fellow peers.
         </p>
         <div className="flex gap-4">
-          <Button
-            asChild
-            className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53] transition-colors"
+          <a
+            href={`mailto:shiroiyuzuru@gmail.com?subject=Bring Sapex to My Community&body=Name:%0D%0ASchool Name:%0D%0ACity:%0D%0ACountry:%0D%0AEmail Address:%0D%0AYour School Email Domain:%0D%0ADoes Your School use Google Sign In?:`}
           >
-            <Link to="/post-problem">Bring to Your School</Link>
-          </Button>
+            <Button className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53] transition-colors">
+              Bring to Your School
+            </Button>
+          </a>
+
           <Button
             asChild
             variant="outline"
             className="border-[#A8D3CC] text-[#D8DEDE] hover:bg-[#A8D3CC] hover:text-[#2D4F53]"
           >
-            <Link to="/browse">Find Your School</Link>
+            <Link to="/stillindevelopment">Find Your School</Link>
           </Button>
         </div>
+
+        <div className="relative w-[800px] h-[600px]">
+          <div className="absolute inset-0 z-0">
+            <MetaBalls
+              color="#2D4F53"
+              cursorBallColor="#abd7dc"
+              cursorBallSize={2}
+              ballCount={19}
+              animationSize={30}
+              enableMouseInteraction={false}
+              enableTransparency={true}
+              hoverSmoothness={0.05}
+              clumpFactor={1}
+              speed={0.9}
+            />
+          </div>
+
+          <div className="absolute inset-0 z-10 flex items-center justify-center">
+            <CircularText
+              text="SAPEX BUILDS COMMUNITIES "
+              onHover="goBonkers"
+              spinDuration={30}
+              className="custom-class"
+            />
+          </div>
+        </div>
+        <MacbookScroll
+          src="/path-to-your-image.jpg"
+          showGradient={true}
+          title={<span>Your Custom Title</span>}
+        />
       </div>
     </div>
   );

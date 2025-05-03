@@ -10,7 +10,12 @@ const mockContributionData = [
   { name: 'Apr', contributions: 10 },
   { name: 'May', contributions: 8 },
   { name: 'Jun', contributions: 12 },
-  { name: 'Jul', contributions: 9 }
+  { name: 'Jul', contributions: 9 },
+  { name: 'Aug', contributions: 11 },
+  { name: 'Sep', contributions: 6 },
+  { name: 'Oct', contributions: 14 },
+  { name: 'Nov', contributions: 13 },
+  { name: 'Dec', contributions: 15 }
 ];
 
 // Contribution by category mock data
@@ -33,7 +38,7 @@ const Contributions = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Your Contributions</h1>
+      <h1 className="text-3xl font-bold mb-6">Total Contributions of Your School</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <Card>
