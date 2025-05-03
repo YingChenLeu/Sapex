@@ -10,6 +10,7 @@ import HelpBoard from "./components/HelpBoard";
 import PostProblem from "./components/PostProblem";
 import Contributions from "./components/Contribution";
 import ProtectedRoute from "./components/ProtectedRoute";
+import StillInDevelopment from "./components/StillInDevelopment";
 
 function App() {
   return (
@@ -66,6 +67,14 @@ function App() {
                   <Contributions />
                 </div>
               </ProtectedRoute>
+            </div>
+          }
+        />
+        <Route
+          path="/stillindevelopment"
+          element={
+            <div>
+             <StillInDevelopment />
             </div>
           }
         />

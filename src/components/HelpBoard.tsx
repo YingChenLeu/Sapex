@@ -25,7 +25,7 @@ type Problem = {
   likes: number;
 };
 
-const categories = ["All", "Mathematics", "Sciences", "English", "Social Sciences", "Foreign Languages"];
+const categories = ["All", "Mathematics", "Science", "English", "Social Sciences", "Foreign Languages"];
 
 const HelpBoard = () => {
   const profilePhoto = localStorage.getItem("photo");
@@ -33,7 +33,6 @@ const HelpBoard = () => {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const navigate = useNavigate();
@@ -149,3 +148,7 @@ const HelpBoard = () => {
 };
 
 export default HelpBoard;
+function setLoading(_arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+

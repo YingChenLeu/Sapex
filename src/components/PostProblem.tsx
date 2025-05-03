@@ -34,14 +34,6 @@ const PostProblem = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | "">("");
   const [urgency, setUrgency] = useState<string>("low");
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-    }
-  };
-
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value as CourseCategory);
     setSelectedCourse("");
@@ -75,7 +67,6 @@ const PostProblem = () => {
           uid: user?.uid || "",
         },
         responses: 0,
-        likes: 0,
       });
       navigate("/helpboard");
     } catch (error) {
