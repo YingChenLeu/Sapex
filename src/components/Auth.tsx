@@ -20,12 +20,19 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const toggleForm = () => setIsLogin(!isLogin);
+  const toggleForm = () => {
+    setIsLogin(!isLogin);
+    setError("");
+  };
+
   const navigate = useNavigate();
 
   const handleClick = async () => {
     try {
+      setError("");
       const result = await signInWithPopup(auth, provider);
       const userEmail = result.user.email;
       if (userEmail) {
@@ -35,31 +42,54 @@ const Auth = () => {
         localStorage.setItem("name", result.user.displayName || "");
         navigate("/helpboard");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Google sign-in error:", error);
+      setError("Google sign-in failed. Please try again.");
     }
   };
 
   const handleEmailLogin = async () => {
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      return;
+    }
+
+    console.log("Attempting login with:", email);
+    setLoading(true);
     try {
+      setError("");
       const result = await signInWithEmailAndPassword(auth, email, password);
+
+      console.log("Login successful:", result);
       localStorage.setItem("uid", result.user.uid);
       localStorage.setItem("email", result.user.email || "");
       navigate("/helpboard");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Email login error:", error);
+      setError(error?.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEmailSignup = async () => {
+    if (!name || !email || !password) {
+      setError("Please fill out all fields.");
+      return;
+    }
+    setLoading(true);
     try {
+      setError("");
       const result = await createUserWithEmailAndPassword(auth, email, password);
       localStorage.setItem("uid", result.user.uid);
       localStorage.setItem("email", result.user.email || "");
       localStorage.setItem("name", name);
       navigate("/helpboard");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Email sign-up error:", error);
+      setError(error.message || "Sign-up failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,9 +109,7 @@ const Auth = () => {
           {/* Login Form */}
           <div
             className={`absolute top-0 left-0 w-full px-8 transition-all duration-700 ease-in-out transform ${
-              isLogin
-                ? "translate-x-0 z-20 opacity-100"
-                : "-translate-x-full z-10 opacity-0"
+              isLogin ? "translate-x-0 z-20 opacity-100" : "-translate-x-full z-10 opacity-0"
             }`}
           >
             <div className="text-[#D8DEDE] max-w-sm mx-auto pt-16">
@@ -89,6 +117,7 @@ const Auth = () => {
                 <LogIn className="w-8 h-8" />
                 <h2 className="text-3xl font-bold">Login</h2>
               </div>
+              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email-login">Email</Label>
@@ -115,10 +144,10 @@ const Auth = () => {
                 <Button
                   className="w-full bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#A8D3CC]/90"
                   onClick={handleEmailLogin}
+                  disabled={loading}
                 >
-                  Login
+                  {loading ? "Logging in..." : "Login"}
                 </Button>
-
                 <div className="flex items-center gap-4">
                   <button
                     onClick={handleClick}
@@ -145,16 +174,15 @@ const Auth = () => {
           {/* Sign Up Form */}
           <div
             className={`absolute top-0 left-0 w-full px-8 transition-all duration-700 ease-in-out transform ${
-              isLogin
-                ? "translate-x-full z-10 opacity-0"
-                : "translate-x-0 z-20 opacity-100"
+              isLogin ? "translate-x-full z-10 opacity-0" : "translate-x-0 z-20 opacity-100"
             }`}
           >
-            <div className="text-[#D8DEDE] max-w-sm mx-auto pt-16">
+            <div className="text-[#D8D3D3] max-w-sm mx-auto pt-16">
               <div className="flex items-center gap-2 mb-8">
                 <UserRound className="w-8 h-8" />
                 <h2 className="text-3xl font-bold">Sign Up</h2>
               </div>
+              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
@@ -191,8 +219,9 @@ const Auth = () => {
                 <Button
                   className="w-full bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#A8D3CC]/90"
                   onClick={handleEmailSignup}
+                  disabled={loading}
                 >
-                  Sign Up
+                  {loading ? "Signing up..." : "Sign Up"}
                 </Button>
               </div>
             </div>
@@ -204,9 +233,7 @@ const Auth = () => {
           onClick={toggleForm}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-[#D8DEDE] hover:text-[#A8D3CC] transition-colors z-30"
         >
-          {isLogin
-            ? "Need an account? Sign Up"
-            : "Already have an account? Login"}
+          {isLogin ? "Need an account? Sign Up" : "Already have an account? Login"}
         </button>
       </div>
     </div>

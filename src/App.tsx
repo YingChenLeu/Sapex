@@ -11,6 +11,7 @@ import PostProblem from "./components/PostProblem";
 import Contributions from "./components/Contribution";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StillInDevelopment from "./components/StillInDevelopment";
+import Profile from "./components/Profile";
 
 function App() {
   return (
@@ -74,7 +75,7 @@ function App() {
           path="/stillindevelopment"
           element={
             <div>
-             <StillInDevelopment />
+              <StillInDevelopment />
             </div>
           }
         />
@@ -94,6 +95,17 @@ function App() {
               <div>
                 <SideBar />
                 <HelpBoard />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/user-profile"
+          element={
+            <ProtectedRoute>
+              <div>
+                <Profile />
               </div>
             </ProtectedRoute>
           }
