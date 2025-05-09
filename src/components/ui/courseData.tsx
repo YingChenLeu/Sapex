@@ -71,7 +71,7 @@ export const courseGroups = {
     "AP Physics I",
     "AP Physics II",
     "AP Physics C: Mechanics",
-    "AP Physics C: Electricity and Magnetism",
+    "AP Physics C: E&M",
     "AP Environmental Science",
     "AP Computer Science A",
     "AP Computer Science Principles",

@@ -8,8 +8,25 @@ import {
 } from "lucide-react";
 import Logo from "@/assets/LeafLogo.png";
 import { Link } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { auth } from "@/lib/firebase";
 
 function SideBar() {
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.clear(); // clear any cached user info
+      navigate("/"); // redirect to login or landing
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
+
   return (
     <div className="fixed top-0 left-0 h-screen w-60 m-0 flex flex-col bg-[#181b24] text-[#D8DEDE] shadow-lg space-y-[20px] border-r-[0.5px] border-l-black">
       <div className="flex items-center top-20">
@@ -50,13 +67,13 @@ function SideBar() {
           <p className="mr-[9px] font-semibold">Privacy</p>
         </Link>
 
-        <Link
-          to="/logout"
+        <button
+          onClick={handleLogout}
           className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
         >
           <LogOut className="ml-[20px]" />
           <p className="mr-[9px] font-semibold">Log Out</p>
-        </Link>
+        </button>
       </div>
     </div>
   );

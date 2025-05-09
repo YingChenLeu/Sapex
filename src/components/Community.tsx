@@ -1,8 +1,10 @@
 import { Earth } from "lucide-react";
 import AISCT from "@/assets/aisctlogo.jpg"; 
+import SplashCursor from "./ui/SplashCursor";
 const Community = () => {
   return (
     <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] py-12 pt-[100px]">
+      <SplashCursor />
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold mb-8 text-center">
           Sapex Communities

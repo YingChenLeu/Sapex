@@ -5,6 +5,7 @@ import MetaBalls from "./MetaBalls";
 import CircularText from "./CircularText";
 import { MacbookScroll } from "./MacbookScroll";
 
+
 function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] flex flex-col pt-16">
@@ -40,7 +41,7 @@ function LandingPage() {
           </Button>
         </div>
 
-        <div className="relative w-[800px] h-[600px]">
+        <div className="relative w-[800px] h-[500px]">
           <div className="absolute inset-0 z-0">
             <MetaBalls
               color="#2D4F53"
@@ -56,7 +57,7 @@ function LandingPage() {
             />
           </div>
 
-          <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <div className="absolute inset-0 z-10 flex items-center justify-center ">
             <CircularText
               text="SAPEX BUILDS COMMUNITIES "
               onHover="goBonkers"
@@ -64,12 +65,16 @@ function LandingPage() {
               className="custom-class"
             />
           </div>
+          <div className="mt-[9rem]">
+          <MacbookScroll
+            src="/src/assets/SapexHelpboardPreview.png"
+            showGradient={true}
+            title={<span>Sapex HelpBoard Preview</span>}
+          />
+          </div>
+
+
         </div>
-        <MacbookScroll
-          src="/path-to-your-image.jpg"
-          showGradient={true}
-          title={<span>Your Custom Title</span>}
-        />
       </div>
     </div>
   );
