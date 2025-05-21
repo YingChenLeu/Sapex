@@ -115,7 +115,14 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
               {problem.user?.avatar ? (
-                <AvatarImage src={problem.user.avatar} />
+                <AvatarImage
+                  src={problem.user.avatar}
+                  loading="eager"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = "none";
+                  }}
+                />
               ) : (
                 <AvatarFallback className="bg-blue-500 text-white">
                   {problem.user?.name?.charAt(0) || "?"}

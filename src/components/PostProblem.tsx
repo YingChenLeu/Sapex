@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -216,11 +217,14 @@ const PostProblem = () => {
           <div className="space-y-4">
             <Label>Image (optional)</Label>
             <FileUpload
-
-              onChange={(files) => {
+              onChange={async (files) => {
                 if (files && files[0]) {
-                  const imageUrl = URL.createObjectURL(files[0]);
-                  setSelectedImage(imageUrl);
+                  const file = files[0];
+                  const storage = getStorage();
+                  const storageRef = ref(storage, `problemImages/${file.name}-${Date.now()}`);
+                  await uploadBytes(storageRef, file);
+                  const downloadURL = await getDownloadURL(storageRef);
+                  setSelectedImage(downloadURL);
                 }
               }}
             />

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSidebar } from "../components/SideBar";
 import { ProblemChatDialog } from "./ProblemChatDialog";
 import { HelpBoardCard } from "./HelpBoardCard";
 import { Button } from "./ui/button";
 import { PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 
 type Problem = {
   id: string;
@@ -29,14 +31,40 @@ const categories = ["All", "Mathematics", "Science", "English", "Social Sciences
 
 const HelpBoard = () => {
   const profilePhoto = localStorage.getItem("photo");
-
+  const userName = localStorage.getItem("name") || "User";
   const [problems, setProblems] = useState<Problem[]>([]);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [, setLoading] = useState(true);
 
+  const { collapsed } = useSidebar();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const cachedPhoto = localStorage.getItem("photo");
+    if (!cachedPhoto) {
+      const fetchUserProfilePicture = async () => {
+        try {
+          const uid = localStorage.getItem("uid");
+          if (!uid) return;
+
+          const userDoc = await getDoc(doc(db, "users", uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            const photoURL = data.profilePicture || "";
+            if (photoURL) {
+              localStorage.setItem("photo", photoURL);
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch profile picture:", error);
+        }
+      };
+
+      fetchUserProfilePicture();
+    }
+  }, []);
   useEffect(() => {
     const fetchProblems = async () => {
       try {
@@ -83,17 +111,18 @@ const HelpBoard = () => {
   };
 
   return (
-    <div className="bg-[#0A0D17] pl-[280px] pt-[30px] min-h-screen">
+    <div className={`bg-[#0A0D17] pt-[30px] min-h-screen ${collapsed ? "pl-[130px]" : "pl-[280px]"} transition-all duration-300`}>
       <h1 className="text-3xl font-bold text-white">Help Board</h1>
       <p className="text-muted-foreground mt-1">
         Post your problems and help others solve theirs
       </p>
 
-      <img
-        src={profilePhoto || undefined}
-        alt="User Profile"
-        className="w-10 h-10 rounded-full border border-white absolute top-5 right-[40px] z-50"
-      />
+      <div className="absolute top-5 right-[40px] z-50">
+        <Avatar className="border border-white">
+          <AvatarImage src={profilePhoto || undefined} alt={userName} />
+          <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
+        </Avatar>
+      </div>
 
       <Button
         className="flex items-center gap-2 bg-discord-primary hover:bg-discord-primary/90 text-white bg-[#8a9994] rounded-lg px-4 py-2 mt-4 "
@@ -148,7 +177,3 @@ const HelpBoard = () => {
 };
 
 export default HelpBoard;
-function setLoading(_arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
-
