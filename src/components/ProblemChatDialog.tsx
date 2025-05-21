@@ -19,6 +19,7 @@ import {
   doc,
   setDoc,
   deleteDoc,
+  getDocs,
   query,
   orderBy,
   onSnapshot,
@@ -29,6 +30,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { AnimatePresence, motion } from "framer-motion";
 dayjs.extend(relativeTime);
+
 
 type Message = {
   id: string;
@@ -242,6 +244,31 @@ export const ProblemChatDialog = ({
 
   const handleDeletePost = async () => {
     if (!problem?.id) return;
+
+    const messagesRef = collection(db, "problems", problem.id, "messages");
+    const snapshot = await getDocs(messagesRef);
+
+    const category = problem.category;
+
+    // Use a Set to ensure each user's contribution is only logged once per post deletion
+    const uniqueUserIds = new Set<string>();
+    snapshot.docs.forEach((docSnap) => {
+      const data = docSnap.data();
+      const uid = data?.user?.uid;
+      if (uid) {
+        uniqueUserIds.add(uid);
+      }
+    });
+
+    await Promise.all(
+      Array.from(uniqueUserIds).map((uid) =>
+        addDoc(collection(db, "users", uid, "contributions"), {
+          category,
+          timestamp: serverTimestamp(),
+        })
+      )
+    );
+
     await deleteDoc(doc(db, "problems", problem.id));
     onClose();
   };

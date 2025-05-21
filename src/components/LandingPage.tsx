@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Logo from "@/assets/LeafLogo.png";
-import MetaBalls from "./MetaBalls";
+import MetaBalls from "./ui/MetaBalls";
 import CircularText from "./CircularText";
 import { MacbookScroll } from "./MacbookScroll";
 

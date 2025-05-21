@@ -4,7 +4,7 @@ import Community from "./components/Community";
 import LandingPage from "./components/LandingPage";
 import Navbar from "./components/NavBar";
 import { Routes, Route } from "react-router-dom";
-import SideBar from "./components/SideBar";
+import SideBar, { SidebarProvider } from "./components/SideBar";
 import Auth from "./components/Auth";
 import HelpBoard from "./components/HelpBoard";
 import PostProblem from "./components/PostProblem";
@@ -16,6 +16,7 @@ import Profile from "./components/Profile";
 function App() {
   return (
     <>
+      <SidebarProvider>
       <Routes>
         <Route
           path="/"
@@ -66,6 +67,7 @@ function App() {
               <ProtectedRoute>
                 <div>
                   <Contributions />
+                  <SideBar />
                 </div>
               </ProtectedRoute>
             </div>
@@ -106,11 +108,13 @@ function App() {
             <ProtectedRoute>
               <div>
                 <Profile />
+                <SideBar />
               </div>
             </ProtectedRoute>
           }
         />
       </Routes>
+      </SidebarProvider>
     </>
   );
 }
