@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { db } from "../lib/firebase";
 import { getAuth } from "firebase/auth";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, getDoc, doc } from "firebase/firestore";
 import { FileUpload } from "@/components/ui/file-upload";
 import {
   Select,
@@ -53,6 +53,14 @@ const PostProblem = () => {
       return;
     }
 
+    let avatar = "";
+    if (user?.uid) {
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (userDoc.exists()) {
+        avatar = userDoc.data().profilePicture || "";
+      }
+    }
+
     try {
       await addDoc(collection(db, "problems"), {
         title,
@@ -64,7 +72,7 @@ const PostProblem = () => {
         createdAt: serverTimestamp(),
         user: {
           name: user?.displayName || "Anonymous",
-          avatar: user?.photoURL || "",
+          avatar,
           uid: user?.uid || "",
         },
         responses: 0,

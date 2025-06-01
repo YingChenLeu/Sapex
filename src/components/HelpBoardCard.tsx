@@ -73,11 +73,11 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
       transition: { type: "spring", stiffness: 300, damping: 20 },
     }}
   >
-    <Card className="bg-discord-card border-discord-border h-full flex flex-col w-auto">
+    <Card className="h-full flex flex-col w-auto">
       {/* Header */}
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start mb-2">
-          <Badge className="bg-discord-primary/80 hover:bg-discord-primary">
+          <Badge>
             {problem.course}
           </Badge>
           <Badge

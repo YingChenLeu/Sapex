@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { getAuth, updateProfile } from "firebase/auth";
+import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useSidebar } from "../components/SideBar";
 import { useState } from "react";
-import { Edit, Save, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Edit, Save, User, Brain } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -18,8 +19,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 
 const Profile = () => {
@@ -35,13 +34,19 @@ const Profile = () => {
     posted: 0,
     joined: "",
     reputation: 0,
+    bigFivePersonality: {
+      Extraversion: 0,
+      Agreeableness: 0,
+      Conscientiousness: 0,
+      Neuroticism: 0,
+      Openness: 0,
+    },
   });
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
+    const auth = getAuth();
 
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
         const userDoc = await getDoc(userDocRef);
@@ -59,11 +64,19 @@ const Profile = () => {
             posted: userData.posted || 0,
             joined: userData.joined || "",
             reputation: userData.reputation || 0,
+            bigFivePersonality: userData.bigFivePersonality || {
+              Extraversion: 0,
+              Agreeableness: 0,
+              Conscientiousness: 0,
+              Neuroticism: 0,
+              Openness: 0,
+            },
           });
         }
       }
-    };
-    fetchUserProfile();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleChange = (field: string, value: string) => {
@@ -100,12 +113,18 @@ const Profile = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // In a real app, this would upload to a server
-      const imageUrl = URL.createObjectURL(file);
-      handleChange("profilePicture", imageUrl);
+      // Placeholder for future upload logic
+      handleChange("profilePicture", file.name); // Example: store file name only
     }
   };
   const { collapsed } = useSidebar();
+
+  const navigate = useNavigate();
+
+  const handlePersonalityQuiz = () => {
+    navigate("/personality-quiz");
+  };
+
   return (
     <div
       className={`bg-[#0A0D17] pt-[30px] min-h-screen ${
@@ -172,6 +191,7 @@ const Profile = () => {
                       />
                     </div>
                   )}
+                  
                 </div>
                 <div className="space-y-2 flex-1">
                   <div>
@@ -208,7 +228,10 @@ const Profile = () => {
             </CardContent>
             {isEditing && (
               <CardFooter className="justify-end">
-                <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
+                <Button
+                  type="submit"
+                  className="bg-blue-600 text-white hover:bg-blue-700"
+                >
                   <Save className="h-4 w-4 mr-2" />
                   Save
                 </Button>
@@ -220,46 +243,33 @@ const Profile = () => {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Settings</CardTitle>
-              <CardDescription>Manage your app preferences</CardDescription>
+              <CardTitle>Personality</CardTitle>
+              <CardDescription>Your Big Five personality traits</CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="theme">
-                <TabsList className="grid w-full grid-cols-1">
-                  <TabsTrigger value="theme">Theme</TabsTrigger>
-                </TabsList>
-                <TabsContent value="theme" className="pt-4">
-                  <RadioGroup
-                    value={profile.theme}
-                    onValueChange={(value) => handleChange("theme", value)}
-                    className="space-y-2"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="system" id="theme-system" />
-                      <Label htmlFor="theme-system">System</Label>
+              {profile.bigFivePersonality &&
+               Object.values(profile.bigFivePersonality).some((score) => score > 0) ? (
+                <div className="space-y-2">
+                  {Object.entries(profile.bigFivePersonality).map(([trait, score]) => (
+                    <div key={trait} className="flex justify-between border-b pb-1">
+                      <span className="capitalize">{trait}</span>
+                      <span className="font-medium">{score}</span>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="light" id="theme-light" />
-                      <Label htmlFor="theme-light">Light</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="dark" id="theme-dark" />
-                      <Label htmlFor="theme-dark">Dark</Label>
-                    </div>
-                  </RadioGroup>
-                </TabsContent>
-              </Tabs>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  You haven’t taken the personality quiz yet.
+                </p>
+              )}
             </CardContent>
             <CardFooter>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  handleChange("theme", "system");
-                  toast.success("Settings updated successfully!");
-                }}
+                onClick={handlePersonalityQuiz}
+                className="bg-[#142a26] hover:bg-[#1b3b2a]/90 text-white px-8 py-3 text-lg rounded-lg shadow-lg hover:shadow-xl transition-all"
               >
-                Save Settings
+                <Brain className="w-5 h-5 mr-2" />
+                Take Personality Quiz
               </Button>
             </CardFooter>
           </Card>
