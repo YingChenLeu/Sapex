@@ -1,7 +1,7 @@
 export const courseGroups = {
   English: [
     "English I",
-    "AP Seminar – English",
+    "AP Seminar",
     "Seminar/English",
     "English: African Literature",
     "English: World Literature",
@@ -18,12 +18,12 @@ export const courseGroups = {
     "Global Issues",
     "Model United Nations (MUN)",
     "AP Psychology",
-    "AP Comparative Government and Politics",
+    "AP Comp Government and Politics",
     "AP Economics: Macro & Micro",
     "AP Macroeconomics",
     "AP Microeconomics",
     "AP World History: Modern",
-    "AP United States Government and Politics",
+    "AP US Government and Politics",
     "AP United States History",
     "AP European History",
     "AP Human Geography",
@@ -75,7 +75,7 @@ export const courseGroups = {
     "AP Environmental Science",
     "AP Computer Science A",
     "AP Computer Science Principles",
-    "Intro to Computer Science: Python",
+    "Intro to CS: Python",
   ],
   Arts: [
     "AP Studio Art: Drawing",

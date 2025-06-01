@@ -30,8 +30,8 @@ type Problem = {
 const categories = ["All", "Mathematics", "Science", "English", "Social Sciences", "Foreign Languages"];
 
 const HelpBoard = () => {
-  const profilePhoto = localStorage.getItem("photo");
-  const userName = localStorage.getItem("name") || "User";
+  const [profilePhoto, setProfilePhoto] = useState("");
+  const [userName, setUserName] = useState("User");
   const [problems, setProblems] = useState<Problem[]>([]);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -42,28 +42,23 @@ const HelpBoard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const cachedPhoto = localStorage.getItem("photo");
-    if (!cachedPhoto) {
-      const fetchUserProfilePicture = async () => {
-        try {
-          const uid = localStorage.getItem("uid");
-          if (!uid) return;
+    const fetchUserProfilePicture = async () => {
+      try {
+        const uid = localStorage.getItem("uid");
+        if (!uid) return;
 
-          const userDoc = await getDoc(doc(db, "users", uid));
-          if (userDoc.exists()) {
-            const data = userDoc.data();
-            const photoURL = data.profilePicture || "";
-            if (photoURL) {
-              localStorage.setItem("photo", photoURL);
-            }
-          }
-        } catch (error) {
-          console.error("Failed to fetch profile picture:", error);
+        const userDoc = await getDoc(doc(db, "users", uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          setProfilePhoto(data.profilePicture || "");
+          setUserName(data.username || "User");
         }
-      };
+      } catch (error) {
+        console.error("Failed to fetch profile picture:", error);
+      }
+    };
 
-      fetchUserProfilePicture();
-    }
+    fetchUserProfilePicture();
   }, []);
   useEffect(() => {
     const fetchProblems = async () => {
@@ -125,7 +120,7 @@ const HelpBoard = () => {
       </div>
 
       <Button
-        className="flex items-center gap-2 bg-discord-primary hover:bg-discord-primary/90 text-white bg-[#8a9994] rounded-lg px-4 py-2 mt-4 "
+        className="flex items-center gap-2  text-white bg-[#8a9994] hover:bg-[#8a9994]/90 rounded-lg px-4 py-2 mt-4 "
         onClick={() => navigate("/post-problem")}
       >
         <PlusCircle size={18} />

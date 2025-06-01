@@ -7,9 +7,13 @@ const SidebarContext = createContext<{
 
 import { useState } from "react";
 
-export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const toggleCollapsed = () => setCollapsed(prev => !prev);
+export const SidebarProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [collapsed, setCollapsed] = useState(true); // default (true is collapsed)
+  const toggleCollapsed = () => setCollapsed((prev) => !prev);
 
   return (
     <SidebarContext.Provider value={{ collapsed, toggleCollapsed }}>
@@ -20,7 +24,8 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
-  if (!context) throw new Error("useSidebar must be used within SidebarProvider");
+  if (!context)
+    throw new Error("useSidebar must be used within SidebarProvider");
   return context;
 };
 import {
@@ -53,7 +58,7 @@ function SideBar() {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-screen ${
+      className={`fixed top-0 left-0 h-screen z-100 ${
         collapsed ? "w-20" : "w-60"
       } m-0 flex flex-col bg-[#181b24] text-[#D8DEDE] shadow-lg space-y-[20px] border-r-[0.5px] border-r-black transition-all duration-300`}
     >
@@ -66,10 +71,17 @@ function SideBar() {
               collapsed ? "mx-auto" : ""
             }`}
           />
-          {!collapsed && <p className={`transition-opacity ease-in-out duration-300 ${collapsed ? "opacity-0" : "opacity-100"} mb-[20px] text-lg `}>Sapex Dashboard</p>}
+          {!collapsed && (
+            <p
+              className={`transition-opacity ease-in-out duration-300 ${
+                collapsed ? "opacity-0" : "opacity-100"
+              } mb-[20px] text-lg `}
+            >
+              Sapex Dashboard
+            </p>
+          )}
         </div>
       </Link>
-      
 
       <Link to="/user-profile" className="sidebar-icon flex items-center gap-2">
         <div className="flex items-center justify-center w-10 rounded-full">
@@ -107,7 +119,9 @@ function SideBar() {
 
       <button
         onClick={toggleCollapsed}
-        className={`w-6 h-6 bg-[#181b24] text-white rounded-full border border-gray-700 shadow-md z-50 transition-all duration-300 ${collapsed ? "mt-10 ml-15 text-white" : "mt-10 ml-55 text-white}"}`}
+        className={`w-6 h-6 bg-[#181b24] text-white rounded-full border border-gray-700 shadow-md z-50 transition-all duration-300 ${
+          collapsed ? "mt-10 ml-15 text-white" : "mt-10 ml-55 text-white}"
+        }`}
       >
         {collapsed ? "→" : "←"}
       </button>
@@ -118,7 +132,7 @@ function SideBar() {
           className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
         >
           <div className="flex items-center justify-center w-10 rounded-full">
-            <Cog className= {collapsed? "":"ml-[20px]"} size={20} />
+            <Cog className={collapsed ? "" : "ml-[20px]"} size={20} />
           </div>
           {!collapsed && <p className="mr-[9px] font-semibold">Privacy</p>}
         </Link>
@@ -128,7 +142,7 @@ function SideBar() {
           className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
         >
           <div className="flex items-center justify-center w-10 rounded-full">
-            <LogOut className= {collapsed? "":"ml-[20px]"} size={20}/>
+            <LogOut className={collapsed ? "" : "ml-[20px]"} size={20} />
           </div>
           {!collapsed && <p className="mr-[9px] font-semibold">Log Out</p>}
         </button>

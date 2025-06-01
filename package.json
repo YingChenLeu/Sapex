@@ -28,6 +28,7 @@
     "firebase": "^11.6.0",
     "framer-motion": "^12.9.2",
     "lucide-react": "^0.501.0",
+    "mathlive": "^0.105.3",
     "ogl": "^1.0.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

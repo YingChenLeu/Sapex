@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { AtSign, Send, Smile, Trash } from "lucide-react";
+import { AtSign, Smile, Trash, CircleUserRound } from "lucide-react";
 import EmojiPicker, { Theme } from "emoji-picker-react";
+import { Sigma } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,7 @@ import {
   orderBy,
   onSnapshot,
   serverTimestamp,
+  getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import dayjs from "dayjs";
@@ -70,6 +72,7 @@ export const ProblemChatDialog = ({
   onClose,
   problem,
 }: ProblemChatDialogProps) => {
+  const [showCalcBar, setShowCalcBar] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [activeUsers, setActiveUsers] = useState<number>(0);
@@ -100,9 +103,14 @@ export const ProblemChatDialog = ({
     );
 
     const setActive = async () => {
+      let avatar = null;
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      if (userDoc.exists()) {
+        avatar = userDoc.data().profilePicture || null;
+      }
       await setDoc(activeUserRef, {
         name: currentUser.displayName || "Anonymous",
-        avatar: currentUser.photoURL || null,
+        avatar,
         uid: currentUser.uid,
         lastActive: serverTimestamp(),
       });
@@ -191,12 +199,20 @@ export const ProblemChatDialog = ({
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !currentUser) return;
 
+    let avatar = null;
+    if (currentUser?.uid) {
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      if (userDoc.exists()) {
+        avatar = userDoc.data().profilePicture || null;
+      }
+    }
+
     await addDoc(collection(db, "problems", problem.id, "messages"), {
       content: newMessage.trim(),
       createdAt: serverTimestamp(),
       user: {
         name: currentUser.displayName || "Anonymous",
-        avatar: currentUser.photoURL || null,
+        avatar,
         uid: currentUser.uid,
       },
     });
@@ -304,7 +320,7 @@ export const ProblemChatDialog = ({
                     </Button>
                   )}
                 </DialogTitle>
-                <div className="absolute right-10 top-13 text-sm text-muted-foreground animate-pulse">
+                <div className="absolute right-20 top-5 text-sm text-muted-foreground animate-pulse">
                   {activeUsers} online
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
@@ -326,7 +342,7 @@ export const ProblemChatDialog = ({
                         />
                       ) : (
                         <AvatarFallback className="bg-discord-primary text-white">
-                          {message.user.name?.charAt(0)}
+                          <CircleUserRound className="w-9 h-9" />
                         </AvatarFallback>
                       )}
                     </Avatar>
@@ -467,6 +483,51 @@ export const ProblemChatDialog = ({
                   >
                     <AtSign size={20} />
                   </button>
+                  {problem.category.toLowerCase() === "mathematics" && (
+                    <>
+                      <button
+                        className="hover:text-white"
+                        onClick={() => setShowCalcBar((prev) => !prev)}
+                      >
+                        <Sigma size={20} />
+                      </button>
+                      {showCalcBar && (
+                        <div className="absolute bottom-12 right-0 bg-[#1e212d] p-2 rounded shadow-lg flex space-x-2 text-sm z-20">
+                          {[
+                            { label: "∫", value: "\\int" },
+                            { label: "dx", value: "dx" },
+                            { label: "dy/dx", value: "\\frac{dy}{dx}" },
+                            { label: "x²", value: "x^2" },
+                            { label: "√", value: "\\sqrt{}" },
+                            { label: "lim", value: "\\lim_{x \\to }" },
+                            { label: "∞", value: "∞" },
+                          ].map((item) => (
+                            <button
+                              key={item.label}
+                              className="bg-discord-sidebar hover:bg-discord-primary px-2 py-1 rounded"
+                              onClick={() => {
+                                const start = textAreaRef.current?.selectionStart || 0;
+                                const end = textAreaRef.current?.selectionEnd || 0;
+                                const text = newMessage;
+                                const updatedText =
+                                  text.substring(0, start) +
+                                  item.value +
+                                  text.substring(end);
+                                setNewMessage(updatedText);
+                                setTimeout(() => {
+                                  textAreaRef.current?.focus();
+                                  const pos = start + item.value.length;
+                                  textAreaRef.current?.setSelectionRange(pos, pos);
+                                }, 0);
+                              }}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  )}
 
                   <button
                     className="hover:text-white"
@@ -475,14 +536,43 @@ export const ProblemChatDialog = ({
                     <Smile size={20} />
                   </button>
 
-                  <Button
-                    size="sm"
-                    className="h-8 bg-discord-primary hover:bg-discord-primary/90 ml-2"
-                    onClick={handleSendMessage}
+                  <button
                     disabled={!newMessage.trim()}
+                    type="submit"
+                    onClick={handleSendMessage}
+                    className="h-8 w-8 ml-2 rounded-full disabled:bg-zinc-700 bg-discord-primary hover:bg-discord-primary/90 transition duration-200 flex items-center justify-center"
                   >
-                    <Send size={16} />
-                  </Button>
+                    <motion.svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-gray-300 h-4 w-4"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <motion.path
+                        d="M5 12l14 0"
+                        initial={{
+                          strokeDasharray: "50%",
+                          strokeDashoffset: "50%",
+                        }}
+                        animate={{
+                          strokeDashoffset: newMessage.trim() ? 0 : "50%",
+                        }}
+                        transition={{
+                          duration: 0.3,
+                          ease: "linear",
+                        }}
+                      />
+                      <path d="M13 18l6 -6" />
+                      <path d="M13 6l6 6" />
+                    </motion.svg>
+                  </button>
                 </div>
               </div>
             </motion.div>
