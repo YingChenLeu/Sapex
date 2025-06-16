@@ -1,8 +1,12 @@
+import { useNavigate } from "react-router-dom";
+import { collection, query, where, getDocs, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { useState, useEffect } from "react";
 
 const LoadingScreen = () => {
   const [loadingText, setLoadingText] = useState("Finding someone to help...");
   const [dots, setDots] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const textInterval = setInterval(() => {
@@ -20,6 +24,48 @@ const LoadingScreen = () => {
     const dotsInterval = setInterval(() => {
       setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
     }, 500);
+
+    // Start the matching process after component mounts
+    const fetchMatch = async () => {
+      try {
+        const uid = localStorage.getItem("uid"); // Get seeker UID from local storage
+
+        // First, find the user's open esupport request
+        const q = query(
+          collection(db, "esupport"),
+          where("seeker_uid", "==", uid),
+          where("helper_uid", "==", null)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          const docRef = doc.ref;
+          const dataDoc = doc.data();
+          const problemType = dataDoc.type;
+
+          // Call FastAPI with both UID and problem type
+          const response = await fetch(
+            `http://localhost:8000/match?uid=${uid}&problem_type=${problemType}`
+          );
+          const data = await response.json();
+
+          await updateDoc(docRef, {
+            helper_uid: data.helper_uid,
+            predicted: data.predicted_score,
+          });
+
+          console.log("Matched helper UID:", data.helper_uid);
+          navigate(`/chat/${docRef.id}`);
+        } else {
+          console.error("No pending esupport document found for this user.");
+        }
+      } catch (error) {
+        console.error("Error fetching match:", error); // Log any errors that occur during match fetch
+      }
+    };
+
+    fetchMatch(); // Trigger the match call on component mount
 
     return () => {
       clearInterval(textInterval);
@@ -49,6 +95,7 @@ const LoadingScreen = () => {
             This may take a moment. We're finding the perfect person to support
             you.
           </p>
+          
         </div>
 
         <div className="flex justify-center space-x-1">
