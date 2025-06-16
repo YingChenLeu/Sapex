@@ -14,50 +14,50 @@ const PersonalityQuiz = () => {
   const navigate = useNavigate();
 
   const personalityTraits = [
-    "I like to talk a lot",
-    "I often criticize others",
-    "I do my work carefully",
-    "I often feel sad or down",
-    "I come up with creative ideas",
-    "I tend to be quiet",
-    "I like helping others",
-    "I can be careless at times",
-    "I stay calm under pressure",
-    "I'm curious about many things",
-    "I have a lot of energy",
-    "I often argue with people",
-    "I’m dependable at work",
-    "I get tense easily",
-    "I enjoy thinking deeply",
-    "I’m enthusiastic about things",
-    "I forgive people easily",
-    "I sometimes leave things messy",
-    "I worry a lot",
-    "I use my imagination often",
-    "I keep to myself",
-    "I usually trust others",
-    "I sometimes avoid hard work",
-    "I stay emotionally steady",
-    "I enjoy inventing new things",
-    "I speak up and take charge",
-    "I can seem distant or cold",
-    "I stick with things until they’re done",
-    "I experience mood swings",
-    "I value art and beauty",
-    "I can be shy around others",
-    "I try to be kind to everyone",
-    "I get things done quickly",
-    "I stay calm in tough situations",
-    "I like having a routine",
-    "I enjoy being around people",
-    "I can be rude sometimes",
-    "I like making and following plans",
-    "I get nervous easily",
-    "I like thinking and exploring ideas",
-    "I’m not that into art or music",
-    "I enjoy working with others",
-    "I get distracted easily",
-    "I enjoy art, music, or literature",
+    "I enjoy talking to people.",
+    "I often notice flaws in others.",
+    "I make sure to do tasks carefully.",
+    "I often feel down or blue.",
+    "I enjoy coming up with new ideas.",
+    "I prefer keeping to myself.",
+    "I like helping people when I can.",
+    "I can be careless sometimes.",
+    "I handle stress well and stay calm.",
+    "I’m curious about many things.",
+    "I usually have a lot of energy.",
+    "I get into arguments with others.",
+    "I can be counted on to do a good job.",
+    "I feel tense or nervous often.",
+    "I enjoy thinking deeply about things.",
+    "I’m enthusiastic and excited about things.",
+    "I tend to forgive people easily.",
+    "I can be a bit disorganized.",
+    "I worry a lot about different things.",
+    "I often use my imagination.",
+    "I tend to be quiet in social settings.",
+    "I usually trust people.",
+    "I sometimes avoid doing hard work.",
+    "I stay emotionally steady, even under pressure.",
+    "I like inventing or creating things.",
+    "I speak up and take the lead.",
+    "I sometimes come off as cold or distant.",
+    "I finish tasks even when they’re difficult.",
+    "My mood can change quickly.",
+    "I value art, music, or beauty in life.",
+    "I sometimes feel shy or self-conscious.",
+    "I try to be kind and considerate to others.",
+    "I get things done efficiently.",
+    "I stay calm in tough situations.",
+    "I like having a predictable routine.",
+    "I enjoy being around other people.",
+    "I can be rude without meaning to.",
+    "I like to make plans and follow through with them.",
+    "I get nervous easily.",
+    "I enjoy reflecting on ideas and possibilities.",
+    "I’m not very interested in art or music.",
+    "I like working together with others.",
+    "I get distracted easily.",
+    "I enjoy creative things like art, music, or writing.",
   ];
 
   const [responses, setResponses] = useState<Record<number, string>>({});
@@ -81,6 +81,14 @@ const PersonalityQuiz = () => {
 
     const reverseScored = new Set([6, 9, 12, 18, 21, 23, 24, 27, 31, 34, 35, 37, 41, 43]);
 
+    const maxScores: Record<string, number> = {
+      Extraversion: 40,
+      Agreeableness: 45,
+      Conscientiousness: 45,
+      Neuroticism: 40,
+      Openness: 50,
+    };
+
     const scores: Record<string, number> = {
       Extraversion: 0,
       Agreeableness: 0,
@@ -98,7 +106,8 @@ const PersonalityQuiz = () => {
           total += reverseScored.has(item) ? 6 - value : value;
         }
       }
-      scores[trait] = total;
+      const maxScore = maxScores[trait];
+      scores[trait] = parseFloat((total / maxScore).toFixed(2));
     }
 
     return scores;

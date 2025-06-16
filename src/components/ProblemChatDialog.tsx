@@ -63,7 +63,6 @@ type ProblemChatDialogProps = {
       uid?: string;
     };
     responses: number;
-    likes: number;
   };
 };
 

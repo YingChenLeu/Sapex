@@ -15,8 +15,46 @@ import Profile from "./components/Profile";
 import WellnessSupport from "./components/WellnessSupport";
 import PersonalityQuiz from "./components/Big5Personality";
 import Matching from "./components/Loading";
+import { useEffect } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase.ts"; // adjust path as needed
 
 function App() {
+  useEffect(() => {
+    const uid = localStorage.getItem("uid");
+    if (!uid) return;
+
+    const userRef = doc(db, "users", uid);
+
+    const setOnline = async () => {
+      try {
+        await updateDoc(userRef, {
+          online: true,
+          lastActive: new Date(),
+        });
+      } catch (err) {
+        console.error("Failed to set user online", err);
+      }
+    };
+
+    const setOffline = async () => {
+      try {
+        await updateDoc(userRef, {
+          online: false,
+        });
+      } catch (err) {
+        console.error("Failed to set user offline", err);
+      }
+    };
+
+    setOnline();
+
+    window.addEventListener("beforeunload", setOffline);
+    return () => {
+      window.removeEventListener("beforeunload", setOffline);
+      setOffline();
+    };
+  }, []);
   return (
     <>
       <SidebarProvider>

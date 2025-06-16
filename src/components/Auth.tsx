@@ -3,7 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, UserRound } from "lucide-react";
 import { useState } from "react";
-const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidEmail = (email: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 import { FcGoogle } from "react-icons/fc";
 import { SiDiscord } from "react-icons/si";
 import { TfiMicrosoftAlt } from "react-icons/tfi";
@@ -52,7 +53,6 @@ const Auth = () => {
             uid: uid,
             username: user.displayName?.trim() || "Anonymous",
             email: user.email,
-            birthday: "",
             bio: "",
             isAdmin: false,
             profilePicture: user.photoURL || "/default-avatar.png",
@@ -71,6 +71,7 @@ const Auth = () => {
               Agreeableness: 0,
               Neuroticism: 0,
             },
+            online: true,
           });
         } else {
           const currentData = userSnap.data();
@@ -78,7 +79,10 @@ const Auth = () => {
           if (!currentData.username || currentData.username.trim() === "") {
             updates.username = user.displayName?.trim() || "Anonymous";
           }
-          if (!currentData.profilePicture || currentData.profilePicture.trim() === "") {
+          if (
+            !currentData.profilePicture ||
+            currentData.profilePicture.trim() === ""
+          ) {
             updates.profilePicture = user.photoURL || "/default-avatar.png";
           }
           if (Object.keys(updates).length > 0) {
@@ -110,15 +114,23 @@ const Auth = () => {
     setLoading(true);
     try {
       setError("");
-      const result = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
+      const result = await signInWithEmailAndPassword(
+        auth,
+        email.trim().toLowerCase(),
+        password
+      );
 
       localStorage.setItem("uid", result.user.uid);
       const userDoc = await getDoc(doc(db, "users", result.user.uid));
       if (userDoc.exists()) {
         const data = userDoc.data();
         localStorage.setItem("name", data.username || "Anonymous");
-        localStorage.setItem("photo", data.profilePicture || "/default-avatar.png");
+        localStorage.setItem(
+          "photo",
+          data.profilePicture || "/default-avatar.png"
+        );
       }
+      await updateDoc(doc(db, "users", result.user.uid), { online: true });
       navigate("/helpboard");
     } catch (error: any) {
       console.error("Email login error:", error);
@@ -155,7 +167,7 @@ const Auth = () => {
         password
       );
       await updateProfile(result.user, {
-        displayName: name.trim()
+        displayName: name.trim(),
       });
       const uid = result.user.uid;
       localStorage.setItem("uid", uid);
@@ -166,7 +178,6 @@ const Auth = () => {
         uid: uid,
         username: name.trim() || "Anonymous",
         email: email.trim().toLowerCase(),
-        birthday: "",
         bio: "",
         isAdmin: false,
         profilePicture: result.user.photoURL || "/default-avatar.png",
@@ -185,6 +196,7 @@ const Auth = () => {
           Agreeableness: 0,
           Neuroticism: 0,
         },
+        online: true,
       });
 
       navigate("/helpboard");
