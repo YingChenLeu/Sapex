@@ -1,12 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import { collection, query, where, getDocs, updateDoc } from "firebase/firestore";
+import { useLocation, useNavigate } from "react-router-dom";
+import { updateDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useState, useEffect } from "react";
 
 const LoadingScreen = () => {
   const [loadingText, setLoadingText] = useState("Finding someone to help...");
   const [dots, setDots] = useState("");
+  const location = useLocation();
   const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const docId = params.get("docId");
 
   useEffect(() => {
     const textInterval = setInterval(() => {
@@ -28,40 +31,41 @@ const LoadingScreen = () => {
     // Start the matching process after component mounts
     const fetchMatch = async () => {
       try {
-        const uid = localStorage.getItem("uid"); // Get seeker UID from local storage
+        const uid = localStorage.getItem("uid");
+        if (!uid || !docId) return;
 
-        // First, find the user's open esupport request
-        const q = query(
-          collection(db, "esupport"),
-          where("seeker_uid", "==", uid),
-          where("helper_uid", "==", null)
+        const docRef = doc(db, "esupport", docId);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+          console.error("Document not found:", docId);
+          return;
+        }
+
+        const dataDoc = docSnap.data();
+        const problemType = dataDoc.type;
+
+        const response = await fetch(
+          `http://localhost:8000/match?uid=${uid}&problem_type=${problemType}`
         );
-        const querySnapshot = await getDocs(q);
+        const data = await response.json();
 
-        if (!querySnapshot.empty) {
-          const doc = querySnapshot.docs[0];
-          const docRef = doc.ref;
-          const dataDoc = doc.data();
-          const problemType = dataDoc.type;
+        console.log("FastAPI returned:", data);
 
-          // Call FastAPI with both UID and problem type
-          const response = await fetch(
-            `http://localhost:8000/match?uid=${uid}&problem_type=${problemType}`
-          );
-          const data = await response.json();
-
+        try {
           await updateDoc(docRef, {
             helper_uid: data.helper_uid,
             predicted: data.predicted_score,
           });
-
-          console.log("Matched helper UID:", data.helper_uid);
-          navigate(`/chat/${docRef.id}`);
-        } else {
-          console.error("No pending esupport document found for this user.");
+          console.log("Firestore updated successfully");
+        } catch (err) {
+          console.error("Failed to update Firestore:", err);
         }
+
+        console.log("Matched helper UID:", data.helper_uid);
+        navigate(`/chat/${docId}`);
       } catch (error) {
-        console.error("Error fetching match:", error); // Log any errors that occur during match fetch
+        console.error("Error fetching match:", error);
       }
     };
 

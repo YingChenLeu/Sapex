@@ -33,7 +33,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { AnimatePresence, motion } from "framer-motion";
 dayjs.extend(relativeTime);
 
-
 type Message = {
   id: string;
   content: string;
@@ -505,8 +504,10 @@ export const ProblemChatDialog = ({
                               key={item.label}
                               className="bg-discord-sidebar hover:bg-discord-primary px-2 py-1 rounded"
                               onClick={() => {
-                                const start = textAreaRef.current?.selectionStart || 0;
-                                const end = textAreaRef.current?.selectionEnd || 0;
+                                const start =
+                                  textAreaRef.current?.selectionStart || 0;
+                                const end =
+                                  textAreaRef.current?.selectionEnd || 0;
                                 const text = newMessage;
                                 const updatedText =
                                   text.substring(0, start) +
@@ -516,7 +517,10 @@ export const ProblemChatDialog = ({
                                 setTimeout(() => {
                                   textAreaRef.current?.focus();
                                   const pos = start + item.value.length;
-                                  textAreaRef.current?.setSelectionRange(pos, pos);
+                                  textAreaRef.current?.setSelectionRange(
+                                    pos,
+                                    pos
+                                  );
                                 }, 0);
                               }}
                             >

@@ -1,99 +1,141 @@
-
 import { useState, useRef, useEffect } from "react";
+import { getAuth } from "firebase/auth";
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, Send, Smile } from "lucide-react";
-
-interface Message {
+import { X, Send, Smile, UserRound } from "lucide-react";
+import { useSidebar } from "./SideBar";
+// Message type for wellness chat, similar to ProblemChatDialog
+type Message = {
   id: string;
-  text: string;
-  sender: 'user' | 'supporter';
-  timestamp: Date;
-}
+  content: string;
+  createdAt: any;
+  user: {
+    name: string;
+    avatar?: string;
+    uid?: string;
+  };
+};
 
-interface ChatScreenProps {
-  onBack: () => void;
-}
+type WellnessChatDialogProps = {
+  sessionId: string;
+  isOpen: boolean;
+  onClose: () => void;
+};
 
-const ChatScreen = ({ onBack }: ChatScreenProps) => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: "Hi! I'm here to listen and support you. How are you feeling today?",
-      sender: 'supporter',
-      timestamp: new Date(Date.now() - 1000)
-    }
-  ]);
+const WellnessChatDialog = ({
+  sessionId,
+  onClose,
+}: WellnessChatDialogProps) => {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const { collapsed } = useSidebar();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
+  // Load messages from Firestore (esupport collection, aligned with ProblemChatDialog)
   useEffect(() => {
-    scrollToBottom();
+    if (!sessionId) return;
+    const messagesRef = collection(db, "esupport", sessionId, "messages");
+    const q = query(messagesRef, orderBy("createdAt", "asc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const msgs = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as any),
+      }));
+      setMessages(msgs);
+    });
+    return () => unsubscribe();
+  }, [sessionId]);
+
+  // Auto-scroll to bottom
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        text: newMessage.trim(),
-        sender: 'user',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, userMessage]);
-      setNewMessage("");
-      
-      // Simulate supporter response
-      setTimeout(() => {
-        const supporterResponses = [
-          "I hear you. That sounds really challenging.",
-          "Thank you for sharing that with me. You're being really brave.",
-          "That makes complete sense. How long have you been feeling this way?",
-          "I'm here with you. Take your time to share what's on your mind.",
-          "It's okay to feel that way. Your feelings are valid."
-        ];
-        
-        const response: Message = {
-          id: (Date.now() + 1).toString(),
-          text: supporterResponses[Math.floor(Math.random() * supporterResponses.length)],
-          sender: 'supporter',
-          timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, response]);
-      }, 1000 + Math.random() * 2000);
+  // Send message to Firestore (esupport collection, aligned with ProblemChatDialog)
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !currentUser) return;
+    let avatar = null;
+    if (currentUser?.uid) {
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      if (userDoc.exists()) {
+        avatar = userDoc.data().profilePicture || null;
+      }
     }
+    await addDoc(collection(db, "esupport", sessionId, "messages"), {
+      content: newMessage.trim(),
+      createdAt: serverTimestamp(),
+      user: {
+        name: currentUser.displayName || "Anonymous",
+        avatar,
+        uid: currentUser.uid,
+      },
+    });
+    setNewMessage("");
   };
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false 
+  // Format time for display
+  const formatTime = (createdAt: any) => {
+    if (!createdAt?.seconds) return "just now";
+    const date = new Date(createdAt.seconds * 1000);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     });
   };
 
   return (
-    <div className="h-screen bg-slate-900 flex flex-col">
-      {/* Header */}
-      <div className="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between">
+    <div
+      className={`h-screen w-full bg-[#0A0D17] flex flex-col ${
+        collapsed ? "pl-[80px]" : "pl-[240px]"
+      } transition-all duration-300`}
+    >
+
+      <div className="bg-[#1e212d] border-b border-discord-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-sm font-semibold">S</span>
-          </div>
-          <div>
-            <h3 className="text-white font-medium">Anonymous Supporter</h3>
-            <p className="text-green-400 text-xs">● online</p>
-          </div>
+          {currentUser?.uid === sessionId ? (
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <UserRound className="text-white h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-white font-medium">Anonymous User</h3>
+              </div>
+            </div>
+          ) : (
+            // Current user is the seeker, show supporter's info
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-full overflow-hidden">
+                <img
+                  src="https://lh3.googleusercontent.com/a/ACg8oclm0VDc"
+                  alt="Supporter"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <h3 className="text-white font-medium">Ying Chen Leu</h3>
+              </div>
+            </div>
+          )}
         </div>
         <Button
           variant="ghost"
           size="icon"
-          onClick={onBack}
+          onClick={onClose}
           className="text-slate-400 hover:text-white hover:bg-slate-700"
         >
           <X className="h-5 w-5" />
@@ -105,26 +147,40 @@ const ChatScreen = ({ onBack }: ChatScreenProps) => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${
+              message.user.uid === currentUser?.uid
+                ? "justify-end"
+                : "justify-start"
+            }`}
           >
             <div className="flex items-start space-x-2 max-w-xs lg:max-w-md">
-              {message.sender === 'supporter' && (
+              {message.user.uid !== currentUser?.uid && (
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-xs font-semibold">S</span>
+                  {message.user.avatar ? (
+                    <img
+                      src={message.user.avatar}
+                      alt={message.user.name}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-white text-xs font-semibold">
+                      {message.user.name ? message.user.name[0] : "S"}
+                    </span>
+                  )}
                 </div>
               )}
               <div className="flex flex-col">
                 <div
                   className={`px-4 py-2 rounded-2xl ${
-                    message.sender === 'user'
-                      ? 'bg-blue-600 text-white rounded-br-md'
-                      : 'bg-slate-700 text-white rounded-bl-md'
+                    message.user.uid === currentUser?.uid
+                      ? "bg-discord-primary text-white rounded-br-md"
+                      : "bg-discord-sidebar text-white rounded-bl-md"
                   }`}
                 >
-                  <p className="text-sm">{message.text}</p>
+                  <p className="text-sm rounded-2xl px-4 py-2 w-fit max-w-[500px] break-words bg-green-400/20 text-green-200">{message.content}</p>
                 </div>
                 <span className="text-xs text-slate-400 mt-1 px-2">
-                  {formatTime(message.timestamp)}
+                  {formatTime(message.createdAt)}
                 </span>
               </div>
             </div>
@@ -134,7 +190,7 @@ const ChatScreen = ({ onBack }: ChatScreenProps) => {
       </div>
 
       {/* Message Input */}
-      <div className="bg-slate-800 border-t border-slate-700 p-4">
+      <div className="bg-[#1e212d] border-t border-discord-border p-4">
         <div className="flex items-center space-x-2">
           <Button
             variant="ghost"
@@ -146,9 +202,9 @@ const ChatScreen = ({ onBack }: ChatScreenProps) => {
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
             placeholder="Type your message..."
-            className="flex-1 bg-slate-700 border-slate-600 text-white placeholder-slate-400 focus:border-blue-500"
+            className="flex-1 bg-discord-sidebar border-none text-white placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           <Button
             onClick={handleSendMessage}
@@ -160,11 +216,11 @@ const ChatScreen = ({ onBack }: ChatScreenProps) => {
           </Button>
         </div>
         <p className="text-xs text-slate-400 mt-2 text-center">
-          This is a safe space. Your conversation is private and anonymous.
+          This is a safe space. Your conversation is private and anonymous. The data will only be used to improve our services and will not be shared with third parties.
         </p>
       </div>
     </div>
   );
 };
 
-export default ChatScreen;
+export default WellnessChatDialog;

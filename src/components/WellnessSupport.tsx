@@ -42,7 +42,7 @@ const WellnessSupport = () => {
         text: "Conversation started.",
         timestamp: new Date(),
       });
-      window.location.href = "/finding-match";
+      window.location.href = `/finding-match?docId=${docRef.id}`;
     } catch (err) {
       console.error("Failed to create support doc:", err);
       setIsSubmitting(false); // unlock on failure
