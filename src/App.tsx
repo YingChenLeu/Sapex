@@ -17,7 +17,8 @@ import PersonalityQuiz from "./components/Big5Personality";
 import Matching from "./components/Loading";
 import { useEffect } from "react";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase.ts"; // adjust path as needed
+import { db } from "@/lib/firebase.ts"; 
+import ChatPage from "./components/Chat";
 
 function App() {
   useEffect(() => {
@@ -120,6 +121,17 @@ function App() {
                   </div>
                 </ProtectedRoute>
               </div>
+            }
+          />
+          <Route
+            path="/chat/:id"
+            element={
+              <ProtectedRoute>
+                <div>
+                  <ChatPage />
+                  <SideBar />
+                </div>
+              </ProtectedRoute>
             }
           />
           <Route
