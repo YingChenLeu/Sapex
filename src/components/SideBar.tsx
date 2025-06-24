@@ -1,11 +1,10 @@
-import { createContext, useContext } from "react";
-
+import { createContext, useContext, useState, useEffect } from "react";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 const SidebarContext = createContext<{
   collapsed: boolean;
   toggleCollapsed: () => void;
 } | null>(null);
-
-import { useState } from "react";
 
 export const SidebarProvider = ({
   children,
@@ -33,8 +32,8 @@ import {
   Globe,
   ClockFading,
   Eclipse,
-  Cog,
   LogOut,
+  Hexagon,
 } from "lucide-react";
 import Logo from "@/assets/LeafLogo.png";
 import { Link } from "react-router-dom";
@@ -55,6 +54,18 @@ function SideBar() {
       console.error("Logout failed:", err);
     }
   };
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const fetchAdminStatus = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        setIsAdmin(userDoc.exists() && userDoc.data().isAdmin === true);
+      }
+    };
+    fetchAdminStatus();
+  }, []);
 
   return (
     <div
@@ -127,16 +138,19 @@ function SideBar() {
       </button>
 
       <div className="mt-auto mb-10 flex flex-col gap-4">
-        <Link
-          to="/privacy"
-          className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
-        >
-          <div className="flex items-center justify-center w-10 rounded-full">
-            <Cog className={collapsed ? "" : "ml-[20px]"} size={20} />
-          </div>
-          {!collapsed && <p className="mr-[9px] font-semibold">Privacy</p>}
-        </Link>
-
+        {isAdmin && (
+          <button
+            onClick={() => navigate("/admin")}
+            className="sidebar-icon flex items-center gap-[20px] bg-blue-900 hover:bg-blue-700"
+          >
+            <div className="flex items-center justify-center w-10 rounded-full">
+              <Hexagon size={20} />
+            </div>
+            {!collapsed && (
+              <p className="mr-[9px] font-semibold">Admin Panel</p>
+            )}
+          </button>
+        )}
         <button
           onClick={handleLogout}
           className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
