@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSidebar } from "../components/SideBar";
 import { ProblemChatDialog } from "./ProblemChatDialog";
 import { HelpBoardCard } from "./HelpBoardCard";
@@ -8,6 +7,7 @@ import { PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../lib/firebase";
 import { collection, getDocs, getDoc, doc } from "firebase/firestore";
+import Dropdown from "./Dropdown";
 
 type Problem = {
   id: string;
@@ -30,8 +30,8 @@ type Problem = {
 const categories = ["All", "Mathematics", "Science", "English", "Social Sciences", "Foreign Languages"];
 
 const HelpBoard = () => {
-  const [profilePhoto, setProfilePhoto] = useState("");
-  const [userName, setUserName] = useState("User");
+  const [, setProfilePhoto] = useState("");
+  const [, setUserName] = useState("User");
   const [problems, setProblems] = useState<Problem[]>([]);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -113,10 +113,7 @@ const HelpBoard = () => {
       </p>
 
       <div className="absolute top-5 right-[40px] z-50">
-        <Avatar className="border border-white">
-          <AvatarImage src={profilePhoto || undefined} alt={userName} />
-          <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
-        </Avatar>
+        <Dropdown />
       </div>
 
       <Button

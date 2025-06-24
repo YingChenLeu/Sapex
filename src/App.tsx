@@ -1,3 +1,9 @@
+import { JSX, useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import AdminManagement from "./components/AdminManagement";
+import { Navigate } from "react-router-dom";
 import AboutDev from "./components/AboutDev";
 import AboutInitiative from "./components/AboutInitiative";
 import Community from "./components/Community";
@@ -15,10 +21,28 @@ import Profile from "./components/Profile";
 import WellnessSupport from "./components/WellnessSupport";
 import PersonalityQuiz from "./components/Big5Personality";
 import Matching from "./components/Loading";
-import { useEffect } from "react";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase.ts"; 
 import ChatPage from "./components/Chat";
+
+const AdminRoute = ({ children }: { children: JSX.Element }) => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const docRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(docRef);
+        setIsAdmin(userSnap.exists() && userSnap.data().isAdmin === true);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loading)
+    return <div className="text-white p-4">Checking admin access...</div>;
+  return isAdmin ? children : <Navigate to="/" />;
+};
 
 function App() {
   useEffect(() => {
@@ -205,6 +229,19 @@ function App() {
                   <SideBar />
                 </div>
               </ProtectedRoute>
+            }
+          />
+        </Routes>
+        <Routes>
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <div>
+                  <SideBar />
+                  <AdminManagement />
+                </div>
+              </AdminRoute>
             }
           />
         </Routes>
