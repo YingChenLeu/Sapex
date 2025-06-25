@@ -1,4 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import CampsBay from "@/assets/CampsBay.png";
+import Freedom from "@/assets/Freedom.png";
+import Frozen from "@/assets/Frozen.png";
+import Lake from "@/assets/Lake.png";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
@@ -54,6 +58,11 @@ const WellnessChatDialog = ({
   } | null>(null);
 
   const helperUidRef = useRef<string | null>(null);
+  // Pick a random background image once per mount
+  const backgroundImage = useMemo(() => {
+    const images = [CampsBay, Freedom, Frozen, Lake];
+    return images[Math.floor(Math.random() * images.length)];
+  }, []);
 
   const [showRatingPrompt, setShowRatingPrompt] = useState(false);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
@@ -135,9 +144,17 @@ const WellnessChatDialog = ({
 
   return (
     <div
-      className={`h-screen w-full bg-[#0A0D17] flex flex-col ${
+      className={`h-screen w-full flex flex-col ${
         collapsed ? "pl-[80px]" : "pl-[240px]"
       } transition-all duration-300`}
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        backgroundBlendMode: "overlay",
+      }}
     >
       <div className="bg-[#1e212d] border-b border-discord-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
