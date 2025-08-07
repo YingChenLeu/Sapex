@@ -52,7 +52,7 @@ const WellnessChatDialog = ({
   const currentUser = auth.currentUser;
   const { collapsed } = useSidebar();
 
-  const [helperInfo, setHelperInfo] = useState<{
+  const [, setHelperInfo] = useState<{
     name: string;
     avatar?: string;
   } | null>(null);
@@ -158,35 +158,12 @@ const WellnessChatDialog = ({
     >
       <div className="bg-[#1e212d] border-b border-discord-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          {helperInfo ? (
-            <>
-              <div className="w-8 h-8 rounded-full overflow-hidden">
-                {helperInfo.avatar ? (
-                  <img
-                    src={helperInfo.avatar}
-                    alt={helperInfo.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-blue-900 to-green-800 flex items-center justify-center">
-                    <UserRound className="text-white h-5 w-5" />
-                  </div>
-                )}
-              </div>
-              <div>
-                <h3 className="text-white font-medium">{helperInfo.name}</h3>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-900 to-green-800 rounded-full flex items-center justify-center">
-                <UserRound className="text-white h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="text-white font-medium">Anonymous User</h3>
-              </div>
-            </>
-          )}
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-900 to-green-800 rounded-full flex items-center justify-center">
+            <UserRound className="text-white h-5 w-5" />
+          </div>
+          <div>
+            <h3 className="text-white font-medium">Sapex Emotional Support</h3>
+          </div>
           {currentUser?.uid !== helperUidRef.current && (
             <Button
               size="sm"

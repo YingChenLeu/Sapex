@@ -46,7 +46,7 @@ const LoadingScreen = () => {
         const problemType = dataDoc.type;
 
         const response = await fetch(
-          `http://localhost:8000/match?uid=${uid}&problem_type=${problemType}`
+          `https://sapex-ml.onrender.com/match?uid=${uid}&problem_type=${problemType}`
         );
         const data = await response.json();
 
