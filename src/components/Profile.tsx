@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -133,8 +134,8 @@ const Profile = () => {
     >
       <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <Card className="lg:col-span-3">
           <form onSubmit={handleSubmit}>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
@@ -153,7 +154,7 @@ const Profile = () => {
                 Edit
               </Button>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-5">
               <div className="flex flex-col md:flex-row md:items-center gap-4">
                 <div className="relative">
                   <Avatar className="h-24 w-24">
@@ -240,7 +241,7 @@ const Profile = () => {
           </form>
         </Card>
 
-        <div className="space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle>Personality</CardTitle>
@@ -248,14 +249,29 @@ const Profile = () => {
             </CardHeader>
             <CardContent>
               {profile.bigFivePersonality &&
-               Object.values(profile.bigFivePersonality).some((score) => score > 0) ? (
-                <div className="space-y-2">
-                  {Object.entries(profile.bigFivePersonality).map(([trait, score]) => (
-                    <div key={trait} className="flex justify-between border-b pb-1">
-                      <span className="capitalize">{trait}</span>
-                      <span className="font-medium">{score}</span>
-                    </div>
-                  ))}
+              Object.values(profile.bigFivePersonality).some((score) => score > 0) ? (
+                <div className="w-full h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart
+                      cx="50%"
+                      cy="50%"
+                      outerRadius="80%"
+                      data={Object.entries(profile.bigFivePersonality).map(([trait, score]) => ({
+                        trait,
+                        value: score * 100,
+                      }))}
+                    >
+                      <PolarGrid />
+                      <PolarAngleAxis dataKey="trait" />
+                      <Radar
+                        name="Personality"
+                        dataKey="value"
+                        stroke="#8884d8"
+                        fill="#8884d8"
+                        fillOpacity={0.6}
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
@@ -288,16 +304,7 @@ const Profile = () => {
                 <span>Problems Posted</span>
                 <span className="font-medium">{profile.posted}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span>Joined</span>
-                <span className="font-medium">{profile.joined}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span>Reputation Score</span>
-                <span className="font-medium text-primary">
-                  {profile.reputation}
-                </span>
-              </div>
+          
             </CardContent>
           </Card>
         </div>

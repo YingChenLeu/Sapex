@@ -89,7 +89,7 @@ const WellnessChatDialog = ({
     fetchHelperInfo();
   }, [sessionId, currentUser]);
 
-  // Load messages from Firestore (esupport collection, aligned with ProblemChatDialog)
+
   useEffect(() => {
     if (!sessionId) return;
     const messagesRef = collection(db, "esupport", sessionId, "messages");
