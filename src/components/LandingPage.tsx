@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import Logo from "@/assets/LeafLogo.png";
+import Logo from "@/assets/leaf&crow.png";
 import MetaBalls from "./ui/MetaBalls";
 import CircularText from "./CircularText";
 import { MacbookScroll } from "./MacbookScroll";
@@ -13,7 +13,7 @@ function LandingPage() {
         <img
           src={Logo}
           alt="Sapex Logo"
-          className="w-40 h-40 mb-5 animate-pulse"
+          className="w-35 h-35 mb-5 animate-pulse"
         />
         <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#D8DEDE] to-[#A8D3CC] bg-clip-text text-transparent">
           Welcome to <span className="edu-font">Sapex</span>

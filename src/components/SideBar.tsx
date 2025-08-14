@@ -35,7 +35,7 @@ import {
   LogOut,
   Hexagon,
 } from "lucide-react";
-import Logo from "@/assets/LeafLogo.png";
+import Logo from "@/assets/leaf&crow.png";
 import { Link } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -78,14 +78,14 @@ function SideBar() {
           <img
             src={Logo}
             alt="Sapex Logo"
-            className={`w-20 h-20 mb-5 animate-pulse ${
-              collapsed ? "mx-auto" : ""
+            className={`w-15 h-15 mb-5 mt-1  animate-pulse ease-in-out duration-300 ${
+              collapsed ? "mx-auto ml-[9px]" : ""
             }`}
           />
           {!collapsed && (
             <p
-              className={`transition-opacity ease-in-out duration-300 ${
-                collapsed ? "opacity-0" : "opacity-100"
+              className={`transition-opacity ease-in-out duration-900 ${
+                collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
               } mb-[20px] text-lg `}
             >
               Sapex Dashboard
@@ -98,14 +98,30 @@ function SideBar() {
         <div className="flex items-center justify-center w-10 rounded-full">
           <CircleUserRound size={20} />
         </div>
-        {!collapsed && <p className="mr-[20px]">User Profile</p>}
+        {!collapsed && (
+          <p
+            className={`transition-opacity ease-in-out duration-900 ${
+              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+            } mr-[20px]`}
+          >
+            User Profile
+          </p>
+        )}
       </Link>
 
       <Link to="/sapex-global" className="sidebar-icon flex items-center gap-2">
         <div className="flex items-center justify-center w-10 rounded-full">
           <Globe size={20} />
         </div>
-        {!collapsed && <p className="mr-[20px]">Sapex Global</p>}
+        {!collapsed && (
+          <p
+            className={`transition-opacity ease-in-out duration-900 ${
+              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+            } mr-[20px]`}
+          >
+            Sapex Global
+          </p>
+        )}
       </Link>
 
       <Link
@@ -115,7 +131,15 @@ function SideBar() {
         <div className="flex items-center justify-center w-10 rounded-full">
           <ClockFading size={20} />
         </div>
-        {!collapsed && <p className="mr-[20px]">Contributions</p>}
+        {!collapsed && (
+          <p
+            className={`transition-opacity ease-in-out duration-900 ${
+              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+            } mr-[20px]`}
+          >
+            Contributions
+          </p>
+        )}
       </Link>
 
       <Link
@@ -125,7 +149,15 @@ function SideBar() {
         <div className="flex items-center justify-center w-10 rounded-full">
           <Eclipse size={20} />
         </div>
-        {!collapsed && <p className="mr-[8px]">Wellness Support</p>}
+        {!collapsed && (
+          <p
+            className={`transition-opacity ease-in-out duration-900 ${
+              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+            } mr-[8px]`}
+          >
+            Wellness Support
+          </p>
+        )}
       </Link>
 
       <button
@@ -147,7 +179,13 @@ function SideBar() {
               <Hexagon size={20} />
             </div>
             {!collapsed && (
-              <p className="mr-[9px] font-semibold">Admin Panel</p>
+              <p
+                className={`transition-opacity ease-in-out duration-900 ${
+                  collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+                } mr-[9px] font-semibold`}
+              >
+                Admin Panel
+              </p>
             )}
           </button>
         )}
@@ -158,7 +196,15 @@ function SideBar() {
           <div className="flex items-center justify-center w-10 rounded-full">
             <LogOut className={collapsed ? "" : "ml-[20px]"} size={20} />
           </div>
-          {!collapsed && <p className="mr-[9px] font-semibold">Log Out</p>}
+          {!collapsed && (
+            <p
+              className={`transition-opacity ease-in-out duration-900 ${
+                collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+              } mr-[9px] font-semibold`}
+            >
+              Log Out
+            </p>
+          )}
         </button>
       </div>
     </div>
