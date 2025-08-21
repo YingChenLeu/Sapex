@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import Logo from "@/assets/leaf&crow.png";
 import MetaBalls from "./ui/MetaBalls";
 import CircularText from "./CircularText";
-import { MacbookScroll } from "./MacbookScroll";
 
 
 function LandingPage() {
@@ -65,14 +64,6 @@ function LandingPage() {
               className="custom-class"
             />
           </div>
-          <div className="mt-[9rem]">
-          <MacbookScroll
-            src="/src/assets/SapexHelpboardPreview.png"
-            showGradient={true}
-            title={<span>Sapex HelpBoard Preview</span>}
-          />
-          </div>
-
 
         </div>
       </div>

@@ -35,7 +35,7 @@ import {
   LogOut,
   Hexagon,
 } from "lucide-react";
-import Logo from "@/assets/leaf&crow.png";
+import Logo from "@/assets/simple-logo.png";
 import { Link } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
