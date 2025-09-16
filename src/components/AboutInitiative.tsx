@@ -8,13 +8,13 @@ import {
   Flower,
   Pencil,
 } from "lucide-react";
-import SplashCursor from "./ui/SplashCursor";
+
 
 function AboutInitiative() {
   return (
     <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] py-12 relative overflow-hidden pt-[100px]">
       {/* Decorative Icons */}
-      <SplashCursor />
+
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <Leaf className="absolute top-20 left-10 text-[#A8D3CC]/20 w-16 h-16 animate-bounce" />
         <Sprout className="absolute top-40 right-20 text-[#A8D3CC]/20 w-12 h-12 animate-bounce delay-100" />
