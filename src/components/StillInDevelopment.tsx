@@ -1,7 +1,7 @@
 import { Construction, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import SplashCursor from "./ui/SplashCursor";
+
 
 const StillInDevelopment = () => {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ const StillInDevelopment = () => {
   return (
     <div className="min-h-screen bg-[#1A1F2C] text-white py-24 px-4 flex flex-col items-center justify-center space-y-8">
       {/* Decorative header with icons */}
-      <SplashCursor />
+
       <div className="flex items-center gap-4 mb-2">
         <Construction className="text-[#9b87f5] h-8 w-8 animate-bounce" />
         <h1 className="text-4xl font-bold text-center">Still In Development</h1>

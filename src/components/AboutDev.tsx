@@ -9,12 +9,12 @@ import {
   Leaf,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import SplashCursor from "./ui/SplashCursor";
+
 
 const AboutDev = () => {
   return (
     <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] py-12 relative overflow-hidden pt-[100px]">
-      <SplashCursor />
+
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <Code className="absolute top-20 left-10 text-[#A8D3CC]/20 w-16 h-16 animate-bounce" />
         <Coffee className="absolute top-40 right-20 text-[#A8D3CC]/20 w-12 h-12 animate-bounce delay-100" />
