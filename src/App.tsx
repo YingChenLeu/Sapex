@@ -1,6 +1,6 @@
 import { JSX, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import AdminManagement from "./components/AdminManagement";
 import { Navigate } from "react-router-dom";
@@ -55,7 +55,7 @@ function App() {
       try {
         await updateDoc(userRef, {
           online: true,
-          lastActive: new Date(),
+          lastActive: serverTimestamp(),
         });
       } catch (err) {
         console.error("Failed to set user online", err);
@@ -66,6 +66,7 @@ function App() {
       try {
         await updateDoc(userRef, {
           online: false,
+          lastActive: serverTimestamp(),
         });
       } catch (err) {
         console.error("Failed to set user offline", err);
