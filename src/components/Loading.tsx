@@ -45,17 +45,22 @@ const LoadingScreen = () => {
         const dataDoc = docSnap.data();
         const problemType = dataDoc.type;
 
-        const response = await fetch(
-          `https://sapex-ml.onrender.com/coldstart_match?uid=${uid}&problem_type=${problemType}`
-        );
+        const dayOfWeek = new Date().getDay(); 
+        let endpointUrl = "";
+        if (dayOfWeek === 1 || dayOfWeek === 2) {
+          endpointUrl = `https://sapex-ml.onrender.com/coldstart_match?uid=${uid}&problem_type=${problemType}`;
+        } else {
+          endpointUrl = `https://sapex-ml.onrender.com/match?uid=${uid}&problem_type=${problemType}`;
+        }
+        const response = await fetch(endpointUrl);
         const data = await response.json();
 
         console.log("FastAPI returned:", data);
 
         try {
           await updateDoc(docRef, {
-            helper_uid: data.helper_id,
-            predicted_score: data.predicted_compatibility,
+            helper_uid: data.helper_uid,
+            predicted_score: data.predicted_score,
           });
           console.log("Firestore updated successfully");
         } catch (err) {
