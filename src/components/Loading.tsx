@@ -31,7 +31,16 @@ const LoadingScreen = () => {
     // Start the matching process after component mounts
     const fetchMatch = async () => {
       try {
-        const uid = localStorage.getItem("uid");
+        let uid = localStorage.getItem("uid");
+        // inside the fetchMatch function, replace:
+        if (uid) {
+          try {
+            // if it was stored with JSON.stringify, this will remove quotes
+            uid = JSON.parse(uid);
+          } catch {
+            // if it wasn't JSON, just keep as is
+          }
+        }
         if (!uid || !docId) return;
 
         const docRef = doc(db, "esupport", docId);
@@ -45,7 +54,7 @@ const LoadingScreen = () => {
         const dataDoc = docSnap.data();
         const problemType = dataDoc.type;
 
-        const dayOfWeek = new Date().getDay(); 
+        const dayOfWeek = new Date().getDay();
         let endpointUrl = "";
         if (dayOfWeek === 1 || dayOfWeek === 2) {
           endpointUrl = `https://sapex-ml.onrender.com/coldstart_match?uid=${uid}&problem_type=${problemType}`;
