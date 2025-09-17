@@ -54,8 +54,8 @@ const LoadingScreen = () => {
 
         try {
           await updateDoc(docRef, {
-            helper_uid: data.helper_uid,
-            predicted: data.predicted_score,
+            helper_uid: data.helper_id,
+            predicted_score: data.predicted_compatibility,
           });
           console.log("Firestore updated successfully");
         } catch (err) {
@@ -99,7 +99,6 @@ const LoadingScreen = () => {
             This may take a moment. We're finding the perfect person to support
             you.
           </p>
-          
         </div>
 
         <div className="flex justify-center space-x-1">
