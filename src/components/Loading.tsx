@@ -70,6 +70,8 @@ const LoadingScreen = () => {
           await updateDoc(docRef, {
             helper_uid: data.helper_uid,
             predicted_score: data.predicted_score,
+            status: "matched",
+            notified: false,
           });
           console.log("Firestore updated successfully");
         } catch (err) {

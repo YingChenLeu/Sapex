@@ -215,8 +215,13 @@ const WellnessChatDialog = ({
               onClick={async () => {
                 if (selectedRating !== null) {
                   await updateDoc(doc(db, "esupport", sessionId), {
-                    actual: (selectedRating/10),
+                    actual: selectedRating / 10,
                   });
+                  if (helperUidRef.current) {
+                    await updateDoc(doc(db, "users", helperUidRef.current), {
+                      busy: false,
+                    });
+                  }
                 }
                 setShowRatingPrompt(false);
                 navigate("/helpboard");

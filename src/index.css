@@ -50,5 +50,18 @@ body {
   opacity: 1;
 }
 
+@font-face {
+  font-family: "Syncopate";
+  src: url("src/assets/Syncopate-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+@layer utilities {
+  .font-syncopate {
+    font-family: "Syncopate", sans-serif;
+  }
+}
 
 

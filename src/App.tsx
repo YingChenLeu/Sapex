@@ -22,6 +22,7 @@ import WellnessSupport from "./components/WellnessSupport";
 import PersonalityQuiz from "./components/Big5Personality";
 import Matching from "./components/Loading";
 import ChatPage from "./components/Chat";
+import NotificationListener from "./components/NotificationListener";
 
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -45,6 +46,19 @@ const AdminRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 function App() {
+  const [uid, setUid] = useState("");
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+      } else {
+        setUid("");
+      }
+    });
+    return () => unsub();
+  }, []);
+
   useEffect(() => {
     const uid = localStorage.getItem("uid");
     if (!uid) return;
@@ -84,6 +98,7 @@ function App() {
   return (
     <>
       <SidebarProvider>
+        <NotificationListener uid={uid} />
         <Routes>
           <Route
             path="/"
