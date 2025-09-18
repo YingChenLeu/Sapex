@@ -61,6 +61,7 @@ const PersonalityQuiz = () => {
   ];
 
   const [responses, setResponses] = useState<Record<number, string>>({});
+  const [unanswered, setUnanswered] = useState<number[]>([]);
 
   const handleResponseChange = (questionIndex: number, value: string) => {
     setResponses((prev) => ({
@@ -117,9 +118,17 @@ const PersonalityQuiz = () => {
     e.preventDefault();
 
     if (Object.keys(responses).length !== 44) {
-      alert("Please answer all 44 questions before submitting.");
+      const unansweredIndices = [];
+      for (let i = 0; i < 44; i++) {
+        if (!(i in responses)) {
+          unansweredIndices.push(i);
+        }
+      }
+      setUnanswered(unansweredIndices);
       return;
     }
+
+    setUnanswered([]);
 
     const result = calculateBigFive();
     console.log("Big Five Results:", result);
@@ -138,6 +147,7 @@ const PersonalityQuiz = () => {
         bigFivePersonality: result,
       });
       console.log("Big Five personality results updated in user profile.");
+      navigate("/user-profile");
     } catch (error) {
       console.error("Failed to update Firestore:", error);
     }
@@ -151,6 +161,9 @@ const PersonalityQuiz = () => {
     { value: "5", label: "Strongly Agree" },
   ];
   const { collapsed } = useSidebar();
+
+  const answeredCount = Object.keys(responses).length;
+  const progressPercent = (answeredCount / 44) * 100;
 
   return (
     <div
@@ -183,11 +196,32 @@ const PersonalityQuiz = () => {
           </CardHeader>
 
           <CardContent>
+            {/* Progress Bar */}
+            <div className="mb-4 sticky top-0 py-2 z-10">
+              <div className="w-full bg-white/20 rounded-full h-3">
+                <div
+                  className="bg-blue-600 h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+              <div className="text-white text-sm mt-1">
+                {answeredCount} / 44 answered
+              </div>
+            </div>
+
+            {unanswered.length > 0 && (
+              <p className="text-red-400 mb-4">
+                Please answer all questions. You missed: {unanswered.map(i => i+1).join(", ")}
+              </p>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-8">
               {personalityTraits.map((trait, index) => (
                 <div
                   key={index}
-                  className="space-y-4 p-6 rounded-lg bg-white/5 border border-white/10"
+                  className={`space-y-4 p-6 rounded-lg bg-white/5 border ${
+                    unanswered.includes(index) ? "border-red-500" : "border-white/10"
+                  }`}
                 >
                   <Label className="text-white text-lg font-medium">
                     {index + 1}. {trait}
@@ -233,7 +267,6 @@ const PersonalityQuiz = () => {
               <div className="flex justify-center pt-8">
                 <Button
                   type="submit"
-                  onClick={() => navigate("/user-profile")}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transition-all"
                 >
                   Complete Assessment

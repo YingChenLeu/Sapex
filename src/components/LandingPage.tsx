@@ -65,7 +65,7 @@ function LandingPage() {
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4 pt-24">
         <img src={Logo} alt="Sapex Logo" className="w-35 h-35 mb-5 animate-pulse" />
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-[#D8DEDE] to-[#A8D3CC] bg-clip-text text-transparent">
-          Welcome to <span className="edu-font">Sapex</span>
+          Welcome to <span className="font-syncopate">Sapex</span>
         </h1>
         <p className="text-lg md:text-xl mb-8 max-w-2xl text-[#D8DEDE]/90">
           A safe, supportive online community built for your school — where students can ask questions, post problems, and get help from your fellow peers.

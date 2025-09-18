@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { motion, AnimatePresence } from "framer-motion";
 const SidebarContext = createContext<{
   collapsed: boolean;
   toggleCollapsed: () => void;
@@ -44,6 +45,8 @@ import { auth } from "@/lib/firebase";
 function SideBar() {
   const navigate = useNavigate();
   const { collapsed, toggleCollapsed } = useSidebar();
+
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -169,7 +172,7 @@ function SideBar() {
         {collapsed ? "→" : "←"}
       </button>
 
-      <div className="mt-auto mb-10 flex flex-col gap-4">
+      <div className="mt-auto mb-10 flex flex-col gap-4 relative">
         {isAdmin && (
           <button
             onClick={() => navigate("/admin")}
@@ -190,7 +193,7 @@ function SideBar() {
           </button>
         )}
         <button
-          onClick={handleLogout}
+          onClick={() => setShowLogoutConfirm(true)}
           className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
         >
           <div className="flex items-center justify-center w-10 rounded-full">
@@ -206,6 +209,40 @@ function SideBar() {
             </p>
           )}
         </button>
+        <AnimatePresence>
+          {showLogoutConfirm && (
+            <motion.div
+              className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="bg-[#181b24] text-white p-6 rounded-lg shadow-lg border border-gray-600 w-80"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <p className="mb-4 text-center">Are you sure you want to log out?</p>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setShowLogoutConfirm(false)}
+                    className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

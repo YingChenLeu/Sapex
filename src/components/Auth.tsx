@@ -72,6 +72,7 @@ const Auth = () => {
               Neuroticism: 0,
             },
             online: true,
+            busy: false,
           });
         } else {
           const currentData = userSnap.data();
@@ -197,6 +198,7 @@ const Auth = () => {
           Neuroticism: 0,
         },
         online: true,
+        busy: false,
       });
 
       navigate("/helpboard");

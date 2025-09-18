@@ -1,37 +1,38 @@
 import { UserRound, Users, LogIn, Leaf } from "lucide-react";
 import { Button } from "./ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const location = useLocation();
-  const isOnInitiativePage = location.pathname === "/initiative";
-  const isOnAboutDev = location.pathname === "/developer";
-  const isOnCommunity = location.pathname === "/community";
+
 
   return (
-    <nav className="bg-[#181b24] text-[#D8DEDE] p-4 fixed top-0 w-full z-50">
+    <nav className="bg-[#181b24] text-[#D8DEDE] py-2 px-4 fixed top-0 w-full z-50">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-6">
+          <Link to="/" className="flex items-center">
+            <img src="src/assets/simple-logo.png" alt="Logo" className="h-15" />
+            <span className="ml-2 text-2xl font-syncopate">SAPEX</span>
+          </Link>
           <Link
-            to={isOnInitiativePage ? "/" : "/initiative"}
+            to={"/initiative"}
             className="flex items-center space-x-2 hover:text-[#A8D3CC] transition-colors"
           >
             <Leaf size={20} />
-            <span>{isOnInitiativePage ? "Home" : "Initiative"}</span>
+            <span>{"Initiative"}</span>
           </Link>
           <Link
-            to={isOnAboutDev ? "/" : "/developer"}
+            to={"/developer"}
             className="flex items-center space-x-2 hover:text-[#A8D3CC] transition-colors"
           >
             <UserRound size={20} />
-            <span>{isOnAboutDev ? "Home" : "About the Dev"}</span>
+            <span>{"About the Dev"}</span>
           </Link>
           <Link
-            to={isOnCommunity ? "/" : "/community"}
+            to={"/community"}
             className="flex items-center space-x-2 hover:text-[#A8D3CC] transition-colors"
           >
             <Users size={20} />
-            <span>{isOnCommunity ? "Home" : "Community"}</span>
+            <span>{"Community"}</span>
           </Link>
 
         </div>

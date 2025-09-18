@@ -276,10 +276,13 @@ export const ProblemChatDialog = ({
 
     await Promise.all(
       Array.from(uniqueUserIds).map((uid) =>
-        addDoc(collection(db, "users", uid, "contributions"), {
-          category,
-          timestamp: serverTimestamp(),
-        })
+        setDoc(
+          doc(db, "users", uid, "contributions", problem.id),
+          {
+            category,
+            timestamp: serverTimestamp(),
+          }
+        )
       )
     );
 

@@ -10,7 +10,6 @@ import {
 import { MessageCircle, Paperclip, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { useEffect, useState } from "react";
 import { DisplayImage } from "./DisplayImage";
@@ -73,7 +72,10 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
       transition: { type: "spring", stiffness: 300, damping: 20 },
     }}
   >
-    <Card className="h-full flex flex-col w-auto">
+    <Card
+      className="h-full flex flex-col w-auto cursor-pointer"
+      onClick={() => onHelpClick(problem)}
+    >
       {/* Header */}
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start mb-2">
@@ -145,40 +147,29 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
           </div>
         </div>
 
-        {/* Attachments and Help Button */}
-        <div className="flex justify-between items-center w-full">
-          <div className="flex gap-4">
-            {/* Responses */}
-            <div className="flex items-center gap-1 text-muted-foreground text-sm">
-              <MessageCircle size={16} />
-              <span>{messageCount}</span>
-            </div>
-
-            {/* Attachments */}
-            {problem.image ? (
-              <div
-                onClick={() => setIsImageDialogOpen(true)}
-                className="flex items-center gap-1 text-muted-foreground text-sm cursor-pointer hover:text-white transition-colors"
-              >
-                <Paperclip size={16} />
-                <span>1 Attachment</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1 text-muted-foreground text-sm">
-                <Paperclip size={16} />
-                <span>No Attachments</span>
-              </div>
-            )}
+        {/* Attachments */}
+        <div className="flex gap-4">
+          {/* Responses */}
+          <div className="flex items-center gap-1 text-muted-foreground text-sm">
+            <MessageCircle size={16} />
+            <span>{messageCount}</span>
           </div>
 
-          {/* Help Solve Button */}
-          <Button
-            variant="default"
-            className="bg-discord-primary hover:bg-discord-primary/90 hover:text-white text-[#9abbbf] rounded-lg px-4 py-2"
-            onClick={() => onHelpClick(problem)}
-          >
-            Help Solve
-          </Button>
+          {/* Attachments */}
+          {problem.image ? (
+            <div
+              onClick={(e) => { e.stopPropagation(); setIsImageDialogOpen(true); }}
+              className="flex items-center gap-1 text-muted-foreground text-sm cursor-pointer hover:text-white transition-colors"
+            >
+              <Paperclip size={16} />
+              <span>1 Attachment</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 text-muted-foreground text-sm">
+              <Paperclip size={16} />
+              <span>No Attachments</span>
+            </div>
+          )}
         </div>
       </CardFooter>
     </Card>
