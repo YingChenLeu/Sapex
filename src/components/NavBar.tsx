@@ -1,7 +1,6 @@
 import { UserRound, Users, LogIn, Leaf } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import Logo from "@/assets/simple-logo.png";
 
 const Navbar = () => {
 
@@ -11,7 +10,7 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-6">
           <Link to="/" className="flex items-center">
-            <img src={Logo} alt="Logo" className="h-15" />
+            <img src="/simple-logo.png" alt="Logo" className="h-15" />
             <span className="ml-2 text-2xl font-syncopate">SAPEX</span>
           </Link>
           <Link
