@@ -36,7 +36,7 @@ import {
   LogOut,
   Hexagon,
 } from "lucide-react";
-import Logo from "@/assets/simple-logo.png";
+
 import { Link } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -79,7 +79,7 @@ function SideBar() {
       <Link to="/helpboard" className="flex items-center top-20">
         <div className="flex items-center">
           <img
-            src={Logo}
+            src="/simple-logo.png"
             alt="Sapex Logo"
             className={`w-15 h-15 mb-5 mt-1  animate-pulse ease-in-out duration-300 ${
               collapsed ? "mx-auto ml-[9px]" : ""

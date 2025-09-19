@@ -68,7 +68,7 @@ body {
 
 @font-face {
   font-family: "Syncopate";
-  src: url("src/assets/Syncopate-Regular.ttf") format("truetype");
+  src: url("/Syncopate-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
