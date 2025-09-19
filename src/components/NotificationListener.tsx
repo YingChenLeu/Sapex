@@ -1,8 +1,6 @@
-
-
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface NotificationListenerProps {
@@ -23,8 +21,9 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({ uid }) => {
 
     const unsub = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
+        if ((change.type === "added" || change.type === "modified") && !change.doc.data().notified) {
           setMatch({ id: change.doc.id, ...change.doc.data() });
+          updateDoc(doc(db, "esupport", change.doc.id), { notified: true });
         }
       });
     });
@@ -51,13 +50,17 @@ const NotificationListener: React.FC<NotificationListenerProps> = ({ uid }) => {
               <button
                 onClick={() => {
                   window.location.href = `/chat/${match.id}`;
+                  updateDoc(doc(db, "esupport", match.id), { notified: true });
                 }}
                 className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
               >
                 Join Chat
               </button>
               <button
-                onClick={() => setMatch(null)}
+                onClick={() => {
+                  updateDoc(doc(db, "esupport", match.id), { notified: true });
+                  setMatch(null);
+                }}
                 className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded"
               >
                 Dismiss

@@ -107,7 +107,7 @@ const HelpBoard = () => {
 
   return (
     <div className={`bg-[#0A0D17] pt-[30px] min-h-screen ${collapsed ? "pl-[130px]" : "pl-[280px]"} transition-all duration-300`}>
-      <h1 className="text-3xl font-bold text-white font-syncopate">SAPEX Academic Center</h1>
+      <h1 className="text-3xl font-bold text-white font-syncopate">Academic Center</h1>
       <p className="text-muted-foreground mt-1">
         Post your problems and help others solve theirs
       </p>

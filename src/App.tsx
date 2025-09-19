@@ -60,6 +60,35 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!uid) return;
+
+    const userRef = doc(db, "users", uid);
+
+    const handleVisibilityChange = async () => {
+      try {
+        if (document.visibilityState === "visible") {
+          await updateDoc(userRef, {
+            online: true,
+            lastActive: serverTimestamp(),
+          });
+        } else {
+          await updateDoc(userRef, {
+            online: false,
+            lastActive: serverTimestamp(),
+          });
+        }
+      } catch (err) {
+        console.error("Failed to update visibility status", err);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [uid]);
+
+  useEffect(() => {
     const uid = localStorage.getItem("uid");
     if (!uid) return;
 
