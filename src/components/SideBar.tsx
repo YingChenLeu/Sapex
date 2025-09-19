@@ -87,11 +87,11 @@ function SideBar() {
           />
           {!collapsed && (
             <p
-              className={`transition-opacity ease-in-out duration-900 ${
+              className={`transition-opacity ease-in-out duration-900 font-syncopate font- ${
                 collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
               } mb-[20px] text-lg `}
             >
-              Sapex Dashboard
+              SAPEX Global
             </p>
           )}
         </div>
