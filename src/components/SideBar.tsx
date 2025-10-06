@@ -72,7 +72,7 @@ function SideBar() {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-screen z-100 ${
+      className={`fixed top-0 left-0 h-screen z-100 rounded-tl-md rounded-tr-md ${
         collapsed ? "w-20" : "w-60"
       } m-0 flex flex-col bg-[#181b24] text-[#D8DEDE] shadow-lg space-y-[20px] border-r-[0.5px] border-r-black transition-all duration-300`}
     >
@@ -224,7 +224,9 @@ function SideBar() {
                 exit={{ scale: 0.8, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <p className="mb-4 text-center">Are you sure you want to log out?</p>
+                <p className="mb-4 text-center">
+                  Are you sure you want to log out?
+                </p>
                 <div className="flex justify-center gap-4">
                   <button
                     onClick={handleLogout}

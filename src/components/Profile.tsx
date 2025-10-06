@@ -258,7 +258,7 @@ const Profile = () => {
                       outerRadius="80%"
                       data={Object.entries(profile.bigFivePersonality).map(([trait, score]) => ({
                         trait,
-                        value: score * 100,
+                        value: Math.min(score * 120, 100),
                       }))}
                     >
                       <PolarGrid />
