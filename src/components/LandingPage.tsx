@@ -38,28 +38,7 @@ function IconGlobe() {
 function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] flex flex-col">
-      {/* Top nav */}
-      <header className="fixed left-0 right-0 top-0 z-40 bg-[#0A0D17]/70 backdrop-blur border-b border-white/5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={Logo} alt="Sapex Logo" className="w-8 h-8" />
-            <span className="font-semibold tracking-wide">Sapex</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-[#D8DEDE]/80">
-            <a href="#features" className="hover:text-[#A8D3CC]">Features</a>
-            <a href="#how-it-works" className="hover:text-[#A8D3CC]">How it works</a>
-            <a href="#testimonials" className="hover:text-[#A8D3CC]">Love</a>
-            <a href="#faq" className="hover:text-[#A8D3CC]">FAQ</a>
-          </nav>
-          <div className="hidden md:block">
-            <a
-              href={`mailto:sapexglobalyouth@gmail.com?subject=Bring Sapex to My Community&body=Name:%0D%0ASchool Name:%0D%0ACity:%0D%0ACountry:%0D%0AEmail Address:%0D%0AYour School Email Domain:%0D%0ADoes Your School use Google Sign In?:`}
-            >
-              <Button className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53] transition-colors">Bring to Your School</Button>
-            </a>
-          </div>
-        </div>
-      </header>
+    
 
       {/* Hero */}
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4 pt-24">
