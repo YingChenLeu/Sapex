@@ -73,6 +73,7 @@ const Auth = () => {
             },
             online: true,
             busy: false,
+            helper: false,
           });
         } else {
           const currentData = userSnap.data();
@@ -199,6 +200,7 @@ const Auth = () => {
         },
         online: true,
         busy: false,
+        helper: false,
       });
 
       navigate("/helpboard");

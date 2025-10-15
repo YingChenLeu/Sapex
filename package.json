@@ -27,6 +27,7 @@
     "emoji-picker-react": "^4.12.2",
     "firebase": "^11.6.0",
     "framer-motion": "^12.9.2",
+    "ldrs": "^1.1.7",
     "lucide-react": "^0.501.0",
     "mathlive": "^0.105.3",
     "ogl": "^1.0.11",

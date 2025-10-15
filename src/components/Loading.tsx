@@ -2,6 +2,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { updateDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useState, useEffect } from "react";
+import { Helix } from "ldrs/react";
+import "ldrs/react/Helix.css";
 
 const LoadingScreen = () => {
   const [loadingText, setLoadingText] = useState("Finding someone to help...");
@@ -64,6 +66,12 @@ const LoadingScreen = () => {
         const response = await fetch(endpointUrl);
         const data = await response.json();
 
+        if (!data || !data.helper_uid) {
+          alert("Unable to Find Match");
+          navigate("/wellness-support");
+          return;
+        }
+
         console.log("FastAPI returned:", data);
 
         try {
@@ -87,9 +95,16 @@ const LoadingScreen = () => {
 
     fetchMatch(); // Trigger the match call on component mount
 
+    // Timeout fallback if no match after 3 minutes
+    const timeoutId = setTimeout(() => {
+      alert("Unable to Find Match");
+      navigate("/wellness-support");
+    }, 180000);
+
     return () => {
       clearInterval(textInterval);
       clearInterval(dotsInterval);
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -103,7 +118,7 @@ const LoadingScreen = () => {
     >
       <div className="text-center space-y-8">
         <div className="relative">
-          <div className="w-24 h-24 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
+          <Helix size="70" speed="2.5" color="black" />
         </div>
 
         <div className="space-y-4">
