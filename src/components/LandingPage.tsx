@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import Logo from "@/assets/leaf&crow.png";
+import Logo from "@/assets/sapexlogo.png";
 import MetaBalls from "./ui/MetaBalls";
 import CircularText from "./CircularText";
 
