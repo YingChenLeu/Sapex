@@ -1,7 +1,8 @@
 import { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useSidebar } from "../components/SideBar";
 import { useState } from "react";
@@ -17,10 +18,19 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { NoiseBackground } from "@/components/ui/noise-background";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -35,6 +45,7 @@ const Profile = () => {
     posted: 0,
     joined: "",
     reputation: 0,
+    helper: false,
     bigFivePersonality: {
       Extraversion: 0,
       Agreeableness: 0,
@@ -43,6 +54,10 @@ const Profile = () => {
       Openness: 0,
     },
   });
+
+  const [showHelperDialog, setShowHelperDialog] = useState(false);
+  const [activatingHelper, setActivatingHelper] = useState(false);
+  const [showDeactivateDialog, setShowDeactivateDialog] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
@@ -65,6 +80,7 @@ const Profile = () => {
             posted: userData.posted || 0,
             joined: userData.joined || "",
             reputation: userData.reputation || 0,
+            helper: userData.helper || false,
             bigFivePersonality: userData.bigFivePersonality || {
               Extraversion: 0,
               Agreeableness: 0,
@@ -124,6 +140,53 @@ const Profile = () => {
 
   const handlePersonalityQuiz = () => {
     navigate("/personality-quiz");
+  };
+
+  const handleBecomeHelper = async () => {
+    try {
+      setActivatingHelper(true);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const userDocRef = doc(db, "users", user.uid);
+      await updateDoc(userDocRef, {
+        helper: true,
+        helperActivatedAt: serverTimestamp(),
+      });
+
+      setProfile((prev) => ({ ...prev, helper: true }));
+      toast.success("You are now a Sapex Helper.");
+    } catch (error) {
+      console.error("Error activating helper:", error);
+      toast.error("Failed to activate Sapex Helper.");
+    } finally {
+      setActivatingHelper(false);
+      setShowHelperDialog(false);
+    }
+  };
+
+  const handleDeactivateHelper = async () => {
+    try {
+      setActivatingHelper(true);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const userDocRef = doc(db, "users", user.uid);
+      await updateDoc(userDocRef, {
+        helper: false,
+      });
+
+      setProfile((prev) => ({ ...prev, helper: false }));
+      toast.success("Sapex Helper deactivated.");
+    } catch (error) {
+      console.error("Error deactivating helper:", error);
+      toast.error("Failed to deactivate Sapex Helper.");
+    } finally {
+      setActivatingHelper(false);
+      setShowDeactivateDialog(false);
+    }
   };
 
   return (
@@ -309,6 +372,113 @@ const Profile = () => {
           </Card>
         </div>
       </div>
+      <div
+        className={`mt-10 flex ${
+          collapsed ? "justify-start pl-6" : "justify-start pl-10"
+        } transition-all duration-300`}
+      >
+        <NoiseBackground
+          gradientColors={["#A5B4FC", "#93C5FD", "#BAE6FD"]}
+          noiseIntensity={0.12}
+          speed={0.35}
+          backdropBlur
+        >
+          <div className="px-4 py-3">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={profile.helper ? "active" : "inactive"}
+                initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.97 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+              >
+                {profile.helper ? (
+                  <Button
+                    onClick={() => setShowDeactivateDialog(true)}
+                    className="bg-indigo-500/90 hover:bg-indigo-500 text-white px-7 py-2.5 text-sm rounded-full shadow-sm"
+                  >
+                    Sapex Active
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => setShowHelperDialog(true)}
+                    className="bg-indigo-400/90 hover:bg-indigo-400 text-white px-7 py-2.5 text-sm rounded-full shadow-sm"
+                  >
+                    Become a Sapex Helper
+                  </Button>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </NoiseBackground>
+      </div>
+      <div className="mt-3 max-w-sm text-xs text-muted-foreground leading-relaxed">
+        <p>
+          Being a Sapex Helper means supporting others with respect, patience, and
+          empathy.
+        </p>
+        <p className="mt-1">
+          Sapex is not a social media platform — it’s a space for guidance, learning,
+          and constructive help.
+        </p>
+        <p className="mt-1">
+          Abuse, ego-driven behavior, or judgment of others goes against the purpose
+          of this role.
+        </p>
+      </div>
+      <Dialog open={showHelperDialog} onOpenChange={setShowHelperDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Become a Sapex Helper</DialogTitle>
+            <DialogDescription>
+              By becoming a Sapex Helper, you must be respectful and be helpful to
+              students to the best of your ability and support the person through a
+              tough time.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowHelperDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleBecomeHelper}
+              disabled={activatingHelper}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {activatingHelper ? "Activating..." : "I Agree"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={showDeactivateDialog} onOpenChange={setShowDeactivateDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Deactivate Sapex Helper</DialogTitle>
+            <DialogDescription>
+              You will no longer appear as a Sapex Helper and won’t be expected to
+              support students. You can re-activate at any time.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowDeactivateDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeactivateHelper}
+              disabled={activatingHelper}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {activatingHelper ? "Deactivating..." : "Deactivate"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
