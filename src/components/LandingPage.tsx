@@ -174,43 +174,16 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section id="testimonials" className="py-16 md:py-24 border-t border-white/5 bg-white/5">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Students are saying…</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                quote: "I finally asked that question I was scared to ask in class. Got three answers in minutes.",
-                name: "Avery, Grade 11",
-              },
-              {
-                quote: "Our math club posts weekly tips—it's become the go-to spot before tests.",
-                name: "Nandi, Grade 10",
-              },
-              {
-                quote: "Anonymous option is clutch. No judgment, just help.",
-                name: "Leo, Grade 12",
-              },
-            ].map(({ quote, name }) => (
-              <figure key={name} className="rounded-2xl border border-white/10 bg-[#0C111C] p-6">
-                <blockquote className="text-sm text-[#D8DEDE]/90">“{quote}”</blockquote>
-                <figcaption className="mt-3 text-xs text-[#D8DEDE]/70">— {name}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-16 md:py-24 border-t border-white/5">
+      <section id="faq" className="py-16 md:py-24 border-t border-white/5 bg-white/5">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">FAQ</h2>
           <div className="space-y-4">
             {[
               {
                 q: "Is Sapex anonymous?",
-                a: "You can post either as yourself or anonymously. Your school login verifies you're a real student first.",
+                a: "You can post either as yourself or anonymously. Your google login verifies you're a real student first.",
               },
               {
                 q: "How do schools get access?",
