@@ -1,49 +1,58 @@
 import { UserRound, Users, LogIn, Leaf } from "lucide-react";
 import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+const navLinks = [
+  { to: "/initiative", label: "Initiative", icon: Leaf },
+  { to: "/developer", label: "About", icon: UserRound },
+  { to: "/community", label: "Communities", icon: Users },
+] as const;
 
 const Navbar = () => {
-
+  const location = useLocation();
 
   return (
-    <nav className="bg-gradient-to-r from-[#40414f] via-[#20232E] to-[#1E1F29] text-[#D8DEDE] py-2 px-4 fixed top-6 left-1/2 transform -translate-x-1/2 w-[90%] rounded-xl shadow-xl z-50">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          <Link to="/" className="flex items-center">
-            <img src="/simple-logo.png" alt="Logo" className="h-15" />
-            <span className="ml-2 text-2xl font-syncopate">SAPEX</span>
-          </Link>
-          <Link
-            to={"/initiative"}
-            className="flex items-center space-x-2 hover:text-[#A8D3CC] transition-colors"
-          >
-            <Leaf size={20} />
-            <span>{"Initiative"}</span>
-          </Link>
-          <Link
-            to={"/developer"}
-            className="flex items-center space-x-2 hover:text-[#A8D3CC] transition-colors"
-          >
-            <UserRound size={20} />
-            <span>{"About the Dev"}</span>
-          </Link>
-          <Link
-            to={"/community"}
-            className="flex items-center space-x-2 hover:text-[#A8D3CC] transition-colors"
-          >
-            <Users size={20} />
-            <span>{"Community"}</span>
-          </Link>
+    <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-5xl z-50 rounded-2xl border border-white/10 bg-[#0C111C]/90 backdrop-blur-md shadow-lg shadow-black/20 py-2.5 px-4 sm:px-6">
+      <div className="flex items-center justify-between gap-4">
+        <Link
+          to="/"
+          className="flex items-center gap-2 shrink-0 hover:opacity-90 transition-opacity"
+        >
+          <img src="/simple-logo.png" alt="Sapex" className="h-8 w-auto" />
+          <span className="text-xl font-syncopate font-semibold text-white">
+            SAPEX
+          </span>
+        </Link>
 
+        <div className="flex items-center gap-1 sm:gap-2">
+          {navLinks.map(({ to, label, icon: Icon }) => {
+            const isActive = location.pathname === to;
+            return (
+              <Link
+                key={to}
+                to={to}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? "text-[#A8D3CC] bg-[#A8D3CC]/10"
+                    : "text-[#D8DEDE]/80 hover:text-[#A8D3CC] hover:bg-white/5"
+                }`}
+              >
+                <Icon size={18} className="shrink-0" />
+                <span className="hidden sm:inline">{label}</span>
+              </Link>
+            );
+          })}
         </div>
+
         <Button
           variant="outline"
+          size="sm"
           asChild
-          className="bg-transparent border-[#A8D3CC] text-[#D8DEDE] hover:bg-[#A8D3CC] hover:text-[#2D4F53]"
+          className="shrink-0 border-[#A8D3CC]/50 text-[#D8DEDE] hover:bg-[#A8D3CC] hover:text-[#2D4F53] hover:border-[#A8D3CC]"
         >
-          <Link to="/login">
-            <LogIn className="mr-2" size={20} />
-            Login
+          <Link to="/login" className="flex items-center gap-2">
+            <LogIn size={18} />
+            <span>Login</span>
           </Link>
         </Button>
       </div>

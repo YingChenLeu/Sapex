@@ -13,6 +13,8 @@ import { Routes, Route } from "react-router-dom";
 import SideBar, { SidebarProvider } from "./components/SideBar";
 import Auth from "./components/Auth";
 import HelpBoard from "./components/HelpBoard";
+import { OriginsLab } from "./components/OriginsLab";
+import StudyRooms from "./components/StudyRooms";
 import PostProblem from "./components/PostProblem";
 import Contributions from "./components/Contribution";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -23,6 +25,7 @@ import PersonalityQuiz from "./components/Big5Personality";
 import Matching from "./components/Loading";
 import ChatPage from "./components/Chat";
 import NotificationListener from "./components/NotificationListener";
+import Main from "./components/Main";
 
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -146,6 +149,15 @@ function App() {
             }
           />
           <Route
+            path="/main"
+            element={
+              <div>
+                <SideBar />
+                <Main />
+              </div>
+            }
+          />
+          <Route
             path="/initiative"
             element={
               <div>
@@ -155,10 +167,11 @@ function App() {
             }
           />
           <Route
-            path="/sapex-global"
+            path="/study-rooms"
             element={
               <div>
-                <StillInDevelopment />
+                <StudyRooms />
+                <SideBar />
               </div>
             }
           />
@@ -227,6 +240,17 @@ function App() {
                 <div>
                   <SideBar />
                   <HelpBoard />
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/origins-lab"
+            element={
+              <ProtectedRoute>
+                <div>
+                  <SideBar />
+                  <OriginsLab />
                 </div>
               </ProtectedRoute>
             }

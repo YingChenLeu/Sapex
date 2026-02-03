@@ -6,9 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { db } from "../lib/firebase";
+import { db, app } from "../lib/firebase";
 import { getAuth } from "firebase/auth";
-import { collection, addDoc, serverTimestamp, getDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  getDoc,
+  doc,
+} from "firebase/firestore";
 import { FileUpload } from "@/components/ui/file-upload";
 import {
   Select,
@@ -29,6 +35,8 @@ const PostProblem = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<CourseCategory | "">(
     ""
   );
@@ -226,16 +234,46 @@ const PostProblem = () => {
             <Label>Image (optional)</Label>
             <FileUpload
               onChange={async (files) => {
-                if (files && files[0]) {
-                  const file = files[0];
-                  const storage = getStorage();
-                  const storageRef = ref(storage, `problemImages/${file.name}-${Date.now()}`);
+                if (!files?.length) return;
+                const file = files[0];
+                const isImage = file.type.startsWith("image/");
+                if (!isImage) {
+                  setUploadError(
+                    "Please upload an image file (e.g. JPEG, PNG)."
+                  );
+                  return;
+                }
+                setUploadError(null);
+                setIsUploading(true);
+                try {
+                  const storage = getStorage(app);
+                  const currentUser = getAuth().currentUser;
+                  const path = `problemImages/${
+                    currentUser?.uid ?? "anon"
+                  }/${Date.now()}-${file.name}`;
+                  const storageRef = ref(storage, path);
                   await uploadBytes(storageRef, file);
                   const downloadURL = await getDownloadURL(storageRef);
                   setSelectedImage(downloadURL);
+                } catch (err) {
+                  console.error("Upload failed:", err);
+                  setUploadError(
+                    err instanceof Error
+                      ? err.message
+                      : "Upload failed. Try again."
+                  );
+                  setSelectedImage(null);
+                } finally {
+                  setIsUploading(false);
                 }
               }}
             />
+            {isUploading && (
+              <p className="text-sm text-gray-400">Uploading image…</p>
+            )}
+            {uploadError && (
+              <p className="text-sm text-red-400">{uploadError}</p>
+            )}
             {selectedImage && (
               <div className="relative aspect-video w-full mt-4">
                 <img

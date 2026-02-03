@@ -13,7 +13,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { db } from "@/lib/firebase";
+import { db, app } from "@/lib/firebase";
+import { getStorage, ref, deleteObject } from "firebase/storage";
 import {
   collection,
   addDoc,
@@ -259,6 +260,26 @@ export const ProblemChatDialog = ({
   const handleDeletePost = async () => {
     if (!problem?.id) return;
 
+    // Delete associated image from Firebase Storage if present
+    if (
+      problem.image &&
+      problem.image.includes("firebasestorage.googleapis.com")
+    ) {
+      try {
+        const url = new URL(problem.image);
+        const pathMatch = url.pathname.match(/\/o\/(.+)$/);
+        if (pathMatch) {
+          const fullPath = decodeURIComponent(pathMatch[1]);
+          const storage = getStorage(app);
+          const storageRef = ref(storage, fullPath);
+          await deleteObject(storageRef);
+        }
+      } catch (err) {
+        console.error("Failed to delete problem image from Storage:", err);
+        // Continue to delete Firestore doc even if Storage delete fails
+      }
+    }
+
     const messagesRef = collection(db, "problems", problem.id, "messages");
     const snapshot = await getDocs(messagesRef);
 
@@ -276,13 +297,10 @@ export const ProblemChatDialog = ({
 
     await Promise.all(
       Array.from(uniqueUserIds).map((uid) =>
-        setDoc(
-          doc(db, "users", uid, "contributions", problem.id),
-          {
-            category,
-            timestamp: serverTimestamp(),
-          }
-        )
+        setDoc(doc(db, "users", uid, "contributions", problem.id), {
+          category,
+          timestamp: serverTimestamp(),
+        })
       )
     );
 

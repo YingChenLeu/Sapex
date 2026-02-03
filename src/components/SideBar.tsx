@@ -30,11 +30,13 @@ export const useSidebar = () => {
 };
 import {
   CircleUserRound,
-  Globe,
+  MessageSquareDot,
   ClockFading,
   Eclipse,
   LogOut,
   Hexagon,
+  Codesandbox,
+  BookOpenText,
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
@@ -76,7 +78,7 @@ function SideBar() {
         collapsed ? "w-20" : "w-60"
       } m-0 flex flex-col bg-[#181b24] text-[#D8DEDE] shadow-lg space-y-[20px] border-r-[0.5px] border-r-black transition-all duration-300`}
     >
-      <Link to="/helpboard" className="flex items-center top-20">
+      <Link to="/main" className="flex items-center top-20">
         <div className="flex items-center">
           <img
             src="/simple-logo.png"
@@ -112,21 +114,6 @@ function SideBar() {
         )}
       </Link>
 
-      <Link to="/sapex-global" className="sidebar-icon flex items-center gap-2">
-        <div className="flex items-center justify-center w-10 rounded-full">
-          <Globe size={20} />
-        </div>
-        {!collapsed && (
-          <p
-            className={`transition-opacity ease-in-out duration-900 ${
-              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-            } mr-[20px]`}
-          >
-            Sapex Global
-          </p>
-        )}
-      </Link>
-
       <Link
         to="/contributions"
         className="sidebar-icon flex items-center gap-2"
@@ -141,6 +128,21 @@ function SideBar() {
             } mr-[20px]`}
           >
             Contributions
+          </p>
+        )}
+      </Link>
+
+      <Link to="/helpboard" className="sidebar-icon flex items-center gap-2">
+        <div className="flex items-center justify-center w-10 rounded-full">
+          <BookOpenText size={20} />
+        </div>
+        {!collapsed && (
+          <p
+            className={`transition-opacity ease-in-out duration-900 ${
+              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+            } mr-[20px]`}
+          >
+            Academic Hub
           </p>
         )}
       </Link>
@@ -163,10 +165,40 @@ function SideBar() {
         )}
       </Link>
 
+      <Link to="/origins-lab" className="sidebar-icon flex items-center gap-2">
+        <div className="flex items-center justify-center w-10 rounded-full">
+          <Codesandbox size={20} />
+        </div>
+        {!collapsed && (
+          <p
+            className={`transition-opacity ease-in-out duration-900 ${
+              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+            } mr-[8px]`}
+          >
+            Origins Lab
+          </p>
+        )}
+      </Link>
+
+      <Link to="/study-rooms" className="sidebar-icon flex items-center gap-2">
+        <div className="flex items-center justify-center w-10 rounded-full">
+          <MessageSquareDot size={20} />
+        </div>
+        {!collapsed && (
+          <p
+            className={`transition-opacity ease-in-out duration-900 ${
+              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
+            } mr-[20px]`}
+          >
+            Study Rooms
+          </p>
+        )}
+      </Link>
+
       <button
         onClick={toggleCollapsed}
         className={`w-6 h-6 bg-[#181b24] text-white rounded-full border border-gray-700 shadow-md z-50 transition-all duration-300 ${
-          collapsed ? "mt-10 ml-15 text-white" : "mt-10 ml-55 text-white}"
+          collapsed ? "mt-10 ml-15 text-white" : "mt-10 ml-55 text-white"
         }`}
       >
         {collapsed ? "→" : "←"}
