@@ -13,7 +13,7 @@ import { Routes, Route } from "react-router-dom";
 import SideBar, { SidebarProvider } from "./components/SideBar";
 import Auth from "./components/Auth";
 import HelpBoard from "./components/HelpBoard";
-import { OriginsLab } from "./components/OriginsLab";
+
 import StudyRooms from "./components/StudyRooms";
 import PostProblem from "./components/PostProblem";
 import Contributions from "./components/Contribution";
