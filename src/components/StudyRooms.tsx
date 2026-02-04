@@ -10,7 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { BookOpen, Plus, Users, Clock, Video, User, Trash2 } from "lucide-react";
+import {
+  BookOpen,
+  Plus,
+  Users,
+  Clock,
+  Video,
+  User,
+  Trash2,
+} from "lucide-react";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { toast } from "sonner";
 import { getAuth } from "firebase/auth";
@@ -26,6 +34,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { incrementUsage } from "@/lib/stats";
 
 const STUDY_SESSIONS_COLLECTION = "studySessions";
 
@@ -89,7 +98,7 @@ const StudyRooms = () => {
       try {
         const q = query(
           collection(db, STUDY_SESSIONS_COLLECTION),
-          orderBy("createdAt", "desc")
+          orderBy("createdAt", "desc"),
         );
         const snapshot = await getDocs(q);
         const list: StudySession[] = snapshot.docs.map((docSnap) => {
@@ -148,6 +157,8 @@ const StudyRooms = () => {
         createdBy,
       });
 
+      await incrementUsage(db, "studyRoomsUsed");
+
       const newSession: StudySession = {
         id: docRef.id,
         subject: trimmed,
@@ -164,7 +175,8 @@ const StudyRooms = () => {
       setCreateError(null);
       toast.success("Study session created with Jitsi video room.");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to create study session.";
+      const message =
+        err instanceof Error ? err.message : "Failed to create study session.";
       setCreateError(message);
       console.error("Failed to create study session:", err);
       toast.error("Failed to create study session. Try again.");
@@ -331,7 +343,13 @@ const StudyRooms = () => {
                           variant="outline"
                           size="sm"
                           className="border-[#7CDCBD]/40 text-[#7CDCBD] hover:bg-[#7CDCBD]/10 hover:border-[#7CDCBD]/60"
-                          onClick={() => window.open(session.meetLink, "_blank", "noopener,noreferrer")}
+                          onClick={() =>
+                            window.open(
+                              session.meetLink,
+                              "_blank",
+                              "noopener,noreferrer",
+                            )
+                          }
                         >
                           <Video className="w-3.5 h-3.5 mr-1.5" />
                           Join video

@@ -16,6 +16,7 @@ import { FloatingDock } from "./ui/dock";
 import Threads from "./ui/threadAnimation";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { incrementUsage } from "@/lib/stats";
 import { Card, CardContent } from "./ui/card";
 
 const iconClass = "size-5 text-neutral-300";
@@ -85,6 +86,7 @@ const WellnessSupport = () => {
         text: "Conversation started.",
         timestamp: new Date(),
       });
+      await incrementUsage(db, "wellnessSupportUsed");
       window.location.href = `/finding-match?docId=${docRef.id}`;
     } catch (err) {
       console.error("Failed to create support doc:", err);

@@ -15,6 +15,7 @@ import {
   getDoc,
   doc,
 } from "firebase/firestore";
+import { incrementUsage } from "@/lib/stats";
 import { FileUpload } from "@/components/ui/file-upload";
 import {
   Select,
@@ -85,6 +86,7 @@ const PostProblem = () => {
         },
         responses: 0,
       });
+      await incrementUsage(db, "helpBoardUsed");
       navigate("/helpboard");
     } catch (error) {
       console.error("Error posting problem:", error);
