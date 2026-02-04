@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSidebar } from "./SideBar";
 import {
   Handshake,
@@ -104,42 +105,62 @@ const WellnessSupport = () => {
 
       <div className="relative z-10 mr-auto max-w-3xl pl-8 pr-6 flex flex-col items-start gap-10">
         {/* Hero */}
-        <header className="space-y-3 text-left">
-          <h1 className="text-3xl md:text-4xl font-serif font-semibold text-white tracking-tight">
+        <motion.header
+          className="space-y-3 text-left"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <h1 className="text-3xl font-bold text-white font-syncopate tracking-tight">
             Wellness Support
           </h1>
-          <p className="text-lg text-neutral-400 max-w-md">
-            Choose a topic and we’ll match you
-            with someone who can listen and support.
+          <p className="text-muted-foreground mt-1 max-w-md">
+            Choose a topic and we’ll match you with someone who can listen and
+            support.
           </p>
-        </header>
+        </motion.header>
 
         {/* Notice card */}
-        <Card className="w-full border-amber-500/30 bg-amber-950/20 backdrop-blur-sm shadow-lg">
-          <CardContent className="p-4 flex items-start gap-3">
-            <Info className="size-5 text-amber-400 shrink-0 mt-0.5" />
-            <div className="text-sm text-amber-100/90">
-              <span className="font-medium text-amber-200">
-                Before you start:
-              </span>{" "}
-              Please complete the{" "}
-              <a
-                href="/user-profile"
-                className="underline text-amber-300 hover:text-amber-200 font-medium"
-              >
-                personality test on your profile
-              </a>{" "}
-              so we can match you with the right peer.
-            </div>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.08, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <Card className="w-full border-amber-500/30 bg-amber-950/20 backdrop-blur-sm shadow-lg">
+            <CardContent className="p-4 flex items-start gap-3">
+              <Info className="size-5 text-amber-400 shrink-0 mt-0.5" />
+              <div className="text-sm text-amber-100/90">
+                <span className="font-medium text-amber-200">
+                  Before you start:
+                </span>{" "}
+                Please complete the{" "}
+                <a
+                  href="/user-profile"
+                  className="underline text-amber-300 hover:text-amber-200 font-medium"
+                >
+                  personality test on your profile
+                </a>{" "}
+                so we can match you with the right peer.
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Dock section */}
-        <section className="w-full flex flex-col items-start gap-6">
-          <p className="text-sm font-medium text-neutral-500 uppercase tracking-wider">
+        <motion.section
+          className="w-full flex flex-col items-start gap-6"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.16, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">
             Choose a topic
           </p>
-          <div className="w-full flex justify-start rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md px-6 py-5 shadow-xl">
+          <motion.div
+            className="w-full flex justify-start rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md px-6 py-5 shadow-xl"
+            whileHover={{ borderColor: "rgba(255,255,255,0.15)" }}
+            transition={{ duration: 0.2 }}
+          >
             <FloatingDock
               items={SUPPORT_OPTIONS.map(({ title, icon, type }) => ({
                 title,
@@ -148,30 +169,51 @@ const WellnessSupport = () => {
               }))}
               desktopClassName="max-w-full"
             />
-          </div>
-          {isSubmitting && (
-            <div className="flex items-center gap-2 text-neutral-400 text-sm">
-              <Loader2 className="size-4 animate-spin" />
-              <span>Finding your match…</span>
-            </div>
-          )}
-        </section>
+          </motion.div>
+          <AnimatePresence mode="wait">
+            {isSubmitting && (
+              <motion.div
+                className="flex items-center gap-2 text-gray-400 text-sm"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <Loader2 className="size-4 animate-spin shrink-0" />
+                <span>Finding your match…</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.section>
 
         {/* Data disclaimer */}
-        <footer className="w-full pt-4 border-t border-white/10">
+        <motion.footer
+          className="w-full pt-4 border-t border-white/10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.24, ease: [0.4, 0, 0.2, 1] }}
+        >
           <button
             type="button"
             onClick={() => setShowDisclaimer(!showDisclaimer)}
-            className="text-sm text-neutral-500 hover:text-neutral-400 underline underline-offset-2 transition-colors"
+            className="text-sm text-gray-500 hover:text-gray-400 underline underline-offset-2 transition-colors"
           >
             Data & privacy disclaimer
           </button>
-          {showDisclaimer && (
-            <p className="mt-2 text-sm text-neutral-400">
-              All data is stored and can be accessed.
-            </p>
-          )}
-        </footer>
+          <AnimatePresence>
+            {showDisclaimer && (
+              <motion.p
+                className="mt-2 text-sm text-gray-400"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                All data is stored and can be accessed.
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </motion.footer>
       </div>
     </div>
   );

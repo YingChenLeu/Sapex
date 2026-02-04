@@ -26,6 +26,7 @@ import Matching from "./components/Loading";
 import ChatPage from "./components/Chat";
 import NotificationListener from "./components/NotificationListener";
 import Main from "./components/Main";
+import { Toaster } from "sonner";
 
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -129,6 +130,7 @@ function App() {
   }, []);
   return (
     <>
+      <Toaster position="top-right" richColors closeButton />
       <SidebarProvider>
         <NotificationListener uid={uid} />
         <Routes>
@@ -169,10 +171,12 @@ function App() {
           <Route
             path="/study-rooms"
             element={
-              <div>
-                <StudyRooms />
-                <SideBar />
-              </div>
+              <ProtectedRoute>
+                <div>
+                  <StudyRooms />
+                  <SideBar />
+                </div>
+              </ProtectedRoute>
             }
           />
           <Route
@@ -250,7 +254,7 @@ function App() {
               <ProtectedRoute>
                 <div>
                   <SideBar />
-                  <OriginsLab />
+                  <StillInDevelopment />
                 </div>
               </ProtectedRoute>
             }

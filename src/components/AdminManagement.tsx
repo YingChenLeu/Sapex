@@ -33,7 +33,9 @@ const AdminManagement = () => {
 
   const handleViewMessages = async (chatId: string) => {
     try {
-      const messagesSnapshot = await getDocs(collection(db, "esupport", chatId, "messages"));
+      const messagesSnapshot = await getDocs(
+        collection(db, "esupport", chatId, "messages")
+      );
       const messagesData = messagesSnapshot.docs.map((doc) => doc.data());
       setSelectedMessages(messagesData);
       setSelectedChatId(chatId);
@@ -60,17 +62,28 @@ const AdminManagement = () => {
           const seekerSnap = await getDoc(doc(db, "users", docData.seeker_uid));
           const helperSnap = await getDoc(doc(db, "users", docData.helper_uid));
 
-          const seekerName = seekerSnap.exists() && seekerSnap.data().username
-            ? seekerSnap.data().username
-            : "Unknown Seeker";
-          const helperName = helperSnap.exists() && helperSnap.data().username
-            ? helperSnap.data().username
-            : "Unknown Supporter";
+          const seekerName =
+            seekerSnap.exists() && seekerSnap.data().username
+              ? seekerSnap.data().username
+              : "Unknown Seeker";
+          const helperName =
+            helperSnap.exists() && helperSnap.data().username
+              ? helperSnap.data().username
+              : "Unknown Supporter";
 
-          const messagesSnap = await getDocs(collection(db, "esupport", docSnap.id, "messages"));
+          const messagesSnap = await getDocs(
+            collection(db, "esupport", docSnap.id, "messages")
+          );
           const messageCount = messagesSnap.size;
 
-          console.log("Seeker:", seekerName, "Helper:", helperName, "Messages:", messageCount);
+          console.log(
+            "Seeker:",
+            seekerName,
+            "Helper:",
+            helperName,
+            "Messages:",
+            messageCount
+          );
 
           data.push({
             id: docSnap.id,
@@ -99,7 +112,11 @@ const AdminManagement = () => {
   const totalChats = chatSessions.length;
 
   return (
-    <div className={`min-h-screen bg-gray-50 p-6 ${collapsed ? "pl-[130px]" : "pl-[280px]"} transition-all duration-300`}>
+    <div
+      className={`min-h-screen bg-gray-50 p-6 ${
+        collapsed ? "pl-[130px]" : "pl-[280px]"
+      } transition-all duration-300`}
+    >
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -182,8 +199,12 @@ const AdminManagement = () => {
                     <TableCell className="font-mono text-sm">
                       {chat.id}
                     </TableCell>
-                    <TableCell className="text-gray-900">{chat.seekerName}</TableCell>
-                    <TableCell className="text-gray-900">{chat.helperName}</TableCell>
+                    <TableCell className="text-gray-900">
+                      {chat.seekerName}
+                    </TableCell>
+                    <TableCell className="text-gray-900">
+                      {chat.helperName}
+                    </TableCell>
                     <TableCell className="max-w-xs truncate text-gray-900">
                       {chat.userIssue}
                     </TableCell>
@@ -198,7 +219,9 @@ const AdminManagement = () => {
                         {chat.status}
                       </span>
                     </TableCell>
-                    <TableCell className="text-gray-900">{chat.messageCount}</TableCell>
+                    <TableCell className="text-gray-900">
+                      {chat.messageCount}
+                    </TableCell>
                     <TableCell>
                       <button
                         onClick={() => handleViewMessages(chat.id)}
@@ -217,11 +240,22 @@ const AdminManagement = () => {
 
         {showMessages && (
           <div className="mt-8 bg-white p-4 rounded shadow-md border border-gray-200">
-            <h2 className="text-lg font-semibold mb-2">Messages for Chat ID: {selectedChatId}</h2>
+            <h2 className="text-lg font-semibold mb-2">
+              Messages for Chat ID: {selectedChatId}
+            </h2>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {selectedMessages.map((msg, idx) => (
                 <div key={idx} className="text-sm border-b pb-2">
-                  <p><span className="font-medium">{msg.user?.name || "Unknown"}</span> at <span className="text-gray-500">{new Date(msg.createdAt?.seconds * 1000).toLocaleString()}</span>:</p>
+                  <p>
+                    <span className="font-medium">
+                      {msg.user?.name || "Unknown"}
+                    </span>{" "}
+                    at{" "}
+                    <span className="text-gray-500">
+                      {new Date(msg.createdAt?.seconds * 1000).toLocaleString()}
+                    </span>
+                    :
+                  </p>
                   <p className="text-gray-800">{msg.content}</p>
                 </div>
               ))}

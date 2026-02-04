@@ -2,6 +2,22 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  CircleUserRound,
+  Video,
+  Clock,
+  Eclipse,
+  LogOut,
+  Hexagon,
+  Codesandbox,
+  BookOpenText,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+
 const SidebarContext = createContext<{
   collapsed: boolean;
   toggleCollapsed: () => void;
@@ -12,7 +28,7 @@ export const SidebarProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [collapsed, setCollapsed] = useState(true); // default (true is collapsed)
+  const [collapsed, setCollapsed] = useState(true);
   const toggleCollapsed = () => setCollapsed((prev) => !prev);
 
   return (
@@ -28,37 +44,21 @@ export const useSidebar = () => {
     throw new Error("useSidebar must be used within SidebarProvider");
   return context;
 };
-import {
-  CircleUserRound,
-  MessageSquareDot,
-  ClockFading,
-  Eclipse,
-  LogOut,
-  Hexagon,
-  Codesandbox,
-  BookOpenText,
-} from "lucide-react";
 
-import { Link } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "@/lib/firebase";
+const navItems = [
+  { to: "/user-profile", icon: CircleUserRound, label: "Profile" },
+  { to: "/contributions", icon: Clock, label: "Contributions" },
+  { to: "/helpboard", icon: BookOpenText, label: "Academic Hub" },
+  { to: "/wellness-support", icon: Eclipse, label: "Wellness" },
+  { to: "/origins-lab", icon: Codesandbox, label: "Origins Lab" },
+  { to: "/study-rooms", icon: Video, label: "Study Rooms" },
+];
 
 function SideBar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { collapsed, toggleCollapsed } = useSidebar();
-
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      localStorage.clear(); // clear any cached user info
-      navigate("/"); // redirect to login or landing
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  };
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -72,213 +72,229 @@ function SideBar() {
     fetchAdminStatus();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.clear();
+      navigate("/");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
   return (
-    <div
-      className={`fixed top-0 left-0 h-screen z-100 rounded-tl-md rounded-tr-md ${
-        collapsed ? "w-20" : "w-60"
-      } m-0 flex flex-col bg-[#181b24] text-[#D8DEDE] shadow-lg space-y-[20px] border-r-[0.5px] border-r-black transition-all duration-300`}
-    >
-      <Link to="/main" className="flex items-center top-20">
-        <div className="flex items-center">
+    <>
+      <aside
+        className={`fixed top-0 left-0 z-[100] h-screen flex flex-col
+          bg-[#0D1117] border-r border-white/[0.06]
+          ${collapsed ? "w-[80px]" : "w-[240px]"}`}
+        style={{
+          transition: "width 400ms cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        {/* Logo */}
+        <Link
+          to="/main"
+          className={`flex items-center shrink-0 border-b border-white/[0.06] transition-colors duration-300 ease-out hover:bg-white/[0.03] ${
+            collapsed ? "justify-center py-4 px-0" : "gap-3 py-4 px-4"
+          }`}
+        >
           <img
             src="/simple-logo.png"
-            alt="Sapex Logo"
-            className={`w-15 h-15 mb-5 mt-1  animate-pulse ease-in-out duration-300 ${
-              collapsed ? "mx-auto ml-[9px]" : ""
-            }`}
+            alt="Sapex"
+            className="h-9 w-9 shrink-0 object-contain"
           />
-          {!collapsed && (
-            <p
-              className={`transition-opacity ease-in-out duration-900 font-syncopate font- ${
-                collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-              } mb-[20px] text-lg `}
-            >
-              SAPEX Global
-            </p>
-          )}
-        </div>
-      </Link>
-
-      <Link to="/user-profile" className="sidebar-icon flex items-center gap-2">
-        <div className="flex items-center justify-center w-10 rounded-full">
-          <CircleUserRound size={20} />
-        </div>
-        {!collapsed && (
-          <p
-            className={`transition-opacity ease-in-out duration-900 ${
-              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-            } mr-[20px]`}
-          >
-            User Profile
-          </p>
-        )}
-      </Link>
-
-      <Link
-        to="/contributions"
-        className="sidebar-icon flex items-center gap-2"
-      >
-        <div className="flex items-center justify-center w-10 rounded-full">
-          <ClockFading size={20} />
-        </div>
-        {!collapsed && (
-          <p
-            className={`transition-opacity ease-in-out duration-900 ${
-              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-            } mr-[20px]`}
-          >
-            Contributions
-          </p>
-        )}
-      </Link>
-
-      <Link to="/helpboard" className="sidebar-icon flex items-center gap-2">
-        <div className="flex items-center justify-center w-10 rounded-full">
-          <BookOpenText size={20} />
-        </div>
-        {!collapsed && (
-          <p
-            className={`transition-opacity ease-in-out duration-900 ${
-              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-            } mr-[20px]`}
-          >
-            Academic Hub
-          </p>
-        )}
-      </Link>
-
-      <Link
-        to="/wellness-support"
-        className="sidebar-icon flex items-center gap-2"
-      >
-        <div className="flex items-center justify-center w-10 rounded-full">
-          <Eclipse size={20} />
-        </div>
-        {!collapsed && (
-          <p
-            className={`transition-opacity ease-in-out duration-900 ${
-              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-            } mr-[8px]`}
-          >
-            Wellness Support
-          </p>
-        )}
-      </Link>
-
-      <Link to="/origins-lab" className="sidebar-icon flex items-center gap-2">
-        <div className="flex items-center justify-center w-10 rounded-full">
-          <Codesandbox size={20} />
-        </div>
-        {!collapsed && (
-          <p
-            className={`transition-opacity ease-in-out duration-900 ${
-              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-            } mr-[8px]`}
-          >
-            Origins Lab
-          </p>
-        )}
-      </Link>
-
-      <Link to="/study-rooms" className="sidebar-icon flex items-center gap-2">
-        <div className="flex items-center justify-center w-10 rounded-full">
-          <MessageSquareDot size={20} />
-        </div>
-        {!collapsed && (
-          <p
-            className={`transition-opacity ease-in-out duration-900 ${
-              collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-            } mr-[20px]`}
-          >
-            Study Rooms
-          </p>
-        )}
-      </Link>
-
-      <button
-        onClick={toggleCollapsed}
-        className={`w-6 h-6 bg-[#181b24] text-white rounded-full border border-gray-700 shadow-md z-50 transition-all duration-300 ${
-          collapsed ? "mt-10 ml-15 text-white" : "mt-10 ml-55 text-white"
-        }`}
-      >
-        {collapsed ? "→" : "←"}
-      </button>
-
-      <div className="mt-auto mb-10 flex flex-col gap-4 relative">
-        {isAdmin && (
-          <button
-            onClick={() => navigate("/admin")}
-            className="sidebar-icon flex items-center gap-[20px] bg-blue-900 hover:bg-blue-700"
-          >
-            <div className="flex items-center justify-center w-10 rounded-full">
-              <Hexagon size={20} />
-            </div>
+          <AnimatePresence initial={false} mode="wait">
             {!collapsed && (
-              <p
-                className={`transition-opacity ease-in-out duration-900 ${
-                  collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-                } mr-[9px] font-semibold`}
+              <motion.span
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{
+                  duration: 0.35,
+                  ease: [0.4, 0, 0.2, 1],
+                }}
+                className="font-syncopate font-semibold text-white text-sm whitespace-nowrap overflow-hidden"
               >
-                Admin Panel
-              </p>
+                SAPEX
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto py-3 px-2 min-h-0">
+          <ul className="space-y-0.5">
+            {navItems.map(({ to, icon: Icon, label }) => {
+              const isActive = location.pathname === to;
+              return (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-300 ease-out
+                      ${collapsed ? "justify-center px-0" : ""}
+                      ${
+                        isActive
+                          ? "bg-[#7CDCBD]/10 text-[#7CDCBD]"
+                          : "text-gray-400 hover:bg-white/[0.05] hover:text-gray-200"
+                      }`}
+                    title={collapsed ? label : undefined}
+                  >
+                    <Icon
+                      className={`shrink-0 ${isActive ? "text-[#7CDCBD]" : ""}`}
+                      size={20}
+                      strokeWidth={1.8}
+                    />
+                    <AnimatePresence initial={false} mode="wait">
+                      {!collapsed && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -8 }}
+                          transition={{
+                            duration: 0.3,
+                            ease: [0.4, 0, 0.2, 1],
+                          }}
+                          className="whitespace-nowrap overflow-hidden"
+                        >
+                          {label}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Collapse toggle */}
+        <div
+          className={`shrink-0 border-t border-white/[0.06] flex items-center ${
+            collapsed ? "justify-center py-3" : "justify-end pr-2 py-3"
+          }`}
+        >
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/[0.06] transition-colors duration-300 ease-out"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? (
+              <ChevronRight className="w-4 h-4" strokeWidth={2} />
+            ) : (
+              <ChevronLeft className="w-4 h-4" strokeWidth={2} />
             )}
           </button>
-        )}
-        <button
-          onClick={() => setShowLogoutConfirm(true)}
-          className="sidebar-icon flex items-center gap-[20px] bg-[#4B1E1E] hover:bg-[#7A2E2E]"
-        >
-          <div className="flex items-center justify-center w-10 rounded-full">
-            <LogOut className={collapsed ? "" : "ml-[20px]"} size={20} />
-          </div>
-          {!collapsed && (
-            <p
-              className={`transition-opacity ease-in-out duration-900 ${
-                collapsed ? "opacity-0 delay-0" : "opacity-100 delay-[350ms]"
-              } mr-[9px] font-semibold`}
+        </div>
+
+        {/* Bottom: Admin + Logout */}
+        <div className="shrink-0 border-t border-white/[0.06] py-3 px-2 space-y-0.5">
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={() => navigate("/admin")}
+              className={`flex items-center gap-3 w-full rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-300 ease-out
+                bg-[#7CDCBD]/10 text-[#7CDCBD] hover:bg-[#7CDCBD]/15
+                ${collapsed ? "justify-center px-0" : ""}`}
+              title={collapsed ? "Admin" : undefined}
             >
-              Log Out
-            </p>
+              <Hexagon className="shrink-0 w-5 h-5" strokeWidth={1.8} />
+              <AnimatePresence initial={false} mode="wait">
+                {!collapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -8 }}
+                    transition={{
+                      duration: 0.3,
+                      ease: [0.4, 0, 0.2, 1],
+                    }}
+                    className="whitespace-nowrap overflow-hidden"
+                  >
+                    Admin
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
           )}
-        </button>
-        <AnimatePresence>
-          {showLogoutConfirm && (
+          <button
+            type="button"
+            onClick={() => setShowLogoutConfirm(true)}
+            className={`flex items-center gap-3 w-full rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-300 ease-out
+              text-gray-400 hover:bg-red-500/10 hover:text-red-400
+              ${collapsed ? "justify-center px-0" : ""}`}
+            title={collapsed ? "Log out" : undefined}
+          >
+            <LogOut className="shrink-0 w-5 h-5" strokeWidth={1.8} />
+            <AnimatePresence initial={false} mode="wait">
+              {!collapsed && (
+                <motion.span
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -8 }}
+                  transition={{
+                    duration: 0.3,
+                    ease: [0.4, 0, 0.2, 1],
+                  }}
+                  className="whitespace-nowrap overflow-hidden"
+                >
+                  Log out
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
+      </aside>
+
+      {/* Logout confirmation */}
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <motion.div
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            onClick={() => setShowLogoutConfirm(false)}
+          >
             <motion.div
-              className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              className="bg-[#12162A] border border-white/10 rounded-xl shadow-xl w-full max-w-sm overflow-hidden"
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              onClick={(e) => e.stopPropagation()}
             >
-              <motion.div
-                className="bg-[#181b24] text-white p-6 rounded-lg shadow-lg border border-gray-600 w-80"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <p className="mb-4 text-center">
-                  Are you sure you want to log out?
+              <div className="p-6">
+                <p className="text-white font-medium text-center">
+                  Log out of Sapex?
                 </p>
-                <div className="flex justify-center gap-4">
-                  <button
-                    onClick={handleLogout}
-                    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded"
-                  >
-                    Yes
-                  </button>
-                  <button
-                    onClick={() => setShowLogoutConfirm(false)}
-                    className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </motion.div>
+                <p className="text-gray-400 text-sm text-center mt-1">
+                  You can sign back in anytime.
+                </p>
+              </div>
+              <div className="flex gap-2 p-4 pt-0">
+                <button
+                  type="button"
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="flex-1 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:bg-white/5 border border-white/10 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex-1 py-2.5 rounded-lg text-sm font-medium text-white bg-red-600/90 hover:bg-red-600 transition-colors"
+                >
+                  Log out
+                </button>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

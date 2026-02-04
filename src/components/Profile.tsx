@@ -1,13 +1,30 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  ResponsiveContainer,
+} from "recharts";
 import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db, app } from "@/lib/firebase";
 import { useSidebar } from "../components/SideBar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Edit, Save, User, Brain } from "lucide-react";
+import {
+  Edit,
+  Save,
+  User,
+  Brain,
+  Camera,
+  Mail,
+  Hash,
+  MessageCircle,
+  Shield,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -18,7 +35,6 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { NoiseBackground } from "@/components/ui/noise-background";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -58,6 +74,8 @@ const Profile = () => {
   const [showHelperDialog, setShowHelperDialog] = useState(false);
   const [activatingHelper, setActivatingHelper] = useState(false);
   const [showDeactivateDialog, setShowDeactivateDialog] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const auth = getAuth();
@@ -127,15 +145,40 @@ const Profile = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      // Placeholder for future upload logic
-      handleChange("profilePicture", file.name); // Example: store file name only
+    if (!file || !file.type.startsWith("image/")) {
+      toast.error("Please choose an image file (JPEG, PNG, etc.).");
+      return;
+    }
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) return;
+
+    setUploadingPhoto(true);
+    try {
+      const storage = getStorage(app);
+      const path = `profilePictures/${user.uid}/${Date.now()}-${file.name}`;
+      const storageRef = ref(storage, path);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+
+      const userDocRef = doc(db, "users", user.uid);
+      await updateDoc(userDocRef, { profilePicture: downloadURL });
+      await updateProfile(user, { photoURL: downloadURL });
+      setProfile((prev) => ({ ...prev, profilePicture: downloadURL }));
+      toast.success("Profile picture updated!");
+    } catch (err) {
+      console.error("Profile picture upload failed:", err);
+      toast.error("Failed to update photo. Try again.");
+    } finally {
+      setUploadingPhoto(false);
+      e.target.value = "";
     }
   };
-  const { collapsed } = useSidebar();
 
+  const { collapsed } = useSidebar();
   const navigate = useNavigate();
 
   const handlePersonalityQuiz = () => {
@@ -174,9 +217,7 @@ const Profile = () => {
       if (!user) return;
 
       const userDocRef = doc(db, "users", user.uid);
-      await updateDoc(userDocRef, {
-        helper: false,
-      });
+      await updateDoc(userDocRef, { helper: false });
 
       setProfile((prev) => ({ ...prev, helper: false }));
       toast.success("Sapex Helper deactivated.");
@@ -189,292 +230,407 @@ const Profile = () => {
     }
   };
 
+  const hasPersonalityData =
+    profile.bigFivePersonality &&
+    Object.values(profile.bigFivePersonality).some((score) => score > 0);
+
   return (
     <div
-      className={`bg-[#0A0D17] pt-[30px] min-h-screen ${
+      className={`bg-[#0A0D17] min-h-screen transition-all duration-300 ${
         collapsed ? "pl-[100px]" : "pl-[280px]"
-      } transition-all duration-300`}
+      }`}
     >
-      <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-16">
+        {/* Hero / header */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-10"
+        >
+          <h1 className="text-3xl font-bold text-white font-syncopate tracking-tight">
+            Profile
+          </h1>
+          <p className="text-gray-400 mt-1 text-sm">
+            Manage your account and preferences
+          </p>
+        </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <Card className="lg:col-span-3">
-          <form onSubmit={handleSubmit}>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Profile Information</CardTitle>
-                <CardDescription>
-                  Update your profile information
-                </CardDescription>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setIsEditing(true)}
-              >
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
-              </Button>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="flex flex-col md:flex-row md:items-center gap-4">
-                <div className="relative">
-                  <Avatar className="h-24 w-24">
-                    {profile.profilePicture &&
-                    profile.profilePicture.startsWith("http") ? (
-                      <AvatarImage
-                        src={profile.profilePicture}
-                        alt={profile.name}
-                      />
-                    ) : (
-                      <AvatarFallback className="text-2xl">
-                        <User size={32} />
-                      </AvatarFallback>
-                    )}
-                  </Avatar>
-                  {isEditing && (
-                    <div className="absolute bottom-0 right-0">
+        {/* Profile card: avatar + info */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+        >
+          <Card className="border-white/10 bg-[#12162A]/90 overflow-hidden">
+            <form onSubmit={handleSubmit}>
+              <CardHeader className="pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-start gap-6">
+                  {/* Avatar with edit overlay */}
+                  <div className="relative group shrink-0">
+                    <Avatar className="h-28 w-28 rounded-2xl border-2 border-white/10 ring-2 ring-[#7CDCBD]/20">
+                      {profile.profilePicture &&
+                      profile.profilePicture.startsWith("http") ? (
+                        <AvatarImage
+                          src={profile.profilePicture}
+                          alt={profile.name}
+                          className="object-cover"
+                        />
+                      ) : (
+                        <AvatarFallback className="rounded-2xl bg-[#1e2433] text-[#7CDCBD] text-3xl">
+                          <User className="w-12 h-12" />
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingPhoto}
+                      className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer disabled:cursor-wait"
+                      aria-label="Change profile picture"
+                    >
+                      {uploadingPhoto ? (
+                        <span className="text-xs text-white font-medium">
+                          Uploading…
+                        </span>
+                      ) : (
+                        <Camera className="w-8 h-8 text-white" />
+                      )}
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoChange}
+                    />
+                  </div>
+
+                  <div className="flex-1 min-w-0 space-y-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <CardTitle className="text-xl text-white font-syncopate">
+                        {profile.name || "Your name"}
+                      </CardTitle>
                       <Button
                         type="button"
+                        variant="outline"
                         size="sm"
-                        className="h-8 w-8 rounded-full p-0"
-                        onClick={() =>
-                          document.getElementById("avatar-upload")?.click()
-                        }
+                        onClick={() => setIsEditing(true)}
+                        className="border-white/20 text-gray-300 hover:bg-white/10 hover:text-white hover:border-[#7CDCBD]/40"
                       >
-                        <Edit className="h-3 w-3" />
-                        <span className="sr-only">Change avatar</span>
+                        <Edit className="h-3.5 w-3.5 mr-1.5" />
+                        Edit profile
                       </Button>
-                      <input
-                        id="avatar-upload"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleFileChange}
-                      />
                     </div>
-                  )}
-                  
+                    <CardDescription className="text-gray-400 text-sm">
+                      Update your display name and bio below.
+                    </CardDescription>
+                  </div>
                 </div>
-                <div className="space-y-2 flex-1">
-                  <div>
-                    <Label htmlFor="name">Full Name</Label>
+              </CardHeader>
+
+              <CardContent className="space-y-5">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="name"
+                      className="text-gray-400 font-medium text-sm"
+                    >
+                      Display name
+                    </Label>
                     <Input
                       id="name"
                       value={profile.name}
                       onChange={(e) => handleChange("name", e.target.value)}
                       disabled={!isEditing}
+                      className="bg-[#0A0D17] border-white/15 text-white placeholder:text-gray-500 focus-visible:ring-[#7CDCBD]/50 focus-visible:border-[#7CDCBD]/50 disabled:opacity-80"
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="userId">User ID</Label>
-                    <Input id="userId" value={profile.userId} disabled />
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="userId"
+                      className="text-gray-400 font-medium text-sm flex items-center gap-1.5"
+                    >
+                      <Hash className="w-3.5 h-3.5" />
+                      User ID
+                    </Label>
+                    <Input
+                      id="userId"
+                      value={profile.userId}
+                      disabled
+                      className="bg-[#0A0D17]/50 border-white/10 text-gray-400 text-sm font-mono"
+                    />
                   </div>
                 </div>
-              </div>
 
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={profile.email} disabled />
-              </div>
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="email"
+                    className="text-gray-400 font-medium text-sm flex items-center gap-1.5"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    Email
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={profile.email}
+                    disabled
+                    className="bg-[#0A0D17]/50 border-white/10 text-gray-400"
+                  />
+                </div>
 
-              <div>
-                <Label htmlFor="bio">Bio</Label>
-                <Textarea
-                  id="bio"
-                  value={profile.bio}
-                  onChange={(e) => handleChange("bio", e.target.value)}
-                  disabled={!isEditing}
-                  rows={4}
-                />
-              </div>
-            </CardContent>
-            {isEditing && (
-              <CardFooter className="justify-end">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="bio"
+                    className="text-gray-400 font-medium text-sm"
+                  >
+                    Bio
+                  </Label>
+                  <Textarea
+                    id="bio"
+                    value={profile.bio}
+                    onChange={(e) => handleChange("bio", e.target.value)}
+                    disabled={!isEditing}
+                    rows={3}
+                    placeholder="A short bio about you..."
+                    className="bg-[#0A0D17] border-white/15 text-white placeholder:text-gray-500 focus-visible:ring-[#7CDCBD]/50 focus-visible:border-[#7CDCBD]/50 resize-none"
+                  />
+                </div>
+              </CardContent>
+
+              <AnimatePresence>
+                {isEditing && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <CardFooter className="flex justify-end gap-2 pt-0">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => setIsEditing(false)}
+                        className="text-gray-400 hover:text-white"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="bg-[#7CDCBD] hover:bg-[#5FBFAA] text-[#0A0D17] font-medium"
+                      >
+                        <Save className="h-4 w-4 mr-2" />
+                        Save changes
+                      </Button>
+                    </CardFooter>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </form>
+          </Card>
+        </motion.div>
+
+        <div className="grid gap-6 mt-8 lg:grid-cols-2">
+          {/* Personality */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="border-white/10 bg-[#12162A]/90 h-full flex flex-col">
+              <CardHeader>
+                <CardTitle className="text-lg text-white font-syncopate flex items-center gap-2">
+                  <Brain className="w-5 h-5 text-[#7CDCBD]" />
+                  Personality
+                </CardTitle>
+                <CardDescription className="text-gray-400">
+                  Your Big Five traits from the quiz
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1">
+                {hasPersonalityData ? (
+                  <div className="w-full h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart
+                        cx="50%"
+                        cy="50%"
+                        outerRadius="75%"
+                        data={Object.entries(profile.bigFivePersonality).map(
+                          ([trait, score]) => ({
+                            trait: trait.slice(0),
+                            value: Math.min(score * 120, 100),
+                          })
+                        )}
+                      >
+                        <PolarGrid stroke="rgba(255,255,255,0.1)" />
+                        <PolarAngleAxis
+                          dataKey="trait"
+                          tick={{ fill: "#9ca3af", fontSize: 11 }}
+                        />
+                        <Radar
+                          name="You"
+                          dataKey="value"
+                          stroke="#7CDCBD"
+                          fill="#7CDCBD"
+                          fillOpacity={0.35}
+                          strokeWidth={1.5}
+                        />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    You haven’t taken the personality quiz yet.
+                  </p>
+                )}
+              </CardContent>
+              <CardFooter>
                 <Button
-                  type="submit"
-                  className="bg-blue-600 text-white hover:bg-blue-700"
+                  onClick={handlePersonalityQuiz}
+                  className="w-full bg-[#12162A] border border-[#7CDCBD]/40 text-[#7CDCBD] hover:bg-[#7CDCBD]/10 font-medium"
                 >
-                  <Save className="h-4 w-4 mr-2" />
-                  Save
+                  <Brain className="w-4 h-4 mr-2" />
+                  {hasPersonalityData ? "Retake quiz" : "Take personality quiz"}
                 </Button>
               </CardFooter>
-            )}
-          </form>
-        </Card>
+            </Card>
+          </motion.div>
 
-        <div className="space-y-6 lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Personality</CardTitle>
-              <CardDescription>Your Big Five personality traits</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {profile.bigFivePersonality &&
-              Object.values(profile.bigFivePersonality).some((score) => score > 0) ? (
-                <div className="w-full h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart
-                      cx="50%"
-                      cy="50%"
-                      outerRadius="80%"
-                      data={Object.entries(profile.bigFivePersonality).map(([trait, score]) => ({
-                        trait,
-                        value: Math.min(score * 120, 100),
-                      }))}
-                    >
-                      <PolarGrid />
-                      <PolarAngleAxis dataKey="trait" />
-                      <Radar
-                        name="Personality"
-                        dataKey="value"
-                        stroke="#8884d8"
-                        fill="#8884d8"
-                        fillOpacity={0.6}
-                      />
-                    </RadarChart>
-                  </ResponsiveContainer>
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+          >
+            <Card className="border-white/10 bg-[#12162A]/90 h-full">
+              <CardHeader>
+                <CardTitle className="text-lg text-white font-syncopate flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-[#7CDCBD]" />
+                  Activity
+                </CardTitle>
+                <CardDescription className="text-gray-400">
+                  Your help board activity
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-0">
+                <div className="flex items-center justify-between py-4 border-b border-white/10">
+                  <span className="text-gray-400">Problems helped</span>
+                  <span className="text-xl font-semibold text-white tabular-nums">
+                    {profile.helped}
+                  </span>
                 </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  You haven’t taken the personality quiz yet.
-                </p>
-              )}
-            </CardContent>
-            <CardFooter>
-              <Button
-                onClick={handlePersonalityQuiz}
-                className="bg-[#142a26] hover:bg-[#1b3b2a]/90 text-white px-8 py-3 text-lg rounded-lg shadow-lg hover:shadow-xl transition-all"
-              >
-                <Brain className="w-5 h-5 mr-2" />
-                Take Personality Quiz
-              </Button>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Statistics</CardTitle>
-              <CardDescription>Your activity summary</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span>Problems Helped</span>
-                <span className="font-medium">{profile.helped}</span>
-              </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span>Problems Posted</span>
-                <span className="font-medium">{profile.posted}</span>
-              </div>
-          
-            </CardContent>
-          </Card>
+                <div className="flex items-center justify-between py-4 border-b border-white/10">
+                  <span className="text-gray-400">Problems posted</span>
+                  <span className="text-xl font-semibold text-white tabular-nums">
+                    {profile.posted}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
-      </div>
-      <div
-        className={`mt-10 flex ${
-          collapsed ? "justify-start pl-6" : "justify-start pl-10"
-        } transition-all duration-300`}
-      >
-        <NoiseBackground
-          gradientColors={["#A5B4FC", "#93C5FD", "#BAE6FD"]}
-          noiseIntensity={0.12}
-          speed={0.35}
-          backdropBlur
+
+        {/* Sapex Helper */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-8 flex flex-wrap items-center gap-4"
         >
-          <div className="px-4 py-3">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={profile.helper ? "active" : "inactive"}
-                initial={{ opacity: 0, y: 6, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-              >
-                {profile.helper ? (
-                  <Button
-                    onClick={() => setShowDeactivateDialog(true)}
-                    className="bg-indigo-500/90 hover:bg-indigo-500 text-white px-7 py-2.5 text-sm rounded-full shadow-sm"
-                  >
-                    Sapex Active
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => setShowHelperDialog(true)}
-                    className="bg-indigo-400/90 hover:bg-indigo-400 text-white px-7 py-2.5 text-sm rounded-full shadow-sm"
-                  >
-                    Become a Sapex Helper
-                  </Button>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </NoiseBackground>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={profile.helper ? "active" : "inactive"}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              className="flex flex-wrap items-center gap-3"
+            >
+              {profile.helper ? (
+                <Button
+                  onClick={() => setShowDeactivateDialog(true)}
+                  className="bg-[#7CDCBD]/20 text-[#7CDCBD] hover:bg-[#7CDCBD]/30 border border-[#7CDCBD]/40 rounded-full px-6 py-2.5"
+                >
+                  <Shield className="w-4 h-4 mr-2" />
+                  Sapex Helper · Active
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setShowHelperDialog(true)}
+                  className="bg-[#7CDCBD] hover:bg-[#5FBFAA] text-[#0A0D17] font-medium rounded-full px-6 py-2.5"
+                >
+                  <Shield className="w-4 h-4 mr-2" />
+                  Become a Sapex Helper
+                </Button>
+              )}
+            </motion.div>
+          </AnimatePresence>
+          <p className="text-xs text-gray-500 max-w-md">
+            Sapex Helpers support others with respect and empathy. This is a
+            space for guidance and learning, not social media.
+          </p>
+        </motion.div>
       </div>
-      <div className="mt-3 max-w-sm text-xs text-muted-foreground leading-relaxed">
-        <p>
-          Being a Sapex Helper means supporting others with respect, patience, and
-          empathy.
-        </p>
-        <p className="mt-1">
-          Sapex is not a social media platform — it’s a space for guidance, learning,
-          and constructive help.
-        </p>
-        <p className="mt-1">
-          Abuse, ego-driven behavior, or judgment of others goes against the purpose
-          of this role.
-        </p>
-      </div>
+
+      {/* Dialogs */}
       <Dialog open={showHelperDialog} onOpenChange={setShowHelperDialog}>
-        <DialogContent>
+        <DialogContent className="border-white/10 bg-[#12162A] text-white">
           <DialogHeader>
-            <DialogTitle>Become a Sapex Helper</DialogTitle>
-            <DialogDescription>
-              By becoming a Sapex Helper, you must be respectful and be helpful to
-              students to the best of your ability and support the person through a
-              tough time.
+            <DialogTitle className="font-syncopate">
+              Become a Sapex Helper
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              You’ll support students respectfully and help them through tough
+              times. Be helpful and kind to the best of your ability.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="gap-2 sm:gap-0">
             <Button
               variant="outline"
               onClick={() => setShowHelperDialog(false)}
+              className="border-white/20 text-gray-300 hover:bg-white/10"
             >
               Cancel
             </Button>
             <Button
               onClick={handleBecomeHelper}
               disabled={activatingHelper}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-[#7CDCBD] hover:bg-[#5FBFAA] text-[#0A0D17]"
             >
-              {activatingHelper ? "Activating..." : "I Agree"}
+              {activatingHelper ? "Activating…" : "I agree"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Dialog open={showDeactivateDialog} onOpenChange={setShowDeactivateDialog}>
-        <DialogContent>
+
+      <Dialog
+        open={showDeactivateDialog}
+        onOpenChange={setShowDeactivateDialog}
+      >
+        <DialogContent className="border-white/10 bg-[#12162A] text-white">
           <DialogHeader>
-            <DialogTitle>Deactivate Sapex Helper</DialogTitle>
-            <DialogDescription>
-              You will no longer appear as a Sapex Helper and won’t be expected to
-              support students. You can re-activate at any time.
+            <DialogTitle className="font-syncopate">
+              Deactivate Sapex Helper
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              You’ll no longer appear as a Helper. You can turn it back on
+              anytime.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="gap-2 sm:gap-0">
             <Button
               variant="outline"
               onClick={() => setShowDeactivateDialog(false)}
+              className="border-white/20 text-gray-300 hover:bg-white/10"
             >
               Cancel
             </Button>
             <Button
               onClick={handleDeactivateHelper}
               disabled={activatingHelper}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              variant="destructive"
+              className="bg-red-600/90 hover:bg-red-600 text-white"
             >
-              {activatingHelper ? "Deactivating..." : "Deactivate"}
+              {activatingHelper ? "Deactivating…" : "Deactivate"}
             </Button>
           </DialogFooter>
         </DialogContent>

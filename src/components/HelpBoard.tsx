@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSidebar } from "../components/SideBar";
 import { ProblemChatDialog } from "./ProblemChatDialog";
 import { HelpBoardCard } from "./HelpBoardCard";
 import { Button } from "./ui/button";
-import { PlusCircle } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../lib/firebase";
 import { collection, getDocs, getDoc, doc } from "firebase/firestore";
@@ -27,7 +28,14 @@ type Problem = {
   likes: number;
 };
 
-const categories = ["All", "Mathematics", "Science", "English", "Social Sciences", "Foreign Languages"];
+const categories = [
+  "All",
+  "Mathematics",
+  "Science",
+  "English",
+  "Social Sciences",
+  "Foreign Languages",
+];
 
 const HelpBoard = () => {
   const [, setProfilePhoto] = useState("");
@@ -105,56 +113,101 @@ const HelpBoard = () => {
     setSelectedProblem(null);
   };
 
+  const filteredProblems = problems.filter((problem) =>
+    selectedCategory === "All"
+      ? true
+      : problem.category.toLowerCase() === selectedCategory.toLowerCase()
+  );
+
+  const ease = [0.4, 0, 0.2, 1] as const;
+
   return (
-    <div className={`bg-[#0A0D17] pt-[30px] min-h-screen ${collapsed ? "pl-[130px]" : "pl-[280px]"} transition-all duration-300`}>
-      <h1 className="text-3xl font-bold text-white font-syncopate">Academic Center</h1>
-      <p className="text-muted-foreground mt-1">
-        Post your problems and help others solve theirs
-      </p>
+    <div
+      className={`bg-[#0A0D17] pt-[30px] min-h-screen pb-16 ${
+        collapsed ? "pl-[130px]" : "pl-[280px]"
+      } transition-all duration-300`}
+    >
+      <div className="px-4 max-w-7xl">
+        <motion.header
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease }}
+        >
+          <h1 className="text-3xl font-bold text-white font-syncopate tracking-tight">
+            Academic Center
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Post your problems and help others solve theirs
+          </p>
+        </motion.header>
 
-      <div className="absolute top-5 right-[40px] z-50">
-        <Dropdown />
-      </div>
+        <div className="absolute top-5 right-[40px] z-50">
+          <Dropdown />
+        </div>
 
-      <Button
-        className="flex items-center gap-2  text-white bg-[#8a9994] hover:bg-[#8a9994]/90 rounded-lg px-4 py-2 mt-4 "
-        onClick={() => navigate("/post-problem")}
-      >
-        <PlusCircle size={18} />
-        Post a Problem
-      </Button>
-
-      <div className="flex space-x-6 mt-6 text-white text-lg">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`px-2 pb-1 transition-all duration-200 border-b-2  ${
-              selectedCategory === cat
-                ? "text-white border-white font-semibold"
-                : "text-gray-400 border-transparent hover:text-slate-400 hover:border-white"
-            }`}
+        <motion.div
+          className="mt-6"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.08, ease }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <Button
+            onClick={() => navigate("/post-problem")}
+            className="group relative flex items-center gap-2.5 rounded-xl bg-[#7CDCBD] text-[#0A0D17] font-semibold shadow-[0_0_20px_-4px_rgba(124,220,189,0.4)] hover:bg-[#5FBFAA] hover:shadow-[0_0_24px_-2px_rgba(124,220,189,0.5)] transition-all duration-300 ease-out h-11 px-5 border-0"
           >
-            {cat}
-          </button>
-        ))}
-      </div>
+            <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#0A0D17]/10">
+              <Plus className="w-4 h-4" strokeWidth={2.5} />
+            </span>
+            <span>Post a Problem</span>
+          </Button>
+        </motion.div>
 
-      <div className="mt-10 ml-[-30px] mr-[20px] max-w-7xl px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {problems
-          .filter((problem) =>
-            selectedCategory === "All"
-              ? true
-              : problem.category.toLowerCase() ===
-                selectedCategory.toLowerCase()
-          )
-          .map((problem) => (
-            <HelpBoardCard
-              key={problem.id}
-              problem={problem}
-              onHelpClick={handleHelpClick}
-            />
+        <motion.nav
+          className="flex flex-wrap gap-x-6 gap-y-2 mt-6 text-white text-lg"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.12, ease }}
+        >
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-2 pb-1 transition-all duration-200 border-b-2 ${
+                selectedCategory === cat
+                  ? "text-white border-white font-semibold"
+                  : "text-gray-400 border-transparent hover:text-slate-400 hover:border-white"
+              }`}
+            >
+              {cat}
+            </button>
           ))}
+        </motion.nav>
+
+        <div className="mt-10 ml-[-30px] mr-[20px] max-w-7xl px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence mode="popLayout">
+            {filteredProblems.map((problem, index) => (
+              <motion.div
+                key={problem.id}
+                layout
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{
+                  duration: 0.3,
+                  delay: index * 0.04,
+                  ease,
+                }}
+              >
+                <HelpBoardCard
+                  problem={problem}
+                  onHelpClick={handleHelpClick}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
 
       {selectedProblem && (

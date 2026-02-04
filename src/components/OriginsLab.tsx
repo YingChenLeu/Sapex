@@ -354,42 +354,55 @@ export const OriginsLab = () => {
     setPromptIndex(0);
   };
 
+  const ease = [0.4, 0, 0.2, 1] as const;
+
   return (
     <div
-      className={`bg-[#0A0D17] min-h-screen pt-[30px] transition-all duration-300 ${
+      className={`bg-[#0A0D17] min-h-screen pt-[30px] pb-16 transition-all duration-300 ${
         collapsed ? "pl-[130px]" : "pl-[280px]"
       }`}
     >
       <div className="px-6 md:px-10 pb-12">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-2">
+        <motion.header
+          className="flex items-center gap-3 mb-2"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease }}
+        >
           <div className="w-10 h-10 rounded-xl bg-[#7CDCBD]/20 flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-[#7CDCBD]" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white font-syncopate">
+            <h1 className="text-3xl font-bold text-white font-syncopate tracking-tight">
               Origins Lab
             </h1>
-            <p className="text-gray-400 text-sm mt-0.5">
+            <p className="text-muted-foreground text-sm mt-0.5">
               Pick a field and brainstorm project ideas
             </p>
           </div>
-        </div>
+        </motion.header>
 
         <AnimatePresence mode="wait">
           {!selectedField ? (
             /* Field selection */
             <motion.div
               key="fields"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease }}
               className="mt-8"
             >
-              <p className="text-gray-400 mb-6 max-w-xl">
+              <motion.p
+                className="text-muted-foreground mb-6 max-w-xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.08, ease }}
+              >
                 Choose a majority or interest area to spark ideas. You’ll get
                 prompts and space to jot down whatever comes to mind.
-              </p>
+              </motion.p>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {FIELDS.map((field, i) => {
                   const Icon = field.icon;
@@ -404,7 +417,7 @@ export const OriginsLab = () => {
                       }}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.05 }}
+                      transition={{ delay: 0.12 + i * 0.04, duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                       whileHover={{
                         scale: 1.02,
                         borderColor: field.color,
@@ -428,24 +441,35 @@ export const OriginsLab = () => {
             /* Brainstorm view */
             <motion.div
               key="brainstorm"
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
               className="mt-8 max-w-2xl relative"
             >
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBack}
-                className="text-gray-400 hover:text-white mb-6 gap-2 -ml-2"
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.05, ease }}
               >
-                <ArrowLeft className="w-4 h-4" />
-                Change field
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleBack}
+                  className="text-gray-400 hover:text-white mb-6 gap-2 -ml-2"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Change field
+                </Button>
+              </motion.div>
 
               {fieldConfig && (
-                <div className="flex items-center gap-3 mb-6">
+                <motion.div
+                  className="flex items-center gap-3 mb-6"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1, ease }}
+                >
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center"
                     style={{ backgroundColor: `${fieldConfig.color}25` }}
@@ -459,16 +483,19 @@ export const OriginsLab = () => {
                     <h2 className="text-xl font-semibold text-white">
                       {fieldConfig.label}
                     </h2>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-muted-foreground">
                       Brainstorm project ideas
                     </p>
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* Prompt card */}
-              <div
+              <motion.div
                 className="rounded-2xl border p-5 mb-6"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.15, ease }}
                 style={{
                   borderColor: `${fieldConfig?.color ?? "#7CDCBD"}30`,
                   backgroundColor: `${fieldConfig?.color ?? "#7CDCBD"}08`,
@@ -492,10 +519,15 @@ export const OriginsLab = () => {
                 >
                   Next prompt
                 </Button>
-              </div>
+              </motion.div>
 
               {/* Add idea */}
-              <div className="mb-6">
+              <motion.div
+                className="mb-6"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2, ease }}
+              >
                 <label className="text-sm font-medium text-gray-300 block mb-2">
                   Add an idea
                 </label>
@@ -515,10 +547,14 @@ export const OriginsLab = () => {
                     Add
                   </Button>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Ideas list */}
-              <div>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.25, ease }}
+              >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium text-gray-400">
                     My ideas ({ideas.length})
@@ -570,11 +606,16 @@ export const OriginsLab = () => {
                     ))}
                   </ul>
                 )}
-              </div>
+              </motion.div>
 
               {/* Optional: expand into full concept */}
               {ideas.length > 0 && (
-                <div className="mt-8 rounded-2xl border border-white/10 bg-[#12162A]/80 p-5">
+                <motion.div
+                  className="mt-8 rounded-2xl border border-white/10 bg-[#12162A]/80 p-5"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.05, ease }}
+                >
                   <label className="text-sm font-medium text-gray-300 block mb-2">
                     Expand one idea (optional)
                   </label>
@@ -585,7 +626,7 @@ export const OriginsLab = () => {
                     placeholder="Pick one idea and describe it in more detail—who it's for, what it does, why it matters..."
                     className="min-h-[100px] bg-[#0A0D17] border-gray-700 text-white placeholder:text-gray-500 resize-none"
                   />
-                </div>
+                </motion.div>
               )}
 
               {loading && (
@@ -595,11 +636,16 @@ export const OriginsLab = () => {
               )}
 
               {/* Everyone's ideas for this field */}
-              <div className="mt-12 pt-8 border-t border-white/10">
+              <motion.div
+                className="mt-12 pt-8 border-t border-white/10"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.3, ease }}
+              >
                 <h3 className="text-lg font-semibold text-white mb-1">
                   Everyone&apos;s ideas
                 </h3>
-                <p className="text-sm text-gray-400 mb-4">
+                <p className="text-sm text-muted-foreground mb-4">
                   Ideas from everyone who brainstormed in {fieldConfig?.label}.
                 </p>
                 {loadingEveryone ? (
@@ -613,10 +659,17 @@ export const OriginsLab = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {everyoneSessions.map((session) => (
-                      <div
+                    {everyoneSessions.map((session, index) => (
+                      <motion.div
                         key={session.id}
                         className="rounded-xl border border-white/10 bg-[#12162A] p-4"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: index * 0.05,
+                          ease,
+                        }}
                       >
                         <div className="flex flex-wrap items-baseline gap-2 mb-2">
                           <span className="font-medium text-white">
@@ -657,11 +710,11 @@ export const OriginsLab = () => {
                             </p>
                           </div>
                         )}
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 )}
-              </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
