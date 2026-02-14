@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Users, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,16 @@ const TEAM_MEMBERS = [
   { name: "Julien Nowak", role: "Co-founder" },
   { name: "Bianca Nusca Dagon", role: "Secretary" },
 ] as const;
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const stagger = {
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+  hidden: {},
+};
 
 function getInitials(name: string) {
   return name
@@ -32,24 +43,48 @@ const AboutDev = () => {
             `,
           }}
         />
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#A8D3CC]/20 mb-6">
+        <motion.div
+          className="relative z-10 max-w-4xl mx-auto text-center"
+          initial="hidden"
+          animate="visible"
+          variants={stagger}
+        >
+          <motion.div
+            className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#A8D3CC]/20 mb-6"
+            variants={fadeInUp}
+            transition={{ duration: 0.45 }}
+          >
             <Users className="w-7 h-7 text-[#A8D3CC]" />
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-bold font-syncopate bg-gradient-to-r from-[#D8DEDE] to-[#A8D3CC] bg-clip-text text-transparent mb-4">
+          </motion.div>
+          <motion.h1
+            className="text-4xl sm:text-5xl font-bold font-syncopate bg-gradient-to-r from-[#D8DEDE] to-[#A8D3CC] bg-clip-text text-transparent mb-4"
+            variants={fadeInUp}
+            transition={{ duration: 0.5 }}
+          >
             About Sapex
-          </h1>
-          <p className="text-lg text-[#D8DEDE]/80 max-w-2xl mx-auto leading-relaxed">
+          </motion.h1>
+          <motion.p
+            className="text-lg text-[#D8DEDE]/80 max-w-2xl mx-auto leading-relaxed"
+            variants={fadeInUp}
+            transition={{ duration: 0.5 }}
+          >
             A youth-led initiative building a safe, supportive platform for
             students to learn, connect, and grow.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </section>
 
       {/* Mission */}
       <section className="px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-3xl mx-auto">
-          <div className="rounded-2xl border border-white/10 bg-[#0C111C]/80 p-8 md:p-10">
+          <motion.div
+            className="rounded-2xl border border-white/10 bg-[#0C111C]/80 p-8 md:p-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5 }}
+            whileHover={{ borderColor: "rgba(168, 211, 204, 0.25)" }}
+          >
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-5 h-5 text-[#A8D3CC]" />
               <span className="text-sm font-medium uppercase tracking-wider text-[#A8D3CC]">
@@ -62,25 +97,46 @@ const AboutDev = () => {
               believe in connection over isolation—and that young people, when
               supported, can achieve more together.
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Team */}
       <section className="px-4 sm:px-6 lg:px-8 pb-24">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-3">
+          <motion.h2
+            className="text-2xl sm:text-3xl font-bold text-center mb-3"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.45 }}
+          >
             The team
-          </h2>
-          <p className="text-[#D8DEDE]/70 text-center mb-12 max-w-xl mx-auto">
+          </motion.h2>
+          <motion.p
+            className="text-[#D8DEDE]/70 text-center mb-12 max-w-xl mx-auto"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.45, delay: 0.08 }}
+          >
             The people behind the platform.
-          </p>
+          </motion.p>
 
-          <div className="grid sm:grid-cols-2 gap-6">
+          <motion.div
+            className="grid sm:grid-cols-2 gap-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={stagger}
+          >
             {TEAM_MEMBERS.map((member) => (
-              <div
+              <motion.div
                 key={member.name}
                 className="group rounded-2xl border border-white/10 bg-[#0C111C] p-6 hover:border-[#A8D3CC]/30 transition-colors duration-300"
+                variants={fadeInUp}
+                transition={{ duration: 0.4 }}
+                whileHover={{ y: -4 }}
               >
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 rounded-xl bg-[#A8D3CC]/20 flex items-center justify-center shrink-0 text-[#A8D3CC] font-semibold text-lg font-syncopate">
@@ -95,25 +151,33 @@ const AboutDev = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA */}
       <section className="px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="max-w-2xl mx-auto text-center">
+        <motion.div
+          className="max-w-2xl mx-auto text-center"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5 }}
+        >
           <p className="text-[#D8DEDE]/70 mb-6">
             Want to bring Sapex to your school?
           </p>
-          <Button
-            asChild
-            className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53]"
-          >
-            <Link to="/">Back to home</Link>
-          </Button>
-        </div>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              asChild
+              className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53]"
+            >
+              <Link to="/">Back to home</Link>
+            </Button>
+          </motion.div>
+        </motion.div>
       </section>
     </div>
   );
