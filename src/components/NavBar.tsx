@@ -1,6 +1,9 @@
-import { UserRound, Users, LogIn, Leaf } from "lucide-react";
+import { useEffect, useState } from "react";
+import { UserRound, Users, LogIn, Leaf, Sparkles } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 const navLinks = [
   { to: "/initiative", label: "Initiative", icon: Leaf },
@@ -10,6 +13,14 @@ const navLinks = [
 
 const Navbar = () => {
   const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-5xl z-50 rounded-2xl border border-white/10 bg-[#0C111C]/90 backdrop-blur-md shadow-lg shadow-black/20 py-2.5 px-4 sm:px-6">
@@ -44,17 +55,30 @@ const Navbar = () => {
           })}
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          asChild
-          className="shrink-0 border-[#A8D3CC]/50 text-[#D8DEDE] hover:bg-[#A8D3CC] hover:text-[#2D4F53] hover:border-[#A8D3CC]"
-        >
-          <Link to="/login" className="flex items-center gap-2">
-            <LogIn size={18} />
-            <span>Login</span>
-          </Link>
-        </Button>
+        {isLoggedIn ? (
+          <Button
+            size="sm"
+            asChild
+            className="shrink-0 bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53]"
+          >
+            <Link to="/helpboard" className="flex items-center gap-2">
+              <Sparkles size={18} />
+              <span>Open Sapex</span>
+            </Link>
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            asChild
+            className="shrink-0 border-[#A8D3CC]/50 text-[#D8DEDE] hover:bg-[#A8D3CC] hover:text-[#2D4F53] hover:border-[#A8D3CC]"
+          >
+            <Link to="/login" className="flex items-center gap-2">
+              <LogIn size={18} />
+              <span>Login</span>
+            </Link>
+          </Button>
+        )}
       </div>
     </nav>
   );
