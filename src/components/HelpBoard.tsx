@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../lib/firebase";
-import { collection, getDocs, getDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
 import Dropdown from "./Dropdown";
 
 type Problem = {
@@ -69,13 +69,15 @@ const HelpBoard = () => {
     fetchUserProfilePicture();
   }, []);
   useEffect(() => {
-    const fetchProblems = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "problems"));
-        const problemsData = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
+    const problemsRef = collection(db, "problems");
+
+    const unsubscribe = onSnapshot(
+      problemsRef,
+      (querySnapshot) => {
+        const problemsData = querySnapshot.docs.map((docSnap) => {
+          const data = docSnap.data();
           return {
-            id: doc.id,
+            id: docSnap.id,
             title: data.title || "Untitled Problem",
             description: data.description || "No description provided.",
             category: data.category || "General",
@@ -93,14 +95,15 @@ const HelpBoard = () => {
           };
         });
         setProblems(problemsData);
-      } catch (error) {
-        console.error("Error fetching problems:", error);
-      } finally {
-        setLoading(false);
+      },
+      (error) => {
+        console.error("Error listening to problems:", error);
       }
-    };
+    );
 
-    fetchProblems();
+    setLoading(false);
+
+    return () => unsubscribe();
   }, []);
 
   const handleHelpClick = (problem: Problem) => {

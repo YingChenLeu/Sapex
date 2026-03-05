@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Code2, Leaf } from "lucide-react";
 import Logo from "@/assets/sapexlogo.png";
 import MetaBalls from "./ui/MetaBalls";
 import CircularText from "./CircularText";
+import firebaseLogo from "@/assets/landingPageAssets/devLogos/firebase.png";
+import fastAPILogo from "@/assets/landingPageAssets/devLogos/fastAPI.png";
+import vercelLogo from "@/assets/landingPageAssets/devLogos/vercel.png";
+import deapLearningLogo from "@/assets/landingPageAssets/devLogos/deapLearning.png";
+import reactLogo from "@/assets/landingPageAssets/devLogos/react.png";
 
 const BRIDGE_PILLARS = [
   {
@@ -89,6 +95,58 @@ function IconGlobe() {
   );
 }
 
+const springCard = { type: "spring" as const, stiffness: 180, damping: 22 };
+
+function TechCard({
+  title,
+  description,
+  logoEl,
+  enterFrom,
+}: {
+  title: string;
+  description: string;
+  icon: string;
+  logoEl: React.ReactNode;
+  enterFrom: { x?: number; y?: number; opacity: number };
+  order: number;
+}) {
+  return (
+    <motion.div
+      className="rounded-2xl border border-white/10 bg-[#0C111C]/80 p-6 flex flex-col gap-4 hover:border-[#A8D3CC]/20"
+      variants={{
+        hidden: enterFrom,
+        visible: {
+          x: 0,
+          y: 0,
+          opacity: 1,
+          transition: springCard,
+        },
+      }}
+      whileHover={{
+        scale: 1.02,
+        y: -4,
+        transition: { type: "spring", stiffness: 400, damping: 25 },
+      }}
+      transition={{ type: "spring", stiffness: 180, damping: 22 }}
+    >
+      <div className="flex items-center justify-center shrink-0 min-h-[80px]">
+        {logoEl}
+      </div>
+      <div className="min-w-0 flex-1">
+        <motion.h3
+          className="font-semibold text-[#D8DEDE] mb-2 text-lg"
+          initial={false}
+          whileHover={{ color: "#A8D3CC" }}
+          transition={{ duration: 0.2 }}
+        >
+          {title}
+        </motion.h3>
+        <p className="text-sm text-[#D8DEDE]/80 leading-relaxed">{description}</p>
+      </div>
+    </motion.div>
+  );
+}
+
 function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] flex flex-col">
@@ -125,7 +183,7 @@ function LandingPage() {
           }}
           transition={{ duration: 0.5 }}
         >
-          Welcome to <span className="font-syncopate">Sapex</span>
+          <span className="font-syncopate">Sapex</span>
         </motion.h1>
         <motion.p
           className="text-lg md:text-xl mb-4 max-w-3xl text-[#D8DEDE]/90 leading-relaxed"
@@ -287,6 +345,168 @@ function LandingPage() {
             thrive together—not in isolation.
           </p>
         </motion.div>
+      </section>
+
+      {/* Key Technologies - quadrant layout, central title + View Code */}
+      <section
+        id="tech"
+        className="py-16 md:py-24 border-t border-white/5 bg-gradient-to-b from-white/5 to-transparent overflow-hidden"
+      >
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          {/* 3x3 grid: corners = cards, center = title + CTA */}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px", amount: 0.2 }}
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.15,
+                  delayChildren: 0.1,
+                },
+              },
+              hidden: {},
+            }}
+          >
+            {/* Top-left: React */}
+            <TechCard
+              title="React front-end"
+              description="A student-first interface built with React—familiar, calm, and accessible so students can seek academic or wellness support without feeling overwhelmed."
+              icon="react"
+              logoEl={
+                <img
+                  src={reactLogo}
+                  alt="React"
+                  className="w-14 h-14 sm:w-16 sm:h-16 object-contain"
+                />
+              }
+              enterFrom={{ x: -40, opacity: 0 }}
+              order={0}
+            />
+            {/* Top-center: Key Technologies + View Code */}
+            <motion.div
+              className="flex flex-col items-center justify-center rounded-2xl border-2 border-[#A8D3CC]/20 bg-[#0C111C]/90 p-8 md:min-h-[200px] order-first md:order-none col-span-1 md:col-span-1"
+              variants={{
+                hidden: { scale: 0.92, opacity: 0 },
+                visible: {
+                  scale: 1,
+                  opacity: 1,
+                  transition: {
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 24,
+                    delay: 0.2,
+                  },
+                },
+              }}
+            >
+              <motion.div
+                className="mb-3"
+                variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+                transition={{ delay: 0.35 }}
+              >
+                <Leaf className="w-5 h-5 text-[#A8D3CC]/90" aria-hidden />
+              </motion.div>
+              <motion.h2
+                className="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-[#D8DEDE] via-[#A8D3CC] to-[#D8DEDE] bg-clip-text text-transparent mb-2"
+                variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ delay: 0.4, type: "spring", stiffness: 180, damping: 22 }}
+              >
+                Key Technologies
+              </motion.h2>
+              <motion.div
+                variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+                transition={{ delay: 0.5 }}
+                className="rounded-lg inline-block mt-3"
+              >
+                <motion.span
+                  className="block rounded-lg"
+                  animate={{
+                    boxShadow: [
+                      "0 0 20px rgba(168,211,204,0.12)",
+                      "0 0 32px rgba(168,211,204,0.22)",
+                      "0 0 20px rgba(168,211,204,0.12)",
+                    ],
+                  }}
+                  transition={{
+                    boxShadow: { repeat: Infinity, duration: 2.5, ease: "easeInOut" },
+                  }}
+                >
+                  <Button
+                    asChild
+                    className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53] shadow-lg shadow-[#A8D3CC]/20"
+                  >
+                    <Link to="/development" className="flex items-center gap-2">
+                      <Code2 size={18} />
+                      View Code
+                    </Link>
+                  </Button>
+                </motion.span>
+              </motion.div>
+            </motion.div>
+            {/* Top-right: DEAP */}
+            <TechCard
+              title="DEAP genetic algorithm"
+              description="Adaptive matching pairs students for peer support using psychology-informed traits and past outcomes. DEAP evolves weights that optimize peer-to-peer matching over time."
+              icon="deap"
+              logoEl={
+                <img
+                  src={deapLearningLogo}
+                  alt=""
+                  className="w-24 h-24 sm:w-28 sm:h-28 object-contain"
+                />
+              }
+              enterFrom={{ x: 40, opacity: 0 }}
+              order={1}
+            />
+            {/* Bottom-left: FastAPI */}
+            <TechCard
+              title="FastAPI"
+              description="ML matching API for wellness support. Real-time endpoints for match, coldstart_match, and GA weight evolution—deployed for secure, low-latency peer matching."
+              icon="fastapi"
+              logoEl={
+                <img
+                  src={fastAPILogo}
+                  alt=""
+                  className="w-24 h-24 sm:w-28 sm:h-28 object-contain"
+                />
+              }
+              enterFrom={{ x: -40, opacity: 0 }}
+              order={2}
+            />
+            {/* Bottom-center: Firebase */}
+            <TechCard
+              title="Firebase"
+              description="Authentication, real-time storage, and synced messages and user data. Enables timely responses, dynamic prioritization, and supportive conversations."
+              icon="firebase"
+              logoEl={
+                <img
+                  src={firebaseLogo}
+                  alt=""
+                  className="w-24 h-24 sm:w-28 sm:h-28 object-contain"
+                />
+              }
+              enterFrom={{ y: 20, opacity: 0 }}
+              order={3}
+            />
+            {/* Bottom-right: Vercel */}
+            <TechCard
+              title="Vercel hosting"
+              description="Deployed with automatic HTTPS, DDoS protection, encrypted data handling, and global edge routing for secure, reliable access."
+              icon="vercel"
+              logoEl={
+                <img
+                  src={vercelLogo}
+                  alt=""
+                  className="w-24 h-24 sm:w-28 sm:h-28 object-contain invert opacity-90"
+                />
+              }
+              enterFrom={{ x: 40, opacity: 0 }}
+              order={4}
+            />
+          </motion.div>
+        </div>
       </section>
 
       {/* BRIDGE Framework - animated */}

@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MessageCircle, Paperclip, Clock } from "lucide-react";
+import { MessageCircle, Paperclip } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
@@ -64,115 +64,122 @@ export const HelpBoardCard = ({ problem, onHelpClick }: HelpBoardCardProps) => {
 
   return (
     <motion.div
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.4, ease: "easeOut" }}
-    whileHover={{
-      scale: 1.03,
-      transition: { type: "spring", stiffness: 300, damping: 20 },
-    }}
-  >
-    <Card
-      className="h-full flex flex-col w-auto cursor-pointer"
-      onClick={() => onHelpClick(problem)}
+      initial={{ opacity: 0, scale: 0.96, y: 6 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      whileHover={{
+        y: -4,
+        scale: 1.02,
+        boxShadow:
+          "0 18px 45px -24px rgba(0,0,0,0.9), 0 0 0 1px rgba(124,220,189,0.08)",
+      }}
+      className="relative"
     >
-      {/* Header */}
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start mb-2">
-          <Badge>
-            {problem.course}
-          </Badge>
-          <Badge
-            className={`${urgencyColors[problem.urgency]} hover:${
-              urgencyColors[problem.urgency]
-            }`}
-          >
-            {problem.urgency.charAt(0).toUpperCase() + problem.urgency.slice(1)}{" "}
-            Priority
-          </Badge>
-        </div>
-        <CardTitle className="text-lg text-white">{problem.title}</CardTitle>
-      </CardHeader>
-
-      {/* Content */}
-      <CardContent className="flex-grow overflow-hidden">
-        <p className="text-muted-foreground text-sm overflow-y-auto h-22 pr-2 custom-scrollbar">
-          {problem.description}
-        </p>
-
-        {/* Image Popup Dialog */}
-        {problem.image && (
-          <DisplayImage
-            isOpen={isImageDialogOpen}
-            onClose={() => setIsImageDialogOpen(false)}
-            imageUrl={problem.image}
-          />
-        )}
-      </CardContent>
-
-      {/* Footer */}
-      <CardFooter className="flex flex-col border-t border-discord-border pt-4 gap-4">
-        <div className="flex items-center justify-between w-full">
-          {/* User info */}
-          <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              {problem.user?.avatar ? (
-                <AvatarImage
-                  src={problem.user.avatar}
-                  loading="eager"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = "none";
-                  }}
-                />
-              ) : (
-                <AvatarFallback className="bg-blue-500 text-white">
-                  {problem.user?.name?.charAt(0) || "?"}
-                </AvatarFallback>
-              )}
-            </Avatar>
-            <span className="text-sm text-muted-foreground">
-              {problem.user.name}
-            </span>
-          </div>
-
-          {/* Timestamp */}
-          <div className="flex items-center text-muted-foreground text-xs gap-1">
-            <Clock size={14} />
-            <span>
-              {problem.createdAt
-                ? formatDistanceToNow(problem.createdAt, { addSuffix: true })
-                : "Just now"}
-            </span>
-          </div>
-        </div>
-
-        {/* Attachments */}
-        <div className="flex gap-4">
-          {/* Responses */}
-          <div className="flex items-center gap-1 text-muted-foreground text-sm">
-            <MessageCircle size={16} />
-            <span>{messageCount}</span>
-          </div>
-
-          {/* Attachments */}
-          {problem.image ? (
-            <div
-              onClick={(e) => { e.stopPropagation(); setIsImageDialogOpen(true); }}
-              className="flex items-center gap-1 text-muted-foreground text-sm cursor-pointer hover:text-white transition-colors"
-            >
-              <Paperclip size={16} />
-              <span>1 Attachment</span>
+      <Card
+        className="h-full flex flex-col w-auto cursor-pointer bg-[#101320] border border-[#1b1f30] hover:border-[#7CDCBD]/50 transition-colors duration-200 rounded-2xl overflow-hidden"
+        onClick={() => onHelpClick(problem)}
+      >
+        {/* Header */}
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-start mb-3 gap-2">
+            <div className="flex flex-col gap-1 min-w-0">
+              <Badge className="w-fit bg-[#181c2c] text-xs font-medium text-slate-200/90 border border-slate-600/40">
+                {problem.course}
+              </Badge>
+              <span className="text-[11px] uppercase tracking-[0.12em] text-slate-500">
+                {problem.category}
+              </span>
             </div>
-          ) : (
-            <div className="flex items-center gap-1 text-muted-foreground text-sm">
-              <Paperclip size={16} />
-              <span>No Attachments</span>
+            <Badge
+              className={`px-2 py-1 rounded-full text-[11px] font-semibold border-0 ${urgencyColors[problem.urgency]} bg-opacity-20`}
+            >
+              {problem.urgency.charAt(0).toUpperCase() + problem.urgency.slice(1)}{" "}
+              urgency
+            </Badge>
+          </div>
+          <CardTitle className="text-base sm:text-lg text-white line-clamp-2 leading-snug">
+            {problem.title}
+          </CardTitle>
+        </CardHeader>
+
+        {/* Content */}
+        <CardContent className="flex-grow overflow-hidden">
+          <p className="text-muted-foreground text-sm max-h-24 overflow-y-auto pr-1 custom-scrollbar leading-relaxed">
+            {problem.description}
+          </p>
+
+          {/* Image Popup Dialog */}
+          {problem.image && (
+            <div className="mt-3">
+              <DisplayImage
+                isOpen={isImageDialogOpen}
+                onClose={() => setIsImageDialogOpen(false)}
+                imageUrl={problem.image}
+              />
             </div>
           )}
-        </div>
-      </CardFooter>
-    </Card>
+        </CardContent>
+
+        {/* Footer */}
+        <CardFooter className="flex flex-col border-t border-discord-border pt-4 gap-4">
+          <div className="flex items-center justify-between w-full">
+            {/* User info */}
+            <div className="flex items-center gap-2 min-w-0">
+              <Avatar className="h-7 w-7 ring-2 ring-[#7CDCBD]/40 ring-offset-2 ring-offset-[#0c0f1a]">
+                {problem.user?.avatar ? (
+                  <AvatarImage
+                    src={problem.user.avatar}
+                    loading="eager"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <AvatarFallback className="bg-blue-500 text-white text-xs">
+                    {problem.user?.name?.charAt(0) || "?"}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="text-sm text-slate-100 truncate">
+                  {problem.user.name}
+                </span>
+                <span className="text-[11px] text-slate-500">
+                  {problem.createdAt
+                    ? formatDistanceToNow(problem.createdAt, { addSuffix: true })
+                    : "Just now"}
+                </span>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <MessageCircle size={14} className="text-[#7CDCBD]" />
+                <span className="font-medium">{messageCount}</span>
+              </div>
+              {problem.image ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsImageDialogOpen(true);
+                  }}
+                  className="flex items-center gap-1 hover:text-slate-100 transition-colors"
+                >
+                  <Paperclip size={14} />
+                  <span>View attachment</span>
+                </button>
+              ) : (
+                <div className="flex items-center gap-1 opacity-70">
+                  <Paperclip size={14} />
+                  <span>No attachment</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </CardFooter>
+      </Card>
     </motion.div>
   );
 };

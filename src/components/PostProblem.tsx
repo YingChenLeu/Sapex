@@ -39,7 +39,7 @@ const PostProblem = () => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<CourseCategory | "">(
-    ""
+    "",
   );
   const [selectedCourse, setSelectedCourse] = useState<Course | "">("");
   const [urgency, setUrgency] = useState<string>("low");
@@ -241,7 +241,7 @@ const PostProblem = () => {
                 const isImage = file.type.startsWith("image/");
                 if (!isImage) {
                   setUploadError(
-                    "Please upload an image file (e.g. JPEG, PNG)."
+                    "Please upload an image file (e.g. JPEG, PNG).",
                   );
                   return;
                 }
@@ -262,7 +262,7 @@ const PostProblem = () => {
                   setUploadError(
                     err instanceof Error
                       ? err.message
-                      : "Upload failed. Try again."
+                      : "Upload failed. Try again.",
                   );
                   setSelectedImage(null);
                 } finally {

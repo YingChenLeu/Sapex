@@ -98,7 +98,7 @@ export const ProblemChatDialog = ({
       "problems",
       problem.id,
       "activeUsers",
-      currentUser.uid
+      currentUser.uid,
     );
 
     const setActive = async () => {
@@ -300,8 +300,8 @@ export const ProblemChatDialog = ({
         setDoc(doc(db, "users", uid, "contributions", problem.id), {
           category,
           timestamp: serverTimestamp(),
-        })
-      )
+        }),
+      ),
     );
 
     await deleteDoc(doc(db, "problems", problem.id));
@@ -324,64 +324,118 @@ export const ProblemChatDialog = ({
               }}
               className="flex flex-col h-full"
             >
-              <DialogHeader className="px-6 py-4 border-b border-discord-border flex-shrink-0 relative">
-                <DialogTitle className="text-xl font-semibold flex items-center gap-4">
-                  {problem.title}
-                  {currentUser?.uid === problem.user.uid && (
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={handleDeletePost}
-                      className="flex items-center gap-1"
-                    >
-                      <Trash size={16} />
-                      Delete Post
-                    </Button>
-                  )}
-                </DialogTitle>
-                <div className="absolute right-20 top-5 text-sm text-muted-foreground animate-pulse">
-                  {activeUsers} online
-                </div>
-                <div className="text-sm text-muted-foreground mt-1">
-                  <span className="bg-discord-primary/20 text-discord-primary px-2 py-0.5 rounded mr-2">
-                    {problem.course}
-                  </span>
-                  Help {problem.user.name} solve their problem
+              <DialogHeader className="px-6 py-4 border-b border-discord-border flex-shrink-0">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <DialogTitle className="text-xl font-semibold line-clamp-2">
+                      {problem.title}
+                    </DialogTitle>
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                      <span className="bg-discord-primary/15 text-discord-primary px-2 py-0.5 rounded-full">
+                        {problem.course}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full uppercase tracking-wide text-[10px] ${
+                          problem.urgency === "high"
+                            ? "bg-red-500/20 text-red-300"
+                            : problem.urgency === "medium"
+                              ? "bg-yellow-500/20 text-yellow-300"
+                              : "bg-emerald-500/20 text-emerald-300"
+                        }`}
+                      >
+                        {problem.urgency} urgency
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        Help {problem.user.name} solve their problem
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="inline-flex items-center gap-1 rounded-full bg-[#181c27] px-3 py-1 text-xs">
+                      <CircleUserRound className="h-3 w-3 text-emerald-400" />
+                      <span className="font-semibold text-white">
+                        {Math.max(0, activeUsers - 1)}
+                      </span>
+                      <span className="text-[11px] text-gray-400">online</span>
+                    </div>
+                    {currentUser?.uid === problem.user.uid && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              "Delete this post for everyone? This cannot be undone.",
+                            )
+                          ) {
+                            handleDeletePost();
+                          }
+                        }}
+                        className="flex items-center gap-1 border-red-500/40 text-red-300 hover:bg-red-500/10 hover:text-red-200"
+                      >
+                        <Trash size={14} />
+                        <span className="text-xs font-medium">Delete post</span>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </DialogHeader>
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-                {messages.map((message) => (
-                  <div key={message.id} className="flex items-start gap-3">
-                    <Avatar className="h-8 w-8 mt-0.5">
-                      {message.user.avatar ? (
-                        <AvatarImage
-                          src={message.user.avatar}
-                          alt={message.user.name}
-                        />
-                      ) : (
-                        <AvatarFallback className="bg-discord-primary text-white">
-                          <CircleUserRound className="w-9 h-9" />
-                        </AvatarFallback>
-                      )}
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <div className="flex items-baseline space-x-2 mb-1">
-                        <span className="text-sm font-medium text-white">
-                          {message.user.name}
-                        </span>
-                        <span className="text-xs text-gray-400">
-                          {message.createdAt?.seconds
-                            ? dayjs.unix(message.createdAt.seconds).fromNow()
-                            : "just now"}
-                        </span>
-                      </div>
-                      <div className="rounded-2xl px-4 py-2 text-sm w-fit max-w-[500px] break-words bg-blue-400/20 text-blue-200">
-                        {message.content}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#0d1019]">
+                {messages.map((message) => {
+                  const isOwn = message.user.uid === currentUser?.uid;
+                  const displayName = isOwn ? "You" : message.user.name;
+                  return (
+                    <div
+                      key={message.id}
+                      className={`flex items-start gap-3 ${
+                        isOwn ? "flex-row-reverse text-right" : ""
+                      }`}
+                    >
+                      <Avatar
+                        className={`h-8 w-8 mt-0.5 ${
+                          isOwn ? "ml-1 ring-2 ring-discord-primary/70" : ""
+                        }`}
+                      >
+                        {message.user.avatar ? (
+                          <AvatarImage
+                            src={message.user.avatar}
+                            alt={message.user.name}
+                          />
+                        ) : (
+                          <AvatarFallback className="bg-discord-primary/80 text-white">
+                            <CircleUserRound className="w-4 h-4" />
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <div
+                        className={`flex flex-col max-w-[75%] ${
+                          isOwn ? "items-end" : "items-start"
+                        }`}
+                      >
+                        <div className="flex items-baseline gap-2 mb-1 text-xs">
+                          <span className="font-semibold text-white truncate">
+                            {displayName}
+                          </span>
+                          <span className="text-gray-400">
+                            {message.createdAt?.seconds
+                              ? dayjs.unix(message.createdAt.seconds).fromNow()
+                              : "just now"}
+                          </span>
+                        </div>
+                        <div
+                          className={`rounded-2xl px-4 py-2 text-sm w-fit max-w-full break-words shadow-sm ${
+                            isOwn
+                              ? "bg-discord-primary text-white rounded-br-sm"
+                              : "bg-[#171b26] text-gray-100 rounded-bl-sm"
+                          }`}
+                        >
+                          {message.content}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {typingUsers.length > 0 && (
                   <div className="px-4 text-xs text-muted-foreground animate-pulse">
                     {typingUsers.join(", ")}{" "}
@@ -427,7 +481,7 @@ export const ProblemChatDialog = ({
                       .filter((option) =>
                         option.name
                           .toLowerCase()
-                          .includes(mentionQuery.toLowerCase())
+                          .includes(mentionQuery.toLowerCase()),
                       )
                       .map((option, idx) => (
                         <div
@@ -471,7 +525,7 @@ export const ProblemChatDialog = ({
                           textAreaRef.current?.focus();
                           textAreaRef.current?.setSelectionRange(
                             start + emoji.length,
-                            start + emoji.length
+                            start + emoji.length,
                           );
                         }, 0);
                       }}
@@ -495,7 +549,7 @@ export const ProblemChatDialog = ({
                         textAreaRef.current?.focus();
                         textAreaRef.current?.setSelectionRange(
                           start + 1,
-                          start + 1
+                          start + 1,
                         );
                       }, 0);
                     }}
@@ -540,7 +594,7 @@ export const ProblemChatDialog = ({
                                   const pos = start + item.value.length;
                                   textAreaRef.current?.setSelectionRange(
                                     pos,
-                                    pos
+                                    pos,
                                   );
                                 }, 0);
                               }}

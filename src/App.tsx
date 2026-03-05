@@ -6,6 +6,7 @@ import AdminManagement from "./components/AdminManagement";
 import { Navigate } from "react-router-dom";
 import AboutDev from "./components/AboutDev";
 import AboutInitiative from "./components/AboutInitiative";
+import TechStack from "./components/TechStack";
 import Community from "./components/Community";
 import LandingPage from "./components/LandingPage";
 import Navbar from "./components/NavBar";
@@ -13,7 +14,6 @@ import { Routes, Route } from "react-router-dom";
 import SideBar, { SidebarProvider } from "./components/SideBar";
 import Auth from "./components/Auth";
 import HelpBoard from "./components/HelpBoard";
-
 import StudyRooms from "./components/StudyRooms";
 import PostProblem from "./components/PostProblem";
 import Contributions from "./components/Contribution";
@@ -27,6 +27,7 @@ import ChatPage from "./components/Chat";
 import NotificationListener from "./components/NotificationListener";
 import Main from "./components/Main";
 import { Toaster } from "sonner";
+import { OriginsLab } from "./components/OriginsLab";
 
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -169,6 +170,15 @@ function App() {
             }
           />
           <Route
+            path="/development"
+            element={
+              <div>
+                <Navbar />
+                <TechStack />
+              </div>
+            }
+          />
+          <Route
             path="/study-rooms"
             element={
               <ProtectedRoute>
@@ -254,7 +264,7 @@ function App() {
               <ProtectedRoute>
                 <div>
                   <SideBar />
-                  <StillInDevelopment />
+                  <OriginsLab />
                 </div>
               </ProtectedRoute>
             }

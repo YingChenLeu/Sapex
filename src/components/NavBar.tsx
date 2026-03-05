@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { UserRound, Users, LogIn, Leaf, Sparkles } from "lucide-react";
+import { UserRound, Users, LogIn, Leaf, Sparkles, Code2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
@@ -7,6 +7,7 @@ import { auth } from "@/lib/firebase";
 
 const navLinks = [
   { to: "/initiative", label: "Initiative", icon: Leaf },
+  { to: "/development", label: "Tech", icon: Code2 },
   { to: "/developer", label: "About", icon: UserRound },
   { to: "/community", label: "Communities", icon: Users },
 ] as const;
@@ -75,7 +76,7 @@ const Navbar = () => {
           >
             <Link to="/login" className="flex items-center gap-2">
               <LogIn size={18} />
-              <span>Login</span>
+              <span>Sign into Sapex</span>
             </Link>
           </Button>
         )}
