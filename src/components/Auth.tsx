@@ -6,9 +6,6 @@ import { useState } from "react";
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 import { FcGoogle } from "react-icons/fc";
-import { SiDiscord } from "react-icons/si";
-import { TfiMicrosoftAlt } from "react-icons/tfi";
-import { FaApple } from "react-icons/fa";
 import { auth, db, provider } from "../lib/firebase";
 import {
   signInWithPopup,
@@ -217,13 +214,14 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#112327] flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl relative bg-[#A8D3CC]/10 rounded-xl shadow-2xl overflow-hidden backdrop-blur-sm">
+    <div className="min-h-screen bg-[#0A0D17] flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl relative bg-[#101320]/80 border border-[#1b1f30] rounded-2xl shadow-2xl overflow-hidden backdrop-blur-sm">
         <div
           className="absolute top-0 left-0 w-1/2 h-full z-10 transition-[transform,border-radius] duration-700 ease-in-out"
           style={{
             transform: isLogin ? "translateX(0)" : "translateX(100%)",
-            background: "linear-gradient(135deg, #2D4F53 0%, #1A1F2C 100%)",
+            background:
+              "linear-gradient(135deg, #11141d 0%, #181c27 50%, #0d1019 100%)",
             borderRadius: isLogin ? "0px 0px 250px 0px" : "200px 0px 0px 0px",
           }}
         />
@@ -237,69 +235,58 @@ const Auth = () => {
                 : "-translate-x-full z-10 opacity-0"
             }`}
           >
-            <div className="text-[#D8DEDE] max-w-sm mx-auto pt-16">
+            <div className="text-slate-100 max-w-sm mx-auto pt-16">
               <div className="flex items-center gap-2 mb-8">
-                <LogIn className="w-8 h-8" />
-                <h2 className="text-3xl font-bold">Login</h2>
+                <LogIn className="w-8 h-8 text-[#7CDCBD]" />
+                <h2 className="text-3xl font-bold text-white">Login</h2>
               </div>
-              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+              {error && (
+                <p className="text-red-400 text-sm mb-4">{error}</p>
+              )}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email-login">Email</Label>
+                  <Label htmlFor="email-login" className="text-slate-300">
+                    Email
+                  </Label>
                   <Input
                     id="email-login"
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-[#A8D3CC]/10 border-[#A8D3CC]/20"
+                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password-login">Password</Label>
+                  <Label htmlFor="password-login" className="text-slate-300">
+                    Password
+                  </Label>
                   <Input
                     id="password-login"
                     type="password"
                     placeholder="••••••••"
-                    className="bg-[#A8D3CC]/10 border-[#A8D3CC]/20"
+                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
                   />
                 </div>
                 <Button
-                  className="w-full bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#A8D3CC]/90"
+                  className="w-full bg-[#7CDCBD] text-[#0A0D17] hover:bg-[#5FBFAA] font-semibold"
                   onClick={handleEmailLogin}
                   disabled={loading}
                 >
                   {loading ? "Logging in..." : "Login"}
                 </Button>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 pt-2">
+                  <span className="text-xs text-slate-500">Or continue with</span>
                   <button
                     onClick={handleClick}
                     type="button"
-                    className="w-10 h-10 rounded-full border border-[#A8D3CC] text-[#A8D3CC] hover:bg-[#A8D3CC]/10 flex items-center justify-center transition"
+                    className="rounded-full border border-[#7CDCBD]/50 bg-[#181c27] text-white hover:bg-[#7CDCBD]/10 flex items-center justify-center transition p-2.5"
                     aria-label="Sign in with Google"
                   >
-                    <FcGoogle size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    className="w-10 h-10 rounded-full border border-[#A8D3CC] text-[#A8D3CC] hover:bg-[#A8D3CC]/10 flex items-center justify-center transition"
-                  >
-                    <FaApple size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    className="w-10 h-10 rounded-full border border-[#A8D3CC] text-[#A8D3CC] hover:bg-[#A8D3CC]/10 flex items-center justify-center transition"
-                  >
-                    <SiDiscord size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    className="w-10 h-10 rounded-full border border-[#A8D3CC] text-[#A8D3CC] hover:bg-[#A8D3CC]/10 flex items-center justify-center transition"
-                  >
-                    <TfiMicrosoftAlt size={18} />
+                    <FcGoogle size={20} />
                   </button>
                 </div>
               </div>
@@ -314,48 +301,56 @@ const Auth = () => {
                 : "translate-x-0 z-20 opacity-100"
             }`}
           >
-            <div className="text-[#D8D3D3] max-w-sm mx-auto pt-16">
+            <div className="text-slate-100 max-w-sm mx-auto pt-16">
               <div className="flex items-center gap-2 mb-8">
-                <UserRound className="w-8 h-8" />
-                <h2 className="text-3xl font-bold">Sign Up</h2>
+                <UserRound className="w-8 h-8 text-[#7CDCBD]" />
+                <h2 className="text-3xl font-bold text-white">Sign Up</h2>
               </div>
-              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+              {error && (
+                <p className="text-red-400 text-sm mb-4">{error}</p>
+              )}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name" className="text-slate-300">
+                    Full Name
+                  </Label>
                   <Input
                     id="name"
                     placeholder="Enter your name"
-                    className="bg-[#A8D3CC]/10 border-[#A8D3CC]/20"
+                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email-signup">Email</Label>
+                  <Label htmlFor="email-signup" className="text-slate-300">
+                    Email
+                  </Label>
                   <Input
                     id="email-signup"
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-[#A8D3CC]/10 border-[#A8D3CC]/20"
+                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password-signup">Password</Label>
+                  <Label htmlFor="password-signup" className="text-slate-300">
+                    Password
+                  </Label>
                   <Input
                     id="password-signup"
                     type="password"
                     placeholder="••••••••"
-                    className="bg-[#A8D3CC]/10 border-[#A8D3CC]/20"
+                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
                   />
                 </div>
                 <Button
-                  className="w-full bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#A8D3CC]/90"
+                  className="w-full bg-[#7CDCBD] text-[#0A0D17] hover:bg-[#5FBFAA] font-semibold"
                   onClick={handleEmailSignup}
                   disabled={loading}
                 >
@@ -369,7 +364,7 @@ const Auth = () => {
         {/* Switch Button */}
         <button
           onClick={toggleForm}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-[#D8DEDE] hover:text-[#A8D3CC] transition-colors z-30"
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-slate-300 hover:text-[#7CDCBD] transition-colors z-30 text-sm font-medium"
         >
           {isLogin
             ? "Need an account? Sign Up"
