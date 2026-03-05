@@ -51,18 +51,17 @@ function AboutInitiative() {
               Why We Started
             </h1>
             <p className="text-lg md:text-xl text-[#D8DEDE]/85 leading-relaxed max-w-2xl mx-auto">
-              Sapex began to combat two critical gaps: a lack of human connection
-              that fuels mental health struggles, and a lack of unity and
-              collaboration among students.
+              We started Sapex because two things kept coming up: kids feeling
+              alone or stressed, and students not really helping each other
+              across classes and grades.
             </p>
             <p className="mt-5 text-base text-[#D8DEDE]/75 leading-relaxed max-w-2xl mx-auto">
-              Many young people feel isolated—at school, online, or in their own
-              heads—without a safe place to reach out. Silos between classes,
-              schools, and communities make it harder to learn together. Our
-              initiative exists to restore real connection and build unity: peer
-              support for academics and mental wellness, and collaboration
-              across and within communities. We offer anonymous chat for
-              non-academic issues so everyone can seek help without fear.
+              A lot of young people don’t have a safe place to talk, whether
+              that’s at school or online. And when everyone stays in their own
+              bubble, it’s harder to learn together. So we made a space where
+              you can get help with school, get support when you’re struggling,
+              and do it with people from your own community. You can also chat
+              anonymously when you need to, so no one has to be afraid to ask.
             </p>
           </motion.section>
 
@@ -85,12 +84,11 @@ function AboutInitiative() {
                     The Mission
                   </h2>
                   <p className="text-[#D8DEDE]/90 leading-relaxed text-base md:text-lg">
-                    We create a space where human connection comes first—so mental
-                    health is supported through real peer relationships, not
-                    isolation. We foster unity and collaboration so that
-                    students learn together, help each other, and grow as a
-                    community. Questions lead to understanding; challenges
-                    become opportunities to connect and support one another.
+                    We want a place where talking to real people comes first.
+                    So instead of dealing with stress or feeling alone, you can
+                    turn to peers who get it. Students help each other with
+                    school and with life stuff. When you have a question or
+                    a rough patch, someone’s there to figure it out with you.
                   </p>
                 </div>
               </div>
@@ -119,13 +117,13 @@ function AboutInitiative() {
                     <Heart className="w-7 h-7 text-[#A8D3CC]" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-3">
-                    Human Connection & Mental Health
+                    Someone to talk to
                   </h3>
                   <p className="text-[#D8DEDE]/85 leading-relaxed text-sm md:text-base">
-                    Isolation worsens mental health; connection heals. We provide
-                    peer support for wellness, stress, and belonging—so students
-                    have someone to talk to and a community that cares.
-                    Anonymous options keep it safe for everyone.
+                    Feeling alone or stressed is rough. We give you a way to
+                    talk to other students about wellness and everyday stuff,
+                    so you’re not on your own. You can stay anonymous if you
+                    want, so it’s safe for everyone.
                   </p>
                 </div>
               </motion.div>
@@ -142,14 +140,13 @@ function AboutInitiative() {
                     <Users className="w-7 h-7 text-[#A8D3CC]" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-3">
-                    Unity & Collaboration
+                    Learning together
                   </h3>
                   <p className="text-[#D8DEDE]/85 leading-relaxed text-sm md:text-base">
-                    We break down silos and bring students together—within
-                    schools and across communities. Share knowledge, solve
-                    problems, and support each other in one collaborative
-                    space. Your contributions build a stronger, more united
-                    learning environment for everyone.
+                    We get everyone in the same place so you can share what
+                    you know and get help when you’re stuck. You ask questions,
+                    others answer, and over time the whole community gets
+                    better at learning and helping each other.
                   </p>
                 </div>
               </motion.div>

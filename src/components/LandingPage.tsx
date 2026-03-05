@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Code2, Leaf } from "lucide-react";
+import { Code2, Leaf, Instagram } from "lucide-react";
 import Logo from "@/assets/sapexlogo.png";
 import MetaBalls from "./ui/MetaBalls";
 import CircularText from "./CircularText";
@@ -150,9 +150,9 @@ function TechCard({
 function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] flex flex-col">
-      {/* Hero */}
-      <motion.div
-        className="flex-1 flex flex-col items-center justify-center text-center px-4 pt-24"
+      {/* Top half: hero + spinning “Sapex builds communities” + trust bar */}
+      <motion.section
+        className="relative w-full overflow-hidden pt-32 pb-12 px-4 sm:px-6 md:px-8"
         initial="hidden"
         animate="visible"
         variants={{
@@ -161,163 +161,137 @@ function LandingPage() {
           },
           hidden: {},
         }}
+        style={{
+          background:
+            "linear-gradient(180deg, #111a16 0%, #0f1614 25%, #0d1218 55%, #0A0D17 85%, #0A0D17 100%)",
+        }}
       >
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 16 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          <img
-            src={Logo}
-            alt="Sapex Logo"
-            className="w-35 h-35 mb-5 animate-pulse"
-          />
-        </motion.div>
-        <motion.h1
-          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-[#D8DEDE] to-[#A8D3CC] bg-clip-text text-transparent"
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="font-syncopate">Sapex</span>
-        </motion.h1>
-        <motion.p
-          className="text-lg md:text-xl mb-4 max-w-3xl text-[#D8DEDE]/90 leading-relaxed"
-          variants={{
-            hidden: { opacity: 0, y: 16 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          A comprehensive, secure platform designed exclusively for educational
-          communities. Sapex empowers students to excel academically, support
-          each other's wellness, and build meaningful connections within their
-          school ecosystem.
-        </motion.p>
-        <motion.p
-          className="text-base md:text-lg mb-8 max-w-3xl text-[#D8DEDE]/75 leading-relaxed"
-          variants={{
-            hidden: { opacity: 0, y: 16 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          From academic problem-solving to peer wellness support, Sapex creates
-          a trusted environment where students can learn, grow, and thrive
-          together.
-        </motion.p>
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-4"
-          variants={{
-            hidden: { opacity: 0, y: 16 },
-            visible: { opacity: 1, y: 0 },
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.a
-            href={`mailto:sapexglobalyouth@gmail.com?subject=Bring Sapex to My Community&body=Name:%0D%0ASchool Name:%0D%0ACity:%0D%0ACountry:%0D%0AEmail Address:%0D%0AYour School Email Domain:%0D%0ADoes Your School use Google Sign In?:`}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Button className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53] transition-colors">
-              Bring to Your School
-            </Button>
-          </motion.a>
+        <div className="mx-auto max-w-6xl">
+          {/* Row 1: Hero copy (left) | Metaballs + circular text (right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="relative z-10 flex flex-col items-start text-left order-2 lg:order-1">
+              <motion.div
+                className="flex items-center justify-start gap-4 mb-6"
+                variants={{
+                  hidden: { opacity: 0, y: 16 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.5 }}
+              >
+                <img
+                  src={Logo}
+                  alt="Sapex Logo"
+                  className="w-20 h-20 sm:w-24 sm:h-24 opacity-95 shrink-0"
+                />
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#D8DEDE] to-[#A8D3CC] bg-clip-text text-transparent font-syncopate">
+                  Sapex
+                </h1>
+              </motion.div>
+              <motion.h2
+                className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#D8DEDE] mb-6 leading-tight"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.5 }}
+              >
+                Connect People, Build{" "}
+                <span className="text-[#A8D3CC] font-semibold">
+                  Communities
+                </span>
+              </motion.h2>
+              <motion.p
+                className="text-lg md:text-xl text-[#D8DEDE]/90 max-w-xl leading-relaxed"
+                variants={{
+                  hidden: { opacity: 0, y: 16 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.5 }}
+              >
+                Multi-use Support Platform for Teenagers and Young Adults
+              </motion.p>
+            </div>
 
-          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              asChild
-              variant="outline"
-              className="border-[#A8D3CC] text-[#D8DEDE] hover:bg-[#A8D3CC] hover:text-[#2D4F53]"
-            >
-              <Link to="/stillindevelopment">Find Your School</Link>
-            </Button>
-          </motion.div>
-        </motion.div>
-
-        {/* Decorative metaballs + circular text */}
-        <motion.div
-          className="relative w-full max-w-[900px] h-[440px] mt-10"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden border border-white/10">
-            <MetaBalls
-              color="#2D4F53"
-              cursorBallColor="#abd7dc"
-              cursorBallSize={2}
-              ballCount={19}
-              animationSize={30}
-              enableMouseInteraction={false}
-              enableTransparency={true}
-              hoverSmoothness={0.05}
-              clumpFactor={1}
-              speed={0.9}
-            />
-          </div>
-          <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-            <CircularText
-              text="SAPEX BUILDS COMMUNITIES "
-              onHover="goBonkers"
-              spinDuration={30}
-              className="custom-class"
-            />
-          </div>
-        </motion.div>
-
-        {/* Trust bar / stats */}
-        <motion.div
-          className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl w-full"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: { staggerChildren: 0.1, delayChildren: 0.8 },
-            },
-            hidden: {},
-          }}
-        >
-          {[
-            {
-              label: "Schools on waitlist",
-              value: "N/A",
-              desc: "Growing community",
-            },
-            {
-              label: "Questions answered",
-              value: "N/A",
-              desc: "Peer solutions",
-            },
-            { label: "Avg. response time", value: "N/A", desc: "Fast support" },
-            {
-              label: "Student satisfaction",
-              value: "N/A",
-              desc: "Trusted platform",
-            },
-          ].map((s) => (
             <motion.div
-              key={s.label}
-              className="rounded-xl border border-white/10 bg-white/5 p-4 hover:border-[#A8D3CC]/30 transition-colors"
-              variants={{
-                hidden: { opacity: 0, y: 12 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              whileHover={{ y: -2 }}
+              className="relative w-full aspect-square max-w-md mx-auto lg:max-w-none lg:mx-0 h-[280px] sm:h-[320px] lg:h-[340px] order-1 lg:order-2"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <div className="text-2xl font-semibold mb-1">{s.value}</div>
-              <div className="text-xs text-[#D8DEDE]/70 font-medium">
-                {s.label}
+              <div className="absolute inset-0 z-0 rounded-2xl overflow-hidden border border-white/10">
+                <MetaBalls
+                  color="#2D4F53"
+                  cursorBallColor="#abd7dc"
+                  cursorBallSize={2}
+                  ballCount={19}
+                  animationSize={30}
+                  enableMouseInteraction={false}
+                  enableTransparency={true}
+                  hoverSmoothness={0.05}
+                  clumpFactor={1}
+                  speed={0.9}
+                />
               </div>
-              <div className="text-xs text-[#D8DEDE]/50 mt-1">{s.desc}</div>
+              <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+                <CircularText
+                  text="SAPEX BUILDS COMMUNITIES "
+                  onHover="goBonkers"
+                  spinDuration={30}
+                  className="custom-class"
+                />
+              </div>
             </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
+          </div>
+
+          {/* Row 2: Trust bar / stats */}
+          <motion.div
+            className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.1, delayChildren: 0.5 },
+              },
+              hidden: {},
+            }}
+          >
+            {[
+              {
+                label: "Schools on waitlist",
+                value: "N/A",
+                desc: "Growing community",
+              },
+              {
+                label: "Questions answered",
+                value: "N/A",
+                desc: "Peer solutions",
+              },
+              { label: "Avg. response time", value: "N/A", desc: "Fast support" },
+              {
+                label: "Student satisfaction",
+                value: "N/A",
+                desc: "Trusted platform",
+              },
+            ].map((s) => (
+              <motion.div
+                key={s.label}
+                className="rounded-xl border border-white/10 bg-white/5 p-4 hover:border-[#A8D3CC]/30 transition-colors"
+                variants={{
+                  hidden: { opacity: 0, y: 12 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                whileHover={{ y: -2 }}
+              >
+                <div className="text-2xl font-semibold mb-1">{s.value}</div>
+                <div className="text-xs text-[#D8DEDE]/70 font-medium">
+                  {s.label}
+                </div>
+                <div className="text-xs text-[#D8DEDE]/50 mt-1">{s.desc}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </motion.section>
 
       {/* Our Purpose & Organization */}
       <section
@@ -333,16 +307,15 @@ function LandingPage() {
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Purpose</h2>
           <p className="text-lg text-[#D8DEDE]/90 leading-relaxed mb-6">
-            Sapex is a youth-led initiative created to give students a safe,
-            supportive space to learn, connect, and grow. We believe that every
-            young person deserves access to peer-led academic help and wellness
-            support within their own school community.
+            Sapex is run by young people for young people. We wanted a place
+            where students can get help with schoolwork and look out for each
+            other, without it feeling stiff or corporate. So we built one.
           </p>
           <p className="text-base text-[#D8DEDE]/80 leading-relaxed max-w-3xl mx-auto">
-            Our platform is built for schools and by people who care about
-            student well-being and academic success. We combine verified school
-            access, peer helpers, and structured support so that students can
-            thrive together—not in isolation.
+            Schools and teachers who care about their students use Sapex so
+            kids can ask questions, share what they know, and feel like they
+            belong. You work with people from your own school, so it stays
+            real and safe.
           </p>
         </motion.div>
       </section>
@@ -755,80 +728,34 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* Social media */}
       <section
-        id="faq"
+        id="social"
         className="py-16 md:py-24 border-t border-white/5 bg-white/5"
       >
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="text-center mb-4"
+            className="text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Frequently Asked Questions
+              Social media
             </h2>
-            <p className="text-lg text-[#D8DEDE]/80">
-              Everything you need to know about Sapex
+            <p className="text-lg text-[#D8DEDE]/80 mb-10">
+              Follow us for updates and community highlights
             </p>
-          </motion.div>
-          <motion.div
-            className="space-y-4 mt-12"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
-            variants={{
-              visible: {
-                transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-              },
-              hidden: {},
-            }}
-          >
-            {[
-              {
-                q: "Is Sapex anonymous?",
-                a: "Yes, you have full control over your privacy. You can post questions and problems either anonymously or with your profile visible. All users are verified through their school Google account first, ensuring a safe community while respecting your choice to remain anonymous when needed.",
-              },
-              {
-                q: "How do schools get access?",
-                a: "Schools can request access by having an educator or administrator contact us through the 'Bring to Your School' button above. We'll work with your IT department to set up Google authentication, configure your school's community settings, and provide training materials. The onboarding process typically takes 1-2 weeks.",
-              },
-              {
-                q: "Is it free?",
-                a: "Yes, Sapex is completely free for all students. Schools can optionally upgrade to premium plans that include advanced moderation tools, analytics dashboards, custom branding, and priority support. However, all core features—academic help, wellness support, and community building—remain free for students.",
-              },
-              {
-                q: "What is a Sapex Helper?",
-                a: "Sapex Helpers are students who volunteer to provide peer support and guidance. They undergo a brief orientation and commit to supporting others with respect, empathy, and patience. Helpers can assist with both academic questions and wellness support, creating a culture of mutual aid within your school community.",
-              },
-              {
-                q: "What subjects are supported?",
-                a: "The Academic Center supports all major subject areas including Mathematics, Science (Biology, Chemistry, Physics), English Language and Literature, Social Sciences (History, Geography, Economics), and Foreign Languages. You can also post general academic questions or study strategy inquiries.",
-              },
-            ].map(({ q, a }) => (
-              <motion.details
-                key={q}
-                className="group rounded-xl border border-white/10 bg-[#0C111C] p-5 open:pb-4 hover:border-[#A8D3CC]/30 transition-colors"
-                variants={{
-                  hidden: { opacity: 0, x: -12 },
-                  visible: { opacity: 1, x: 0 },
-                }}
-                transition={{ duration: 0.35 }}
-              >
-                <summary className="cursor-pointer select-none flex items-center justify-between">
-                  <span className="font-medium text-lg">{q}</span>
-                  <span className="text-[#A8D3CC] group-open:rotate-45 transition text-xl">
-                    +
-                  </span>
-                </summary>
-                <p className="mt-3 text-sm text-[#D8DEDE]/80 leading-relaxed">
-                  {a}
-                </p>
-              </motion.details>
-            ))}
+            <a
+              href="https://www.instagram.com/sapexglobal_initiative/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#0C111C] border border-white/10 text-[#D8DEDE] hover:border-[#A8D3CC]/40 hover:text-[#A8D3CC] transition-colors"
+              aria-label="Sapex on Instagram"
+            >
+              <Instagram className="w-7 h-7" strokeWidth={1.5} />
+            </a>
           </motion.div>
         </div>
       </section>
