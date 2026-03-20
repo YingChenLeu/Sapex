@@ -28,6 +28,43 @@ import NotificationListener from "./components/NotificationListener";
 import Main from "./components/Main";
 import { Toaster } from "sonner";
 import { OriginsLab } from "./components/OriginsLab";
+import { useLocation } from "react-router-dom";
+
+const APP_NAME = "Sapex";
+
+const getPageTitle = (pathname: string) => {
+  if (pathname === "/") return "Landing";
+  if (pathname === "/main") return "Control Center";
+  if (pathname === "/helpboard") return "Academic Center";
+  if (pathname === "/post-problem") return "Post a Problem";
+  if (pathname === "/study-rooms") return "Study Rooms";
+  if (pathname === "/origins-lab") return "Origins Lab";
+  if (pathname === "/wellness-support") return "Wellness Support";
+  if (pathname === "/contributions") return "Contributions";
+  if (pathname === "/personality-quiz") return "Personality Quiz";
+  if (pathname === "/finding-match") return "Finding Match";
+  if (pathname === "/chat/:id" || pathname.startsWith("/chat/")) return "Chat";
+  if (pathname === "/user-profile") return "User Profile";
+  if (pathname === "/admin") return "Admin";
+  if (pathname === "/initiative") return "About Initiative";
+  if (pathname === "/development") return "Tech Stack";
+  if (pathname === "/developer") return "About Developer";
+  if (pathname === "/community") return "Community";
+  if (pathname === "/stillindevelopment") return "Still In Development";
+  if (pathname === "/login") return "Login";
+  return APP_NAME;
+};
+
+const DocumentTitleManager = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const pageTitle = getPageTitle(location.pathname);
+    document.title = pageTitle === APP_NAME ? APP_NAME : `${pageTitle} | ${APP_NAME}`;
+  }, [location.pathname]);
+
+  return null;
+};
 
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -134,6 +171,7 @@ function App() {
       <Toaster position="top-right" richColors closeButton />
       <SidebarProvider>
         <NotificationListener uid={uid} />
+        <DocumentTitleManager />
         <Routes>
           <Route
             path="/"
