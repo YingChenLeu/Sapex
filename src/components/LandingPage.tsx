@@ -8,6 +8,7 @@ import FloatingLines from "./ui/FloatingLines";
 import SoftAurora from "./ui/SoftAurora";
 import BorderGlow from "./ui/BorderGlow";
 import MemoriesBento from "./ui/MemoriesBento";
+import ActionWordsMarquee from "./ui/ActionWordsMarquee";
 import CircularText from "./CircularText";
 import {
   AcademicHubDemo,
@@ -257,9 +258,10 @@ function LandingPage() {
                 Multi-use Support Platform for Teenagers and Young Adults
               </motion.p>
               <p className="mt-4 text-sm sm:text-base text-[#D8DEDE]/80 max-w-xl leading-relaxed">
-                Sapex Connect is a student collaboration platform with guided study rooms and peer
-                academic help — so students can learn together, ask questions, and get support from
-                their school community.
+                Sapex Connect is a student collaboration platform with guided
+                study rooms and peer academic help — so students can learn
+                together, ask questions, and get support from their school
+                community.
               </p>
             </div>
 
@@ -310,7 +312,10 @@ function LandingPage() {
           >
             <motion.div
               className="text-sm text-[#D8DEDE]/85 sm:text-base"
-              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: { opacity: 1, y: 0 },
+              }}
             >
               <span className="font-semibold text-[#D8DEDE]">Funded by</span>{" "}
               <span className="font-semibold text-[#A8D3CC]">AISCT</span>
@@ -322,7 +327,10 @@ function LandingPage() {
             />
             <motion.div
               className="text-sm text-[#D8DEDE]/85 sm:text-base"
-              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: { opacity: 1, y: 0 },
+              }}
             >
               <span className="font-semibold text-[#D8DEDE]">Used by</span>{" "}
               <span className="font-semibold text-[#A8D3CC]">
@@ -332,6 +340,9 @@ function LandingPage() {
           </motion.div>
         </div>
       </motion.section>
+
+      {/* Action words marquee — Discord-inspired infinite verb strip */}
+      <ActionWordsMarquee />
 
       {/* Our Purpose & Organization */}
       <section
@@ -951,6 +962,101 @@ function LandingPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Discord-inspired punchy outro CTA */}
+      <section
+        id="cta"
+        className="relative overflow-hidden border-t border-white/5 py-20 md:py-28"
+      >
+        <div className="pointer-events-none absolute inset-0 z-0 opacity-50 [mask-image:radial-gradient(ellipse_60%_70%_at_50%_50%,black_0%,transparent_85%)]">
+          <SoftAurora
+            color1="#A8D3CC"
+            color2="#2D4F53"
+            brightness={0.65}
+            speed={0.4}
+            scale={1.5}
+            enableMouseInteraction={false}
+          />
+        </div>
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(168,211,204,0.10), transparent 70%)",
+          }}
+        />
+        <motion.div
+          className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <motion.h2
+            className="font-syncopate font-bold uppercase leading-[0.95] tracking-tight text-[clamp(2.5rem,8vw,6.5rem)] bg-gradient-to-b from-[#D8DEDE] via-[#A8D3CC] to-[#2D4F53] bg-clip-text text-transparent"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+          >
+            You found us.
+          </motion.h2>
+          <motion.h2
+            className="font-syncopate font-bold uppercase leading-[0.95] tracking-tight text-[clamp(2.5rem,8vw,6.5rem)] bg-gradient-to-b from-[#A8D3CC] to-[#D8DEDE] bg-clip-text text-transparent mt-2"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.18 }}
+          >
+            Now find your people.
+          </motion.h2>
+
+          <motion.div
+            className="mt-10 flex flex-wrap items-center justify-center gap-3"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.35 }}
+          >
+            <motion.span
+              className="block rounded-xl"
+              animate={{
+                boxShadow: [
+                  "0 0 24px rgba(168,211,204,0.18)",
+                  "0 0 44px rgba(168,211,204,0.32)",
+                  "0 0 24px rgba(168,211,204,0.18)",
+                ],
+              }}
+              transition={{
+                boxShadow: {
+                  repeat: Infinity,
+                  duration: 2.6,
+                  ease: "easeInOut",
+                },
+              }}
+            >
+              <Button
+                asChild
+                size="lg"
+                className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53] text-base px-7 py-6 rounded-xl"
+              >
+                <Link to="/login">Sign in to Sapex</Link>
+              </Button>
+            </motion.span>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-[#A8D3CC]/60 bg-transparent text-[#D8DEDE] hover:bg-[#A8D3CC]/10 hover:text-[#D8DEDE] text-base px-7 py-6 rounded-xl"
+            >
+              <Link to="/community">Browse schools</Link>
+            </Button>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Reverse marquee right above the footer for a final visual beat */}
+      <ActionWordsMarquee reverse durationSeconds={48} />
 
       {/* Footer / CTA */}
       <motion.footer
