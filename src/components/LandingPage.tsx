@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Code2, Leaf, Instagram } from "lucide-react";
+import { Code2, Leaf, Instagram, Info, ExternalLink } from "lucide-react";
 import Logo from "@/assets/sapexlogo.png";
 import MetaBalls from "./ui/MetaBalls";
 import FloatingLines from "./ui/FloatingLines";
@@ -15,6 +15,7 @@ import {
   WellnessDemo,
   StudyRoomsDemo,
   OriginsLabDemo,
+  RateYourChanceDemo,
 } from "./ui/FeatureShowcase";
 import firebaseLogo from "@/assets/landingPageAssets/devLogos/firebase.png";
 import fastAPILogo from "@/assets/landingPageAssets/devLogos/fastAPI.png";
@@ -744,11 +745,11 @@ function LandingPage() {
               See Sapex in action
             </p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Four places students show up for each other
+              Where students show up for each other
             </h2>
             <p className="text-base sm:text-lg text-[#D8DEDE]/80 max-w-2xl mx-auto">
               Looping previews of the real Sapex flows — Academic Center,
-              Wellness Support, Study Rooms, and Origins Lab.
+              Wellness Support, Study Rooms, Origins Lab, and Rate Your Chance.
             </p>
           </motion.div>
 
@@ -765,6 +766,7 @@ function LandingPage() {
                 ],
                 Demo: AcademicHubDemo,
                 reverse: false,
+                disclaimer: undefined as string | undefined,
               },
               {
                 eyebrow: "Wellness Support",
@@ -777,6 +779,7 @@ function LandingPage() {
                 ],
                 Demo: WellnessDemo,
                 reverse: true,
+                disclaimer: undefined as string | undefined,
               },
               {
                 eyebrow: "Study Rooms",
@@ -789,6 +792,7 @@ function LandingPage() {
                 ],
                 Demo: StudyRoomsDemo,
                 reverse: false,
+                disclaimer: undefined as string | undefined,
               },
               {
                 eyebrow: "Origins Lab",
@@ -801,45 +805,103 @@ function LandingPage() {
                 ],
                 Demo: OriginsLabDemo,
                 reverse: true,
+                disclaimer: undefined as string | undefined,
               },
-            ].map(({ eyebrow, title, copy, bullets, Demo, reverse }) => (
-              <motion.div
-                key={eyebrow}
-                className={`grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 items-center ${
-                  reverse ? "lg:[&>*:first-child]:order-2" : ""
-                }`}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
-              >
-                <div className="max-w-xl">
-                  <div className="text-[#A8D3CC] font-medium tracking-wider text-xs uppercase mb-3">
-                    {eyebrow}
+              {
+                eyebrow: "Rate Your Chance",
+                title: "Crowdsource an honest read on your dream school.",
+                copy: "Post your application snapshot anonymously and let verified peers weigh in. The crowd surfaces a chance estimate plus respectful, actionable feedback — so you know where you really stand before decision day.",
+                bullets: [
+                  "Anonymous submissions with peer-only visibility",
+                  "Crowd verdicts split by Reach / Target / Likely / Safety",
+                  "Moderated comments focused on actionable advice",
+                ],
+                Demo: RateYourChanceDemo,
+                reverse: false,
+                disclaimer:
+                  "Available only on the public version at sapexconnect.com. Not enabled on the AISCT deployment.",
+              },
+            ].map(
+              ({
+                eyebrow,
+                title,
+                copy,
+                bullets,
+                Demo,
+                reverse,
+                disclaimer,
+              }) => (
+                <motion.div
+                  key={eyebrow}
+                  className={`grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 items-center ${
+                    reverse ? "lg:[&>*:first-child]:order-2" : ""
+                  }`}
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+                >
+                  <div className="max-w-xl">
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <span className="text-[#A8D3CC] font-medium tracking-wider text-xs uppercase">
+                        {eyebrow}
+                      </span>
+                      {disclaimer && (
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/30 bg-amber-300/10 px-2.5 py-0.5 text-[11px] font-medium text-amber-200/90">
+                          <ExternalLink className="w-3 h-3" />
+                          Public version only
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+                      {title}
+                    </h3>
+                    <p className="text-base sm:text-lg text-[#D8DEDE]/85 leading-relaxed mb-6">
+                      {copy}
+                    </p>
+                    <ul className="space-y-2.5">
+                      {bullets.map((b) => (
+                        <li
+                          key={b}
+                          className="flex items-start gap-2.5 text-sm sm:text-base text-[#D8DEDE]/80"
+                        >
+                          <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#A8D3CC] shrink-0" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {disclaimer && (
+                      <div className="mt-6 flex items-start gap-2.5 rounded-xl border border-amber-300/20 bg-amber-300/[0.06] px-3.5 py-3 text-sm text-amber-100/85 leading-relaxed">
+                        <Info className="w-4 h-4 mt-0.5 shrink-0 text-amber-300/80" />
+                        <span>
+                          {disclaimer.split("sapexconnect.com").map(
+                            (chunk, idx, arr) =>
+                              idx < arr.length - 1 ? (
+                                <span key={idx}>
+                                  {chunk}
+                                  <a
+                                    href="https://www.sapexconnect.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-amber-200 underline underline-offset-2 hover:text-amber-100"
+                                  >
+                                    sapexconnect.com
+                                  </a>
+                                </span>
+                              ) : (
+                                <span key={idx}>{chunk}</span>
+                              )
+                          )}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-                    {title}
-                  </h3>
-                  <p className="text-base sm:text-lg text-[#D8DEDE]/85 leading-relaxed mb-6">
-                    {copy}
-                  </p>
-                  <ul className="space-y-2.5">
-                    {bullets.map((b) => (
-                      <li
-                        key={b}
-                        className="flex items-start gap-2.5 text-sm sm:text-base text-[#D8DEDE]/80"
-                      >
-                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[#A8D3CC] shrink-0" />
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="flex items-center justify-center">
-                  <Demo />
-                </div>
-              </motion.div>
-            ))}
+                  <div className="flex items-center justify-center">
+                    <Demo />
+                  </div>
+                </motion.div>
+              )
+            )}
           </div>
         </div>
       </section>
