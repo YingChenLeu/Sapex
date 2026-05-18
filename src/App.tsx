@@ -30,6 +30,7 @@ import Main from "./components/Main";
 import { Toaster } from "sonner";
 import { OriginsLab } from "./components/OriginsLab";
 import { useLocation } from "react-router-dom";
+import { EasterEggPage } from "./components/ui/EasterEgg";
 
 const APP_NAME = "Sapex";
 const LANDING_TAB_TITLE = "Sapex Connect – Student Collaboration Platform";
@@ -54,6 +55,7 @@ const getPageTitle = (pathname: string) => {
   if (pathname === "/community") return "Community";
   if (pathname === "/stillindevelopment") return "Still In Development";
   if (pathname === "/login") return "Login";
+  if (pathname === "/easteregg") return "Easter Egg";
   return APP_NAME;
 };
 
@@ -258,6 +260,7 @@ function App() {
               </div>
             }
           />
+          <Route path="/easteregg" element={<EasterEggPage />} />
           <Route
             path="/contributions"
             element={
