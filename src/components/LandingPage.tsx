@@ -177,9 +177,7 @@ function TechCard({
 function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] flex flex-col">
-      <div className="w-full border-b border-[#2D4F53]/40 bg-[#0C111C]/90 px-4 py-2 text-center text-xs font-medium uppercase tracking-[0.16em] text-[#A8D3CC] sm:px-6">
-        Powerd by smt smt smt
-      </div>
+ 
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
@@ -237,78 +235,6 @@ function LandingPage() {
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#D8DEDE] to-[#A8D3CC] bg-clip-text text-transparent font-syncopate">
                   Sapex Connect
                 </h1>
-              </motion.div>
-              <motion.div
-                className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-base sm:text-lg text-[#D8DEDE]/70"
-                variants={{
-                  hidden: { opacity: 0, y: 12 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.5 }}
-              >
-                <span>Powered by</span>
-                <a
-                  href="https://vercel.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 font-medium text-[#D8DEDE] transition-opacity hover:opacity-80"
-                >
-                  <svg
-                    viewBox="0 0 76 65"
-                    aria-hidden="true"
-                    className="h-6 w-6 sm:h-7 sm:w-7 fill-current"
-                  >
-                    <path d="M37.59.25l36.95 64H.64l36.95-64z" />
-                  </svg>
-                  <span>Vercel</span>
-                </a>
-                <a
-                  href="https://firebase.google.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 font-medium text-[#D8DEDE] transition-opacity hover:opacity-80"
-                >
-                  <svg
-                    viewBox="0 0 256 351"
-                    aria-hidden="true"
-                    className="h-7 w-7 sm:h-8 sm:w-8"
-                  >
-                    <path
-                      fill="#FFC24A"
-                      d="M1.253 280.732l1.605-2.314 103.589-196.524-43.572 82.296z"
-                    />
-                    <path
-                      fill="#FFA712"
-                      d="M134.417 148.974l32.039-32.812-32.039-58.717-28.616 54.467z"
-                    />
-                    <path
-                      fill="#F4BD62"
-                      d="M139.121 137.587l32.039-32.812-32.039-58.717-28.616 54.467z"
-                      opacity="0"
-                    />
-                    <path
-                      fill="#FFA50E"
-                      d="M134.417 148.974l32.039-32.812-32.039-58.717-28.616 54.467z"
-                    />
-                    <path
-                      fill="#F6820C"
-                      d="M0 282.998l.962-.617 3.79-1.527 138.823-138.292.503-1.371-31.66-60.39z"
-                    />
-                    <path
-                      fill="#FDE068"
-                      d="M147.937 350.523l108.062-60.477-30.851-189.892-43.59-39.011-138.745 282.55z"
-                    />
-                    <path
-                      fill="#FCCA3F"
-                      d="M255.999 290.046l-30.851-189.892-43.59-39.011-43.621 80.831z"
-                    />
-                    <path
-                      fill="#EEAB37"
-                      d="M147.937 350.523l-.61.336-108.062-67.86z"
-                    />
-                  </svg>
-                  <span>Firebase</span>
-                </a>
               </motion.div>
               <motion.h2
                 className="text-2xl sm:text-4xl md:text-5xl font-bold text-[#D8DEDE] mb-5 sm:mb-6 leading-tight"
