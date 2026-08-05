@@ -1,39 +1,48 @@
-import { JSX, useEffect, useState } from "react";
+import { JSX, Suspense, lazy, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
-import AdminManagement from "./components/AdminManagement";
-import { Navigate } from "react-router-dom";
-import AboutDev from "./components/AboutDev";
-import AboutInitiative from "./components/AboutInitiative";
-import TechStack from "./components/TechStack";
-import Community from "./components/Community";
-import LandingPage from "./components/LandingPage";
+import { Navigate, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/NavBar";
-import { Routes, Route } from "react-router-dom";
 import SideBar, { SidebarProvider } from "./components/SideBar";
-import FloatingLines from "./components/ui/FloatingLines";
-import Auth from "./components/Auth";
-import HelpBoard from "./components/HelpBoard";
-import StudyRooms from "./components/StudyRooms";
-import PostProblem from "./components/PostProblem";
-import Contributions from "./components/Contribution";
 import ProtectedRoute from "./components/ProtectedRoute";
-import StillInDevelopment from "./components/StillInDevelopment";
-import Profile from "./components/Profile";
-import WellnessSupport from "./components/WellnessSupport";
-import PersonalityQuiz from "./components/Big5Personality";
-import Matching from "./components/Loading";
-import ChatPage from "./components/Chat";
 import NotificationListener from "./components/NotificationListener";
-import Main from "./components/Main";
 import { Toaster } from "sonner";
-import { OriginsLab } from "./components/OriginsLab";
-import { useLocation } from "react-router-dom";
-import { EasterEggPage } from "./components/ui/EasterEgg";
+
+const AdminManagement = lazy(() => import("./components/AdminManagement"));
+const AboutDev = lazy(() => import("./components/AboutDev"));
+const AboutInitiative = lazy(() => import("./components/AboutInitiative"));
+const TechStack = lazy(() => import("./components/TechStack"));
+const Community = lazy(() => import("./components/Community"));
+const LandingPage = lazy(() => import("./components/LandingPage"));
+const FloatingLines = lazy(() => import("./components/ui/FloatingLines"));
+const Auth = lazy(() => import("./components/Auth"));
+const HelpBoard = lazy(() => import("./components/HelpBoard"));
+const StudyRooms = lazy(() => import("./components/StudyRooms"));
+const PostProblem = lazy(() => import("./components/PostProblem"));
+const Contributions = lazy(() => import("./components/Contribution"));
+const StillInDevelopment = lazy(() => import("./components/StillInDevelopment"));
+const Profile = lazy(() => import("./components/Profile"));
+const WellnessSupport = lazy(() => import("./components/WellnessSupport"));
+const PersonalityQuiz = lazy(() => import("./components/Big5Personality"));
+const Matching = lazy(() => import("./components/Loading"));
+const ChatPage = lazy(() => import("./components/Chat"));
+const Main = lazy(() => import("./components/Main"));
+const OriginsLab = lazy(() =>
+  import("./components/OriginsLab").then((m) => ({ default: m.OriginsLab }))
+);
+const EasterEggPage = lazy(() =>
+  import("./components/ui/EasterEgg").then((m) => ({ default: m.EasterEggPage }))
+);
 
 const APP_NAME = "Sapex";
 const LANDING_TAB_TITLE = "Sapex Connect – Student Collaboration Platform";
+
+const PageFallback = () => (
+  <div className="flex min-h-screen items-center justify-center bg-[#0A0D17] text-white/70">
+    Loading…
+  </div>
+);
 
 const getPageTitle = (pathname: string) => {
   if (pathname === "/") return LANDING_TAB_TITLE;
@@ -179,210 +188,212 @@ function App() {
       <SidebarProvider>
         <NotificationListener uid={uid} />
         <DocumentTitleManager />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <Navbar /> <LandingPage />
-              </div>
-            }
-          />
-          <Route
-            path="/post-problem"
-            element={
-              <div>
-                <PostProblem />
-              </div>
-            }
-          />
-          <Route
-            path="/main"
-            element={
-              <div className="relative min-h-screen overflow-hidden bg-[#0A0D17]">
-                <div className="pointer-events-none absolute inset-0 z-0 opacity-35 [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.9),rgba(0,0,0,0.4),transparent)]">
-                  <FloatingLines
-                    linesGradient={["#45f56e", "#A8D3CC", "#2D4F53"]}
-                    interactive={false}
-                    bendStrength={-15}
-                    parallax={false}
-                    mixBlendMode="screen"
-                  />
-                </div>
-                <SideBar />
-                <Main />
-              </div>
-            }
-          />
-          <Route
-            path="/initiative"
-            element={
-              <div>
-                <AboutInitiative />
-                <Navbar />
-              </div>
-            }
-          />
-          <Route
-            path="/development"
-            element={
-              <div>
-                <Navbar />
-                <TechStack />
-              </div>
-            }
-          />
-          <Route
-            path="/study-rooms"
-            element={
-              <ProtectedRoute>
+        <Suspense fallback={<PageFallback />}>
+          <Routes>
+            <Route
+              path="/"
+              element={
                 <div>
-                  <StudyRooms />
-                  <SideBar />
+                  <Navbar /> <LandingPage />
                 </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/developer"
-            element={
-              <div>
-                <AboutDev />
-                <Navbar />
-              </div>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <div>
-                <Auth />
-              </div>
-            }
-          />
-          <Route path="/easteregg" element={<EasterEggPage />} />
-          <Route
-            path="/contributions"
-            element={
-              <div>
+              }
+            />
+            <Route
+              path="/post-problem"
+              element={
+                <div>
+                  <PostProblem />
+                </div>
+              }
+            />
+            <Route
+              path="/main"
+              element={
+                <div className="relative min-h-screen overflow-hidden bg-[#0A0D17]">
+                  <div className="pointer-events-none absolute inset-0 z-0 opacity-35 [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.9),rgba(0,0,0,0.4),transparent)]">
+                    <FloatingLines
+                      linesGradient={["#45f56e", "#A8D3CC", "#2D4F53"]}
+                      interactive={false}
+                      bendStrength={-15}
+                      parallax={false}
+                      mixBlendMode="screen"
+                    />
+                  </div>
+                  <SideBar />
+                  <Main />
+                </div>
+              }
+            />
+            <Route
+              path="/initiative"
+              element={
+                <div>
+                  <AboutInitiative />
+                  <Navbar />
+                </div>
+              }
+            />
+            <Route
+              path="/development"
+              element={
+                <div>
+                  <Navbar />
+                  <TechStack />
+                </div>
+              }
+            />
+            <Route
+              path="/study-rooms"
+              element={
                 <ProtectedRoute>
                   <div>
-                    <Contributions />
+                    <StudyRooms />
                     <SideBar />
                   </div>
                 </ProtectedRoute>
-              </div>
-            }
-          />
-          <Route
-            path="/chat/:id"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route
+              path="/developer"
+              element={
                 <div>
-                  <ChatPage />
-                  <SideBar />
+                  <AboutDev />
+                  <Navbar />
                 </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/stillindevelopment"
-            element={
-              <div>
-                <StillInDevelopment />
-              </div>
-            }
-          />
-          <Route
-            path="/community"
-            element={
-              <div>
-                <Community />
-                <Navbar />
-              </div>
-            }
-          />
-          <Route
-            path="/helpboard"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route
+              path="/login"
+              element={
                 <div>
-                  <SideBar />
-                  <HelpBoard />
+                  <Auth />
                 </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/origins-lab"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route path="/easteregg" element={<EasterEggPage />} />
+            <Route
+              path="/contributions"
+              element={
                 <div>
-                  <SideBar />
-                  <OriginsLab />
+                  <ProtectedRoute>
+                    <div>
+                      <Contributions />
+                      <SideBar />
+                    </div>
+                  </ProtectedRoute>
                 </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/personality-quiz"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat/:id"
+              element={
+                <ProtectedRoute>
+                  <div>
+                    <ChatPage />
+                    <SideBar />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stillindevelopment"
+              element={
                 <div>
-                  <SideBar />
-                  <PersonalityQuiz />
+                  <StillInDevelopment />
                 </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/wellness-support"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route
+              path="/community"
+              element={
                 <div>
-                  <SideBar />
-                  <WellnessSupport />
+                  <Community />
+                  <Navbar />
                 </div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/finding-match"
-            element={
-              <ProtectedRoute>
-                <div>
-                  <SideBar />
-                  <Matching />
-                </div>
-              </ProtectedRoute>
-            }
-          />
+              }
+            />
+            <Route
+              path="/helpboard"
+              element={
+                <ProtectedRoute>
+                  <div>
+                    <SideBar />
+                    <HelpBoard />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/origins-lab"
+              element={
+                <ProtectedRoute>
+                  <div>
+                    <SideBar />
+                    <OriginsLab />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/personality-quiz"
+              element={
+                <ProtectedRoute>
+                  <div>
+                    <SideBar />
+                    <PersonalityQuiz />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/wellness-support"
+              element={
+                <ProtectedRoute>
+                  <div>
+                    <SideBar />
+                    <WellnessSupport />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/finding-match"
+              element={
+                <ProtectedRoute>
+                  <div>
+                    <SideBar />
+                    <Matching />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/user-profile"
-            element={
-              <ProtectedRoute>
-                <div>
-                  <Profile />
-                  <SideBar />
-                </div>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-        <Routes>
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <div>
-                  <SideBar />
-                  <AdminManagement />
-                </div>
-              </AdminRoute>
-            }
-          />
-        </Routes>
+            <Route
+              path="/user-profile"
+              element={
+                <ProtectedRoute>
+                  <div>
+                    <Profile />
+                    <SideBar />
+                  </div>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+          <Routes>
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <div>
+                    <SideBar />
+                    <AdminManagement />
+                  </div>
+                </AdminRoute>
+              }
+            />
+          </Routes>
+        </Suspense>
       </SidebarProvider>
     </>
   );
