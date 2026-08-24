@@ -1,4 +1,4 @@
-import { JSX, Suspense, lazy, useEffect, useState } from "react";
+import { JSX, Suspense, lazy, useCallback, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
@@ -8,6 +8,7 @@ import SideBar, { SidebarProvider } from "./components/SideBar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotificationListener from "./components/NotificationListener";
 import { Toaster } from "sonner";
+import { RootIntroSplash } from "./components/IntroSplash";
 
 const AdminManagement = lazy(() => import("./components/AdminManagement"));
 const AboutDev = lazy(() => import("./components/AboutDev"));
@@ -82,6 +83,18 @@ const DocumentTitleManager = () => {
   return null;
 };
 
+const HomePage = ({ onReady }: { onReady: () => void }) => {
+  useEffect(() => {
+    onReady();
+  }, [onReady]);
+
+  return (
+    <div>
+      <Navbar /> <LandingPage />
+    </div>
+  );
+};
+
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -105,6 +118,8 @@ const AdminRoute = ({ children }: { children: JSX.Element }) => {
 
 function App() {
   const [uid, setUid] = useState("");
+  const [homeReady, setHomeReady] = useState(false);
+  const markHomeReady = useCallback(() => setHomeReady(true), []);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -192,11 +207,7 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={
-                <div>
-                  <Navbar /> <LandingPage />
-                </div>
-              }
+              element={<HomePage onReady={markHomeReady} />}
             />
             <Route
               path="/post-problem"
@@ -394,6 +405,7 @@ function App() {
             />
           </Routes>
         </Suspense>
+        <RootIntroSplash contentReady={homeReady} />
       </SidebarProvider>
     </>
   );
