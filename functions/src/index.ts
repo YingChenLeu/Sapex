@@ -149,7 +149,7 @@ function buildOfflineMessageEmailHtml(opts: {
     ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:28px auto 0;">
         <tr>
           <td style="border-radius:10px;background:#7cdbbd;">
-            <a href="${ctaHref}" style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#0a0d17;text-decoration:none;border-radius:10px;">Open thread in Academic Center</a>
+            <a href="${ctaHref}" style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#161A24;text-decoration:none;border-radius:10px;">Open thread in Academic Center</a>
           </td>
         </tr>
       </table>`

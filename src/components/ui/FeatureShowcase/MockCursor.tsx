@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { usePlaybackSpeed } from "./playbackSpeed";
 
 export type CursorWaypoint = {
   /** Time in seconds since the cursor mounts. */
@@ -29,13 +30,14 @@ interface MockCursorProps {
  */
 const MockCursor = ({ waypoints, ease = "easeInOut" }: MockCursorProps) => {
   const reduce = useReducedMotion();
+  const speed = usePlaybackSpeed();
   if (waypoints.length === 0) return null;
 
   const last = waypoints[waypoints.length - 1];
-  const totalDuration = Math.max(last.t, 0.01);
+  const totalDuration = Math.max(last.t, 0.01) / speed;
   const xs = waypoints.map((w) => `${w.x}%`);
   const ys = waypoints.map((w) => `${w.y}%`);
-  const times = waypoints.map((w) => w.t / totalDuration);
+  const times = waypoints.map((w) => w.t / Math.max(last.t, 0.01));
 
   // Reduced motion: just snap to the first waypoint, no animation.
   if (reduce) {
@@ -74,7 +76,7 @@ const MockCursor = ({ waypoints, ease = "easeInOut" }: MockCursorProps) => {
         <CursorIcon />
         {waypoints.map((w, i) =>
           w.click ? (
-            <ClickRipple key={i} delay={w.t} />
+            <ClickRipple key={i} delay={w.t / speed} duration={0.55 / speed} />
           ) : null,
         )}
       </motion.div>
@@ -93,14 +95,14 @@ const CursorIcon = () => (
     <path
       d="M1 1 L1 14 L4.2 11 L6.7 16.5 L9 15.5 L6.5 10 L11 10 Z"
       fill="white"
-      stroke="#0A0D17"
+      stroke="#161A24"
       strokeWidth="0.8"
       strokeLinejoin="round"
     />
   </svg>
 );
 
-const ClickRipple = ({ delay }: { delay: number }) => (
+const ClickRipple = ({ delay, duration = 0.55 }: { delay: number; duration?: number }) => (
   <motion.span
     className="absolute rounded-full border-2 border-white"
     style={{
@@ -114,7 +116,7 @@ const ClickRipple = ({ delay }: { delay: number }) => (
     animate={{ opacity: [0, 0.85, 0], scale: [0.4, 1.4, 1.7] }}
     transition={{
       delay,
-      duration: 0.55,
+      duration,
       times: [0, 0.4, 1],
       ease: "easeOut",
     }}

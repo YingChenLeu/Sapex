@@ -51,7 +51,7 @@ const TopicChooserScene = () => {
   return (
     <motion.div
       key="chooser"
-      className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+      className="absolute inset-0 flex flex-col bg-[#161A24]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -63,8 +63,8 @@ const TopicChooserScene = () => {
           Wellness Support
         </div>
         <div className="text-[9.5px] text-white/55 mt-0.5 leading-snug">
-          Choose a topic and we'll match you with someone who can listen and
-          support.
+          Choose a topic. An experimental matching system pairs you with
+          someone who can listen.
         </div>
       </div>
 
@@ -190,7 +190,7 @@ const MatchingScene = () => {
   return (
     <motion.div
       key="matching"
-      className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#0A0D17]"
+      className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#161A24]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -211,7 +211,7 @@ const MatchingScene = () => {
           animate={{ scale: [0.9, 1.05, 0.9], opacity: [0.6, 1, 0.6] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div className="absolute inset-3 rounded-full bg-[#0C111C] flex items-center justify-center">
+        <div className="absolute inset-3 rounded-full bg-[#1E2430] flex items-center justify-center">
           <Siren className="w-5 h-5" style={{ color: ACCENT }} />
         </div>
       </div>
@@ -229,7 +229,7 @@ const MatchingScene = () => {
         ].map((p, i) => (
           <motion.div
             key={p.initials}
-            className="w-6 h-6 rounded-full border-2 border-[#0C111C] flex items-center justify-center text-[8.5px] font-semibold text-[#0A0D17]"
+            className="w-6 h-6 rounded-full border-2 border-[#1E2430] flex items-center justify-center text-[8.5px] font-semibold text-[#161A24]"
             style={{ background: p.color }}
             animate={{ opacity: [0.3, 1, 0.3], scale: [0.92, 1.04, 0.92] }}
             transition={{
@@ -335,7 +335,7 @@ const ChatDialogScene = () => {
       transition={{ duration: 0.3 }}
       style={{
         background:
-          "linear-gradient(160deg, #1b2742 0%, #0e1b2c 40%, #0A0D17 100%)",
+          "linear-gradient(160deg, #1b2742 0%, #0e1b2c 40%, #161A24 100%)",
       }}
     >
       {/* Soft scenic overlay (mimics the photo background) */}
@@ -350,7 +350,7 @@ const ChatDialogScene = () => {
       />
 
       {/* Header */}
-      <div className="relative bg-[#1e212d]/95 border-b border-white/10 px-2.5 py-2 flex items-center justify-between">
+      <div className="relative bg-[#2A2E3C]/95 border-b border-white/10 px-2.5 py-2 flex items-center justify-between">
         <div className="flex items-center gap-1.5 min-w-0">
           <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-900 to-green-800 flex items-center justify-center shrink-0">
             <UserRound className="text-white w-3.5 h-3.5" />
@@ -400,7 +400,7 @@ const ChatDialogScene = () => {
       </div>
 
       {/* Input bar */}
-      <div className="relative bg-[#1e212d]/95 border-t border-white/10 px-2.5 py-2">
+      <div className="relative bg-[#2A2E3C]/95 border-t border-white/10 px-2.5 py-2">
         <div className="flex items-center gap-1.5">
           <Smile className="w-3.5 h-3.5 text-white/45 shrink-0" />
           <div className="flex-1 rounded-md bg-[#101524] px-2 py-1.5 text-[10px]">

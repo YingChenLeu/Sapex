@@ -9,6 +9,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NotificationListener from "./components/NotificationListener";
 import { Toaster } from "sonner";
 import { RootIntroSplash } from "./components/IntroSplash";
+import WhiteSplashes from "./components/ui/WhiteSplashes";
+import { LoadingState } from "./components/ui/states";
 
 const AdminManagement = lazy(() => import("./components/AdminManagement"));
 const AboutDev = lazy(() => import("./components/AboutDev"));
@@ -22,7 +24,9 @@ const HelpBoard = lazy(() => import("./components/HelpBoard"));
 const StudyRooms = lazy(() => import("./components/StudyRooms"));
 const PostProblem = lazy(() => import("./components/PostProblem"));
 const Contributions = lazy(() => import("./components/Contribution"));
-const StillInDevelopment = lazy(() => import("./components/StillInDevelopment"));
+const StillInDevelopment = lazy(
+  () => import("./components/StillInDevelopment"),
+);
 const Profile = lazy(() => import("./components/Profile"));
 const WellnessSupport = lazy(() => import("./components/WellnessSupport"));
 const PersonalityQuiz = lazy(() => import("./components/Big5Personality"));
@@ -30,18 +34,22 @@ const Matching = lazy(() => import("./components/Loading"));
 const ChatPage = lazy(() => import("./components/Chat"));
 const Main = lazy(() => import("./components/Main"));
 const OriginsLab = lazy(() =>
-  import("./components/OriginsLab").then((m) => ({ default: m.OriginsLab }))
+  import("./components/OriginsLab").then((m) => ({ default: m.OriginsLab })),
 );
 const EasterEggPage = lazy(() =>
-  import("./components/ui/EasterEgg").then((m) => ({ default: m.EasterEggPage }))
+  import("./components/ui/EasterEgg").then((m) => ({
+    default: m.EasterEggPage,
+  })),
 );
+const AnimationPage = lazy(() => import("./components/AnimationPage"));
+const AisaGiss = lazy(() => import("./components/AisaGiss"));
 
 const APP_NAME = "Sapex";
 const LANDING_TAB_TITLE = "Sapex Connect – Student Collaboration Platform";
 
 const PageFallback = () => (
-  <div className="flex min-h-screen items-center justify-center bg-[#0A0D17] text-white/70">
-    Loading…
+  <div className="flex min-h-screen items-center justify-center bg-transparent">
+    <LoadingState label="Loading Sapex…" />
   </div>
 );
 
@@ -66,6 +74,8 @@ const getPageTitle = (pathname: string) => {
   if (pathname === "/stillindevelopment") return "Still In Development";
   if (pathname === "/login") return "Login";
   if (pathname === "/easteregg") return "Easter Egg";
+  if (pathname === "/animation") return "Animation";
+  if (pathname === "/aisa-giss-2026") return "AISA GISS 2026";
   return APP_NAME;
 };
 
@@ -89,8 +99,9 @@ const HomePage = ({ onReady }: { onReady: () => void }) => {
   }, [onReady]);
 
   return (
-    <div>
-      <Navbar /> <LandingPage />
+    <div className="landing">
+      <Navbar />
+      <LandingPage />
     </div>
   );
 };
@@ -111,8 +122,7 @@ const AdminRoute = ({ children }: { children: JSX.Element }) => {
     return () => unsubscribe();
   }, []);
 
-  if (loading)
-    return <div className="text-white p-4">Checking admin access...</div>;
+  if (loading) return <LoadingState label="Checking admin access…" />;
   return isAdmin ? children : <Navigate to="/" />;
 };
 
@@ -199,16 +209,14 @@ function App() {
   }, []);
   return (
     <>
+      <WhiteSplashes />
       <Toaster position="top-right" richColors closeButton />
       <SidebarProvider>
         <NotificationListener uid={uid} />
         <DocumentTitleManager />
         <Suspense fallback={<PageFallback />}>
           <Routes>
-            <Route
-              path="/"
-              element={<HomePage onReady={markHomeReady} />}
-            />
+            <Route path="/" element={<HomePage onReady={markHomeReady} />} />
             <Route
               path="/post-problem"
               element={
@@ -220,10 +228,10 @@ function App() {
             <Route
               path="/main"
               element={
-                <div className="relative min-h-screen overflow-hidden bg-[#0A0D17]">
-                  <div className="pointer-events-none absolute inset-0 z-0 opacity-35 [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.9),rgba(0,0,0,0.4),transparent)]">
+                <div className="relative min-h-screen overflow-hidden bg-transparent">
+                  <div className="pointer-events-none absolute inset-0 z-0 opacity-60 [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.9),rgba(0,0,0,0.4),transparent)]">
                     <FloatingLines
-                      linesGradient={["#45f56e", "#A8D3CC", "#2D4F53"]}
+                      linesGradient={["#9effb8", "#E8F8F4", "#A8D3CC"]}
                       interactive={false}
                       bendStrength={-15}
                       parallax={false}
@@ -241,6 +249,15 @@ function App() {
                 <div>
                   <AboutInitiative />
                   <Navbar />
+                </div>
+              }
+            />
+            <Route
+              path="/aisa-giss-2026"
+              element={
+                <div>
+                  <Navbar />
+                  <AisaGiss />
                 </div>
               }
             />
@@ -282,6 +299,7 @@ function App() {
               }
             />
             <Route path="/easteregg" element={<EasterEggPage />} />
+            <Route path="/animation" element={<AnimationPage />} />
             <Route
               path="/contributions"
               element={

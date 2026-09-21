@@ -36,7 +36,7 @@ const FIELDS = [
 const FieldSelectScene = () => (
   <motion.div
     key="fields"
-    className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+    className="absolute inset-0 flex flex-col bg-[#161A24]"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
@@ -74,7 +74,7 @@ const FieldSelectScene = () => (
         return (
           <motion.div
             key={field.id}
-            className="rounded-lg border-2 bg-[#12162A] p-2 flex flex-col items-start gap-1"
+            className="rounded-lg border-2 bg-[#1C2140] p-2 flex flex-col items-start gap-1"
             style={{
               borderColor: isHighlighted ? field.color : `${field.color}40`,
               boxShadow: isHighlighted
@@ -165,7 +165,7 @@ const IDEAS: Idea[] = [
 const BrainstormScene = () => (
   <motion.div
     key="brainstorm"
-    className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+    className="absolute inset-0 flex flex-col bg-[#161A24]"
     initial={{ opacity: 0, x: 16 }}
     animate={{ opacity: 1, x: 0 }}
     exit={{ opacity: 0, x: -16 }}
@@ -217,7 +217,7 @@ const BrainstormScene = () => (
         Add an idea
       </div>
       <div className="flex items-center gap-1.5">
-        <div className="flex-1 px-2 py-1.5 rounded-md bg-[#12162A] border border-white/10 text-[9.5px]">
+        <div className="flex-1 px-2 py-1.5 rounded-md bg-[#1C2140] border border-white/10 text-[9.5px]">
           <TypedInput
             placeholder="Type an idea and press Enter or Add"
             placeholderClassName="text-white/35"
@@ -231,7 +231,7 @@ const BrainstormScene = () => (
             ]}
           />
         </div>
-        <div className="inline-flex items-center gap-1 px-2 py-1.5 rounded-md bg-[#7CDCBD] text-[#0A0D17] text-[9px] font-semibold shrink-0">
+        <div className="inline-flex items-center gap-1 px-2 py-1.5 rounded-md bg-[#7CDCBD] text-[#161A24] text-[9px] font-semibold shrink-0">
           <Plus className="w-2.5 h-2.5" strokeWidth={3} />
           Add
         </div>
@@ -247,7 +247,7 @@ const BrainstormScene = () => (
         {IDEAS.map((idea) => (
           <motion.li
             key={idea.id}
-            className="rounded-md bg-[#12162A] border border-white/10 px-2.5 py-1.5 text-[10px] text-white/90 leading-snug"
+            className="rounded-md bg-[#1C2140] border border-white/10 px-2.5 py-1.5 text-[10px] text-white/90 leading-snug"
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idea.delay, duration: 0.3 }}
@@ -321,7 +321,7 @@ const PEER_SESSIONS: PeerSession[] = [
 const EveryoneScene = () => (
   <motion.div
     key="everyone"
-    className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+    className="absolute inset-0 flex flex-col bg-[#161A24]"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
@@ -341,14 +341,14 @@ const EveryoneScene = () => (
       {PEER_SESSIONS.map((session) => (
         <motion.div
           key={session.id}
-          className="rounded-lg border border-white/10 bg-[#12162A] px-2.5 py-2"
+          className="rounded-lg border border-white/10 bg-[#1C2140] px-2.5 py-2"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: session.delay, duration: 0.35 }}
         >
           <div className="flex items-center gap-1.5 mb-1.5">
             <div
-              className="w-5 h-5 rounded-full flex items-center justify-center text-[8.5px] font-semibold text-[#0A0D17] shrink-0"
+              className="w-5 h-5 rounded-full flex items-center justify-center text-[8.5px] font-semibold text-[#161A24] shrink-0"
               style={{ background: session.color }}
             >
               {session.initials}

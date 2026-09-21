@@ -44,7 +44,7 @@ const BIANCA: Person = {
 
 const Avatar = ({ person, size = 32 }: { person: Person; size?: number }) => (
   <div
-    className="rounded-full flex items-center justify-center text-[11px] font-semibold text-[#0A0D17] shrink-0"
+    className="rounded-full flex items-center justify-center text-[11px] font-semibold text-[#161A24] shrink-0"
     style={{
       width: size,
       height: size,
@@ -64,7 +64,7 @@ const HelpBoardScene = () => {
   return (
     <motion.div
       key="board"
-      className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+      className="absolute inset-0 flex flex-col bg-[#161A24]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -88,13 +88,13 @@ const HelpBoardScene = () => {
         transition={{ delay: 0.1, duration: 0.3 }}
       >
         <div
-          className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10.5px] font-semibold text-[#0A0D17]"
+          className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10.5px] font-semibold text-[#161A24]"
           style={{
             background: ACCENT,
             boxShadow: "0 0 14px -4px rgba(124,220,189,0.45)",
           }}
         >
-          <span className="flex items-center justify-center w-3.5 h-3.5 rounded bg-[#0A0D17]/15">
+          <span className="flex items-center justify-center w-3.5 h-3.5 rounded bg-[#161A24]/15">
             <Plus className="w-2.5 h-2.5" strokeWidth={3} />
           </span>
           Post a Problem
@@ -299,7 +299,7 @@ const ChatDialogScene = () => {
   return (
     <motion.div
       key="chat"
-      className="absolute inset-0 flex flex-col bg-[#11141d]"
+      className="absolute inset-0 flex flex-col bg-[#1A1E2C]"
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
@@ -336,7 +336,7 @@ const ChatDialogScene = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 px-3 py-2.5 space-y-2 bg-[#0d1019] overflow-hidden">
+      <div className="flex-1 px-3 py-2.5 space-y-2 bg-[#161A28] overflow-hidden">
         {CHAT_MESSAGES.map((m) => (
           <Bubble key={m.id} msg={m} />
         ))}
@@ -367,8 +367,8 @@ const ChatDialogScene = () => {
       </div>
 
       {/* Input bar */}
-      <div className="border-t border-white/10 bg-[#11141d] px-2.5 py-2">
-        <div className="rounded-lg border border-white/10 bg-[#0d1019]">
+      <div className="border-t border-white/10 bg-[#1A1E2C] px-2.5 py-2">
+        <div className="rounded-lg border border-white/10 bg-[#161A28]">
           <div className="px-2.5 py-2 text-[10.5px]">
             <TypedInput
               placeholder="Message…"
@@ -384,7 +384,7 @@ const ChatDialogScene = () => {
               ]}
             />
           </div>
-          <div className="flex items-center gap-1 border-t border-white/[0.06] bg-[#0a0c12]/90 px-1.5 py-1">
+          <div className="flex items-center gap-1 border-t border-white/[0.06] bg-[#141820]/90 px-1.5 py-1">
             <button
               type="button"
               className="rounded p-1 text-white/45"
@@ -412,7 +412,7 @@ const ChatDialogScene = () => {
                 width="12"
                 height="12"
                 fill="none"
-                stroke="#0a0d17"
+                stroke="#161A24"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"

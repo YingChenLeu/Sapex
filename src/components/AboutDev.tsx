@@ -31,7 +31,7 @@ function getInitials(name: string) {
 
 const AboutDev = () => {
   return (
-    <div className="min-h-screen bg-[#0A0D17] text-[#D8DEDE] overflow-hidden">
+    <div className="min-h-screen bg-transparent text-[#F0F2F2] overflow-hidden">
       {/* Hero */}
       <section className="relative pt-28 pb-20 px-4 sm:px-6 lg:px-8">
         <div
@@ -57,14 +57,14 @@ const AboutDev = () => {
             <Users className="w-7 h-7 text-[#A8D3CC]" />
           </motion.div>
           <motion.h1
-            className="text-4xl sm:text-5xl font-bold font-syncopate bg-gradient-to-r from-[#D8DEDE] to-[#A8D3CC] bg-clip-text text-transparent mb-4"
+            className="text-4xl sm:text-5xl font-bold font-syncopate bg-gradient-to-r from-[#F0F2F2] to-[#A8D3CC] bg-clip-text text-transparent mb-4"
             variants={fadeInUp}
             transition={{ duration: 0.5 }}
           >
             About Sapex
           </motion.h1>
           <motion.p
-            className="text-lg text-[#D8DEDE]/80 max-w-2xl mx-auto leading-relaxed"
+            className="text-lg text-[#F0F2F2]/80 max-w-2xl mx-auto leading-relaxed"
             variants={fadeInUp}
             transition={{ duration: 0.5 }}
           >
@@ -78,7 +78,7 @@ const AboutDev = () => {
       <section className="px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-3xl mx-auto">
           <motion.div
-            className="rounded-2xl border border-white/10 bg-[#0C111C]/80 p-8 md:p-10"
+            className="rounded-2xl border border-white/10 bg-[#1E2430]/80 p-8 md:p-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
@@ -91,7 +91,7 @@ const AboutDev = () => {
                 Our mission
               </span>
             </div>
-            <p className="text-[#D8DEDE]/90 leading-relaxed text-lg">
+            <p className="text-[#F0F2F2]/90 leading-relaxed text-lg">
               Sapex exists to give every student access to peer-led academic
               help and wellness support within their own school community. We
               believe in connection over isolation—and that young people, when
@@ -114,7 +114,7 @@ const AboutDev = () => {
             The team
           </motion.h2>
           <motion.p
-            className="text-[#D8DEDE]/70 text-center mb-12 max-w-xl mx-auto"
+            className="text-[#F0F2F2]/70 text-center mb-12 max-w-xl mx-auto"
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
@@ -133,7 +133,7 @@ const AboutDev = () => {
             {TEAM_MEMBERS.map((member) => (
               <motion.div
                 key={member.name}
-                className="group rounded-2xl border border-white/10 bg-[#0C111C] p-6 hover:border-[#A8D3CC]/30 transition-colors duration-300"
+                className="group rounded-2xl border border-white/10 bg-[#1E2430] p-6 hover:border-[#A8D3CC]/30 transition-colors duration-300"
                 variants={fadeInUp}
                 transition={{ duration: 0.4 }}
                 whileHover={{ y: -4 }}
@@ -166,13 +166,13 @@ const AboutDev = () => {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-[#D8DEDE]/70 mb-6">
+          <p className="text-[#F0F2F2]/70 mb-6">
             Want to bring Sapex to your school?
           </p>
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               asChild
-              className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#D8DEDE] hover:text-[#2D4F53]"
+              className="bg-[#A8D3CC] text-[#2D4F53] hover:bg-[#F0F2F2] hover:text-[#2D4F53]"
             >
               <Link to="/">Back to home</Link>
             </Button>

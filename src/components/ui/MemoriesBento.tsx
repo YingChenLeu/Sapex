@@ -61,9 +61,7 @@ function BentoColumn({
   // Duplicate tiles so the loop is continuous when y goes from 0 -> -50%.
   const loop = [...tiles, ...tiles];
   const animate =
-    direction === "up"
-      ? { y: ["0%", "-50%"] }
-      : { y: ["-50%", "0%"] };
+    direction === "up" ? { y: ["0%", "-50%"] } : { y: ["-50%", "0%"] };
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -98,47 +96,61 @@ function BentoColumn({
 
 export default function MemoriesBento({
   className = "",
+  durationScale = 1,
+  tone = "wash",
 }: {
   className?: string;
+  durationScale?: number;
+  tone?: "wash" | "vignette";
 }) {
+  const isVignette = tone === "vignette";
+
   return (
     <div
       aria-hidden
       className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
     >
-      {/* Bento columns */}
       <div
         className="absolute inset-0 grid grid-cols-2 gap-3 p-3 sm:grid-cols-3 sm:gap-4 sm:p-4 md:grid-cols-4"
         style={{
-          // soft fade so columns feel embedded in the section
-          maskImage:
-            "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.55) 70%, rgba(0,0,0,0) 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.55) 70%, rgba(0,0,0,0) 100%)",
+          maskImage: isVignette
+            ? "radial-gradient(ellipse 95% 88% at 50% 50%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.7) 62%, rgba(0,0,0,0) 100%)"
+            : "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.55) 70%, rgba(0,0,0,0) 100%)",
+          WebkitMaskImage: isVignette
+            ? "radial-gradient(ellipse 95% 88% at 50% 50%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.7) 62%, rgba(0,0,0,0) 100%)"
+            : "radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.55) 70%, rgba(0,0,0,0) 100%)",
         }}
       >
-        <BentoColumn tiles={COLUMN_A} duration={42} direction="up" />
-        <BentoColumn tiles={COLUMN_B} duration={56} direction="down" />
+        <BentoColumn
+          tiles={COLUMN_A}
+          duration={42 / durationScale}
+          direction="up"
+        />
+        <BentoColumn
+          tiles={COLUMN_B}
+          duration={56 / durationScale}
+          direction="down"
+        />
         <BentoColumn
           tiles={COLUMN_C}
-          duration={48}
+          duration={48 / durationScale}
           direction="up"
           className="hidden sm:block"
         />
         <BentoColumn
           tiles={COLUMN_D}
-          duration={62}
+          duration={62 / durationScale}
           direction="down"
           className="hidden md:block"
         />
       </div>
 
-      {/* Darkening + brand wash so text on top stays readable */}
       <div
         className="absolute inset-0"
         style={{
-          background:
-            "linear-gradient(180deg, rgba(10,13,23,0.85) 0%, rgba(10,13,23,0.65) 35%, rgba(10,13,23,0.65) 65%, rgba(10,13,23,0.9) 100%)",
+          background: isVignette
+            ? "linear-gradient(180deg, rgba(10,13,23,0.72) 0%, rgba(10,13,23,0.28) 38%, rgba(10,13,23,0.28) 62%, rgba(10,13,23,0.82) 100%)"
+            : "linear-gradient(180deg, rgba(10,13,23,0.85) 0%, rgba(10,13,23,0.65) 35%, rgba(10,13,23,0.65) 65%, rgba(10,13,23,0.9) 100%)",
         }}
       />
       <div

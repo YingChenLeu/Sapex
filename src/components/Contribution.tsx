@@ -20,14 +20,13 @@ import {
 import { getAuth } from "firebase/auth";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { useSidebar } from "../components/SideBar";
+import { AppPage, PageHeader } from "@/components/ui/app-shell";
 import {
   MessageCircle,
   Calendar,
   Award,
   TrendingUp,
   BarChart3,
-  Sparkles,
 } from "lucide-react";
 
 const Contributions = () => {
@@ -81,7 +80,6 @@ const Contributions = () => {
     fetchContributions();
   }, []);
 
-  const { collapsed } = useSidebar();
 
   const chartData = Object.entries(monthlyCategoryCounts)
     .map(([month, categories]) => ({
@@ -113,29 +111,12 @@ const Contributions = () => {
   );
 
   return (
-    <div
-      className={`bg-[#0A0D17] min-h-screen transition-all duration-300 ${
-        collapsed ? "pl-[74px] sm:pl-[92px]" : "pl-[220px] xl:pl-[280px]"
-      }`}
-    >
-      <div className="max-w-[1400px] px-4 sm:px-6 lg:pl-6 lg:pr-8 pt-8 pb-16">
-        <motion.header
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex items-center gap-3"
-        >
-          <div className="w-10 h-10 rounded-xl bg-[#7CDCBD]/15 border border-[#7CDCBD]/20 flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-[#7CDCBD]" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-white font-syncopate tracking-tight">
-              Contributions
-            </h1>
-            <p className="text-gray-400 mt-0.5 text-sm">
-              Your impact helping others on the help board
-            </p>
-          </div>
-        </motion.header>
+    <AppPage width="wide">
+      <PageHeader
+        margin="contributions"
+        title="Contributions"
+        description="How often you’ve helped on the Academic Center."
+      />
 
         {/* Stat cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -171,14 +152,14 @@ const Contributions = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: stat.delay }}
               >
-                <Card className="relative border-white/10 bg-[#12162A]/90 overflow-hidden h-full hover:border-[#7CDCBD]/30 transition-colors">
+                <Card className="relative h-full overflow-hidden" interactive>
                   <div
                     aria-hidden
                     className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#7CDCBD]/5 blur-2xl"
                   />
                   <CardHeader className="pb-2 relative">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-sm font-medium text-gray-300 font-syncopate uppercase tracking-wider">
+                      <CardTitle className="text-sm font-medium text-chalk-2">
                         {stat.label}
                       </CardTitle>
                       <div className="w-9 h-9 rounded-lg bg-[#7CDCBD]/10 flex items-center justify-center text-[#7CDCBD]">
@@ -214,11 +195,11 @@ const Contributions = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2"
           >
-            <Card className="border-white/10 bg-[#12162A]/90 h-full flex flex-col">
+            <Card className="flex h-full flex-col">
               <CardHeader>
                 <div className="flex items-center gap-2 text-[#7CDCBD]">
                   <TrendingUp className="w-5 h-5" />
-                  <CardTitle className="text-lg text-white font-syncopate">
+                  <CardTitle className="text-lg">
                     Contribution history
                   </CardTitle>
                 </div>
@@ -271,7 +252,7 @@ const Contributions = () => {
                       />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "#12162A",
+                          backgroundColor: "#1C2140",
                           border: "1px solid rgba(255,255,255,0.1)",
                           borderRadius: "8px",
                         }}
@@ -303,11 +284,11 @@ const Contributions = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
           >
-            <Card className="border-white/10 bg-[#12162A]/90 h-full flex flex-col">
+            <Card className="flex h-full flex-col">
               <CardHeader>
                 <div className="flex items-center gap-2 text-[#7CDCBD]">
                   <BarChart3 className="w-5 h-5" />
-                  <CardTitle className="text-lg text-white font-syncopate">
+                  <CardTitle className="text-lg">
                     By category
                   </CardTitle>
                 </div>
@@ -386,8 +367,7 @@ const Contributions = () => {
             </Card>
           </motion.div>
         </div>
-      </div>
-    </div>
+    </AppPage>
   );
 };
 

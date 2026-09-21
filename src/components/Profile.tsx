@@ -11,7 +11,7 @@ import { getAuth, updateProfile, onAuthStateChanged } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db, app } from "@/lib/firebase";
-import { useSidebar } from "../components/SideBar";
+import { AppPage, PageHeader } from "@/components/ui/app-shell";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -178,7 +178,6 @@ const Profile = () => {
     }
   };
 
-  const { collapsed } = useSidebar();
   const navigate = useNavigate();
 
   const handlePersonalityQuiz = () => {
@@ -235,25 +234,12 @@ const Profile = () => {
     Object.values(profile.bigFivePersonality).some((score) => score > 0);
 
   return (
-    <div
-      className={`bg-[#0A0D17] min-h-screen transition-all duration-300 ${
-        collapsed ? "pl-[74px] sm:pl-[92px]" : "pl-[220px] xl:pl-[280px]"
-      }`}
-    >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-16">
-        {/* Hero / header */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-10"
-        >
-          <h1 className="text-3xl font-bold text-white font-syncopate tracking-tight">
-            Profile
-          </h1>
-          <p className="text-gray-400 mt-1 text-sm">
-            Manage your account and preferences
-          </p>
-        </motion.div>
+    <AppPage>
+      <PageHeader
+        margin="profile"
+        title="Profile"
+        description="Your account, personality, and helper status."
+      />
 
         {/* Profile card: avatar + info */}
         <motion.div
@@ -261,7 +247,7 @@ const Profile = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
         >
-          <Card className="border-white/10 bg-[#12162A]/90 overflow-hidden">
+          <Card className="overflow-hidden">
             <form onSubmit={handleSubmit}>
               <CardHeader className="pb-4">
                 <div className="flex flex-col sm:flex-row sm:items-start gap-6">
@@ -307,7 +293,7 @@ const Profile = () => {
 
                   <div className="flex-1 min-w-0 space-y-4">
                     <div className="flex flex-wrap items-center gap-3">
-                      <CardTitle className="text-xl text-white font-syncopate">
+                      <CardTitle className="text-xl">
                         {profile.name || "Your name"}
                       </CardTitle>
                       <Button
@@ -342,7 +328,7 @@ const Profile = () => {
                       value={profile.name}
                       onChange={(e) => handleChange("name", e.target.value)}
                       disabled={!isEditing}
-                      className="bg-[#0A0D17] border-white/15 text-white placeholder:text-gray-500 focus-visible:ring-[#7CDCBD]/50 focus-visible:border-[#7CDCBD]/50 disabled:opacity-80"
+                      className="bg-[#161A24] border-white/15 text-white placeholder:text-gray-500 focus-visible:ring-[#7CDCBD]/50 focus-visible:border-[#7CDCBD]/50 disabled:opacity-80"
                     />
                   </div>
                   <div className="space-y-2">
@@ -357,7 +343,7 @@ const Profile = () => {
                       id="userId"
                       value={profile.userId}
                       disabled
-                      className="bg-[#0A0D17]/50 border-white/10 text-gray-400 text-sm font-mono"
+                      className="bg-[#161A24]/50 border-white/10 text-gray-400 text-sm font-mono"
                     />
                   </div>
                 </div>
@@ -375,7 +361,7 @@ const Profile = () => {
                     type="email"
                     value={profile.email}
                     disabled
-                    className="bg-[#0A0D17]/50 border-white/10 text-gray-400"
+                    className="bg-[#161A24]/50 border-white/10 text-gray-400"
                   />
                 </div>
 
@@ -393,7 +379,7 @@ const Profile = () => {
                     disabled={!isEditing}
                     rows={3}
                     placeholder="A short bio about you..."
-                    className="bg-[#0A0D17] border-white/15 text-white placeholder:text-gray-500 focus-visible:ring-[#7CDCBD]/50 focus-visible:border-[#7CDCBD]/50 resize-none"
+                    className="bg-[#161A24] border-white/15 text-white placeholder:text-gray-500 focus-visible:ring-[#7CDCBD]/50 focus-visible:border-[#7CDCBD]/50 resize-none"
                   />
                 </div>
               </CardContent>
@@ -417,7 +403,7 @@ const Profile = () => {
                       </Button>
                       <Button
                         type="submit"
-                        className="bg-[#7CDCBD] hover:bg-[#5FBFAA] text-[#0A0D17] font-medium"
+                        className=""
                       >
                         <Save className="h-4 w-4 mr-2" />
                         Save changes
@@ -437,9 +423,9 @@ const Profile = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <Card className="border-white/10 bg-[#12162A]/90 h-full flex flex-col">
+            <Card className="flex h-full flex-col">
               <CardHeader>
-                <CardTitle className="text-lg text-white font-syncopate flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-lg">
                   <Brain className="w-5 h-5 text-[#7CDCBD]" />
                   Personality
                 </CardTitle>
@@ -487,7 +473,7 @@ const Profile = () => {
               <CardFooter>
                 <Button
                   onClick={handlePersonalityQuiz}
-                  className="w-full bg-[#12162A] border border-[#7CDCBD]/40 text-[#7CDCBD] hover:bg-[#7CDCBD]/10 font-medium"
+                  className="w-full"
                 >
                   <Brain className="w-4 h-4 mr-2" />
                   {hasPersonalityData ? "Retake quiz" : "Take personality quiz"}
@@ -502,9 +488,9 @@ const Profile = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
           >
-            <Card className="border-white/10 bg-[#12162A]/90 h-full">
+            <Card className="h-full">
               <CardHeader>
-                <CardTitle className="text-lg text-white font-syncopate flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-lg">
                   <MessageCircle className="w-5 h-5 text-[#7CDCBD]" />
                   Activity
                 </CardTitle>
@@ -548,7 +534,7 @@ const Profile = () => {
               {profile.helper ? (
                 <Button
                   onClick={() => setShowDeactivateDialog(true)}
-                  className="bg-[#7CDCBD]/20 text-[#7CDCBD] hover:bg-[#7CDCBD]/30 border border-[#7CDCBD]/40 rounded-full px-6 py-2.5"
+                  variant="outline"
                 >
                   <Shield className="w-4 h-4 mr-2" />
                   Sapex Helper · Active
@@ -556,7 +542,7 @@ const Profile = () => {
               ) : (
                 <Button
                   onClick={() => setShowHelperDialog(true)}
-                  className="bg-[#7CDCBD] hover:bg-[#5FBFAA] text-[#0A0D17] font-medium rounded-full px-6 py-2.5"
+                  variant="brass"
                 >
                   <Shield className="w-4 h-4 mr-2" />
                   Become a Sapex Helper
@@ -564,21 +550,17 @@ const Profile = () => {
               )}
             </motion.div>
           </AnimatePresence>
-          <p className="text-xs text-gray-500 max-w-md">
+          <p className="max-w-md text-xs text-chalk-3">
             Sapex Helpers support others with respect and empathy. This is a
             space for guidance and learning, not social media.
           </p>
         </motion.div>
-      </div>
 
-      {/* Dialogs */}
       <Dialog open={showHelperDialog} onOpenChange={setShowHelperDialog}>
-        <DialogContent className="border-white/10 bg-[#12162A] text-white">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-syncopate">
-              Become a Sapex Helper
-            </DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogTitle>Become a Sapex Helper</DialogTitle>
+            <DialogDescription>
               You’ll support students respectfully and help them through tough
               times. Be helpful and kind to the best of your ability.
             </DialogDescription>
@@ -587,14 +569,13 @@ const Profile = () => {
             <Button
               variant="outline"
               onClick={() => setShowHelperDialog(false)}
-              className="border-white/20 text-gray-300 hover:bg-white/10"
             >
               Cancel
             </Button>
             <Button
               onClick={handleBecomeHelper}
               disabled={activatingHelper}
-              className="bg-[#7CDCBD] hover:bg-[#5FBFAA] text-[#0A0D17]"
+              loading={activatingHelper}
             >
               {activatingHelper ? "Activating…" : "I agree"}
             </Button>
@@ -606,12 +587,10 @@ const Profile = () => {
         open={showDeactivateDialog}
         onOpenChange={setShowDeactivateDialog}
       >
-        <DialogContent className="border-white/10 bg-[#12162A] text-white">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-syncopate">
-              Deactivate Sapex Helper
-            </DialogTitle>
-            <DialogDescription className="text-gray-400">
+            <DialogTitle>Deactivate Sapex Helper</DialogTitle>
+            <DialogDescription>
               You’ll no longer appear as a Helper. You can turn it back on
               anytime.
             </DialogDescription>
@@ -620,7 +599,6 @@ const Profile = () => {
             <Button
               variant="outline"
               onClick={() => setShowDeactivateDialog(false)}
-              className="border-white/20 text-gray-300 hover:bg-white/10"
             >
               Cancel
             </Button>
@@ -628,14 +606,13 @@ const Profile = () => {
               onClick={handleDeactivateHelper}
               disabled={activatingHelper}
               variant="destructive"
-              className="bg-red-600/90 hover:bg-red-600 text-white"
             >
               {activatingHelper ? "Deactivating…" : "Deactivate"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </AppPage>
   );
 };
 

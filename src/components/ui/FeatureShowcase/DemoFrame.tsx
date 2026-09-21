@@ -35,7 +35,7 @@ const DemoFrame = ({
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <div className="relative rounded-[28px] border border-white/10 bg-[#0C111C]/95 shadow-2xl shadow-black/40 overflow-hidden backdrop-blur-sm">
+      <div className="relative rounded-[28px] border border-white/10 bg-[#1E2430]/95 shadow-2xl shadow-black/40 overflow-hidden backdrop-blur-sm">
         {/* Window chrome */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-white/[0.025]">
           <div className="flex items-center gap-2 min-w-0">
@@ -43,7 +43,7 @@ const DemoFrame = ({
               className="w-2 h-2 rounded-full shrink-0"
               style={{ background: accent, boxShadow: `0 0 8px ${accent}` }}
             />
-            <span className="text-[10px] uppercase tracking-[0.18em] text-[#D8DEDE]/70 font-syncopate truncate">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-[#F0F2F2]/70 font-syncopate truncate">
               {badge}
             </span>
           </div>

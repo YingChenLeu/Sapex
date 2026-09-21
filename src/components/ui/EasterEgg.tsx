@@ -414,7 +414,7 @@ function DropoutScreen({
         {isChasing ? (
           <>
             <span>NO is running</span>
-            <span className="rounded-md bg-yellow-400/30 px-2 py-0.5 text-white">
+            <span className="rounded-control bg-yellow-400/30 px-2 py-0.5 text-white">
               {secondsLeft}s
             </span>
           </>
@@ -452,7 +452,7 @@ function DropoutScreen({
           ref={arenaRef}
           className="relative h-[320px] w-full overflow-hidden rounded-3xl border-4 border-dashed border-black bg-white/30 backdrop-blur-sm sm:h-[360px]"
         >
-          <div className="pointer-events-none absolute left-3 top-3 rounded-md bg-black/80 px-2 py-1 text-xs font-bold text-white">
+          <div className="pointer-events-none absolute left-3 top-3 rounded-control bg-black/80 px-2 py-1 text-xs font-bold text-white">
             try to click "No"
           </div>
 

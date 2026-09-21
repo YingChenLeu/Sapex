@@ -86,7 +86,7 @@ const SESSIONS = [
 const RoomsListScene = () => (
   <motion.div
     key="rooms"
-    className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+    className="absolute inset-0 flex flex-col bg-[#161A24]"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
@@ -104,7 +104,7 @@ const RoomsListScene = () => (
 
     {/* Create form */}
     <motion.div
-      className="mx-3 mt-1 mb-3 rounded-lg border border-white/10 bg-[#12162A]/80 px-2.5 py-2"
+      className="mx-3 mt-1 mb-3 rounded-lg border border-white/10 bg-[#1C2140]/80 px-2.5 py-2"
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.12, duration: 0.3 }}
@@ -115,7 +115,7 @@ const RoomsListScene = () => (
             className="absolute left-1.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-[#7CDCBD]/70"
             aria-hidden
           />
-          <div className="pl-5 pr-2 py-1.5 rounded-md bg-[#0A0D17] border border-white/15 text-[10px]">
+          <div className="pl-5 pr-2 py-1.5 rounded-md bg-[#161A24] border border-white/15 text-[10px]">
             <TypedInput
               placeholder="Enter subject (e.g. Calculus, Biology)"
               placeholderClassName="text-white/35"
@@ -130,7 +130,7 @@ const RoomsListScene = () => (
             />
           </div>
         </div>
-        <div className="inline-flex items-center gap-1 rounded-md bg-[#7CDCBD] text-[#0A0D17] text-[9.5px] font-semibold px-2 py-1.5 shrink-0">
+        <div className="inline-flex items-center gap-1 rounded-md bg-[#7CDCBD] text-[#161A24] text-[9.5px] font-semibold px-2 py-1.5 shrink-0">
           <Plus className="w-2.5 h-2.5" strokeWidth={3} />
           Create
         </div>
@@ -149,7 +149,7 @@ const RoomsListScene = () => (
       {SESSIONS.map((s, i) => (
         <motion.div
           key={s.subject}
-          className="rounded-lg border border-white/10 bg-[#12162A]/80 px-2.5 py-2 flex items-center gap-2"
+          className="rounded-lg border border-white/10 bg-[#1C2140]/80 px-2.5 py-2 flex items-center gap-2"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 + i * 0.1, duration: 0.3 }}
@@ -208,14 +208,14 @@ const VideoRoomScene = () => {
   return (
     <motion.div
       key="room"
-      className="absolute inset-0 flex flex-col bg-[#0a0d17]"
+      className="absolute inset-0 flex flex-col bg-[#161A24]"
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.3 }}
     >
       {/* Room header */}
-      <div className="px-3 py-2 border-b border-white/10 bg-[#11141d] flex items-center justify-between">
+      <div className="px-3 py-2 border-b border-white/10 bg-[#1A1E2C] flex items-center justify-between">
         <div className="min-w-0">
           <div className="text-[10.5px] font-semibold text-white truncate">
             Calculus exam prep
@@ -237,7 +237,7 @@ const VideoRoomScene = () => {
             key={tile.initials}
             className="relative aspect-[4/3] rounded-lg overflow-hidden border border-white/10"
             style={{
-              background: `linear-gradient(140deg, ${tile.bg}40, #0A0D17 65%)`,
+              background: `linear-gradient(140deg, ${tile.bg}40, #161A24 65%)`,
             }}
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -245,7 +245,7 @@ const VideoRoomScene = () => {
           >
             <div className="absolute inset-0 flex items-center justify-center">
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-semibold text-[#0A0D17] shadow-md"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-semibold text-[#161A24] shadow-md"
                 style={{ background: tile.bg }}
               >
                 {tile.initials}
@@ -307,7 +307,7 @@ const VideoRoomScene = () => {
 
       {/* Side chat strip */}
       <motion.div
-        className="mx-2.5 mb-2.5 rounded-md border border-white/10 bg-[#11141d] px-2.5 py-1.5 flex items-start gap-1.5"
+        className="mx-2.5 mb-2.5 rounded-md border border-white/10 bg-[#1A1E2C] px-2.5 py-1.5 flex items-start gap-1.5"
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1.2, duration: 0.35 }}

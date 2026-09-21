@@ -62,7 +62,7 @@ const crowdMix = [
 const FeedScene = () => (
   <motion.div
     key="feed"
-    className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+    className="absolute inset-0 flex flex-col bg-[#161A24]"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
@@ -79,7 +79,7 @@ const FeedScene = () => (
           </div>
         </div>
         <div
-          className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-semibold text-[#0A0D17]"
+          className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-semibold text-[#161A24]"
           style={{
             background: ACCENT,
             boxShadow: "0 0 14px -4px rgba(124,220,189,0.5)",
@@ -129,7 +129,7 @@ const FeedScene = () => (
     </motion.div>
 
     <div className="px-3 pb-2 pt-2">
-      <div className="space-y-2 rounded-2xl border border-white/10 bg-[#12162A]/75 p-2.5">
+      <div className="space-y-2 rounded-2xl border border-white/10 bg-[#1C2140]/75 p-2.5">
         {profiles.map((profile, index) => (
           <ProfileCard key={profile.school} {...profile} index={index} />
         ))}
@@ -138,7 +138,7 @@ const FeedScene = () => (
 
     <div className="mt-auto px-3 pb-3">
       <motion.div
-        className="rounded-xl border border-white/10 bg-[#0C111C]/75 px-3 py-2"
+        className="rounded-xl border border-white/10 bg-[#1E2430]/75 px-3 py-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.6, 1, 0.6] }}
         transition={{ delay: 2.1, duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
@@ -169,7 +169,7 @@ const FeedScene = () => (
 const ReviewScene = () => (
   <motion.div
     key="review"
-    className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+    className="absolute inset-0 flex flex-col bg-[#161A24]"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
@@ -192,7 +192,7 @@ const ReviewScene = () => (
     </div>
 
     <div className="px-3 pb-2">
-      <div className="rounded-2xl border border-white/10 bg-[#12162A]/75 p-3">
+      <div className="rounded-2xl border border-white/10 bg-[#1C2140]/75 p-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.2em] text-white/45">
@@ -218,7 +218,7 @@ const ReviewScene = () => (
           {crowdMix.map((item, index) => (
             <div
               key={item.label}
-              className="rounded-xl border border-white/10 bg-[#0A0D17]/60 px-2 py-2"
+              className="rounded-xl border border-white/10 bg-[#161A24]/60 px-2 py-2"
             >
               <div className="flex items-center justify-between gap-2 text-[8.5px] uppercase tracking-[0.14em]">
                 <span style={{ color: item.color }}>{item.label}</span>
@@ -240,7 +240,7 @@ const ReviewScene = () => (
     </div>
 
     <div className="px-3 pb-2">
-      <div className="rounded-2xl border border-white/10 bg-[#0C111C]/80 p-3">
+      <div className="rounded-2xl border border-white/10 bg-[#1E2430]/80 p-3">
         <div className="flex items-center justify-between text-[10px] text-white/65">
           <span>Your rating</span>
           <span className="font-semibold tabular-nums text-white">68%</span>
@@ -277,7 +277,7 @@ const ReviewScene = () => (
     </div>
 
     <div className="px-3 pb-3">
-      <div className="rounded-2xl border border-white/10 bg-[#12162A]/75 p-3">
+      <div className="rounded-2xl border border-white/10 bg-[#1C2140]/75 p-3">
         <div className="flex items-center justify-between text-[10px] text-white/65">
           <span>Anonymous comment</span>
           <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-0.5 text-[9px] text-white/55">
@@ -285,7 +285,7 @@ const ReviewScene = () => (
             respectful only
           </span>
         </div>
-        <div className="mt-2 rounded-xl border border-white/10 bg-[#0A0D17]/70 px-2.5 py-2 text-[10px] text-white/75">
+        <div className="mt-2 rounded-xl border border-white/10 bg-[#161A24]/70 px-2.5 py-2 text-[10px] text-white/75">
           <TypedInput
             placeholder="Leave advice for this student"
             placeholderClassName="text-white/35"
@@ -302,7 +302,7 @@ const ReviewScene = () => (
         <div className="mt-2 flex items-center justify-between">
           <span className="text-[9px] text-white/40">Advice is anonymous</span>
           <motion.div
-            className="inline-flex items-center gap-1 rounded-lg bg-[#7CDCBD] px-2.5 py-1 text-[9.5px] font-semibold text-[#0A0D17]"
+            className="inline-flex items-center gap-1 rounded-lg bg-[#7CDCBD] px-2.5 py-1 text-[9.5px] font-semibold text-[#161A24]"
             animate={{ scale: [1, 1.03, 1] }}
             transition={{ delay: 2.9, duration: 0.5 }}
           >
@@ -331,7 +331,7 @@ const ReviewScene = () => (
 const ResultScene = () => (
   <motion.div
     key="result"
-    className="absolute inset-0 flex flex-col bg-[#0A0D17]"
+    className="absolute inset-0 flex flex-col bg-[#161A24]"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
@@ -366,7 +366,7 @@ const ResultScene = () => (
     </div>
 
     <div className="px-3 pb-2">
-      <div className="rounded-2xl border border-white/10 bg-[#12162A]/75 p-3">
+      <div className="rounded-2xl border border-white/10 bg-[#1C2140]/75 p-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="text-[11px] text-white/70">Stanford University</div>
@@ -393,7 +393,7 @@ const ResultScene = () => (
             <SignalRow label="Likely votes" value="29%" color="#7CDCBD" width="29%" />
             <SignalRow label="Helpful comments" value="7" color="#60A5FA" width="82%" />
           </div>
-          <div className="rounded-xl border border-white/10 bg-[#0A0D17]/60 px-3 py-2">
+          <div className="rounded-xl border border-white/10 bg-[#161A24]/60 px-3 py-2">
             <div className="text-[9px] uppercase tracking-[0.18em] text-white/40">
               Momentum
             </div>
@@ -405,7 +405,7 @@ const ResultScene = () => (
               {["#7CDCBD", "#A78BFA", "#60A5FA", "#FBBF24"].map((color, index) => (
                 <motion.span
                   key={color}
-                  className="flex h-5 w-5 items-center justify-center rounded-full border border-[#0A0D17] text-[7px] font-semibold text-[#0A0D17]"
+                  className="flex h-5 w-5 items-center justify-center rounded-full border border-[#161A24] text-[7px] font-semibold text-[#161A24]"
                   style={{ background: color }}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -421,7 +421,7 @@ const ResultScene = () => (
     </div>
 
     <div className="px-3 pb-2">
-      <div className="rounded-2xl border border-white/10 bg-[#0C111C]/80 p-3">
+      <div className="rounded-2xl border border-white/10 bg-[#1E2430]/80 p-3">
         <div className="flex items-center justify-between text-[10px] text-white/65">
           <span className="inline-flex items-center gap-1.5">
             <MessageCircle className="h-3.5 w-3.5 text-[#7CDCBD]" />
@@ -448,7 +448,7 @@ const ResultScene = () => (
     </div>
 
     <div className="mt-auto px-3 pb-3">
-      <div className="rounded-2xl border border-white/10 bg-[#12162A]/75 px-3 py-2.5">
+      <div className="rounded-2xl border border-white/10 bg-[#1C2140]/75 px-3 py-2.5">
         <div className="flex items-center justify-between text-[10px] text-white/65">
           <span className="inline-flex items-center gap-1.5">
             <Users className="h-3.5 w-3.5 text-[#7CDCBD]" />
@@ -488,8 +488,8 @@ const ProfileCard = ({
   <motion.div
     className={`rounded-2xl border px-3 py-2.5 ${
       featured
-        ? "border-[#7CDCBD]/30 bg-[#0A0D17]/85"
-        : "border-white/10 bg-[#0A0D17]/60"
+        ? "border-[#7CDCBD]/30 bg-[#161A24]/85"
+        : "border-white/10 bg-[#161A24]/60"
     }`}
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}

@@ -517,7 +517,7 @@ export const ProblemChatDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-2xl h-[80vh] flex flex-col p-0 bg-[#11141d] text-white">
+      <DialogContent className="max-w-2xl h-[80vh] flex flex-col p-0 bg-[#1A1E2C] text-white">
         <AnimatePresence mode="wait">
           {isOpen && (
             <motion.div
@@ -588,7 +588,7 @@ export const ProblemChatDialog = ({
                 </div>
               </DialogHeader>
 
-              <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-5 space-y-1 custom-scrollbar bg-[#0d1019]">
+              <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-5 space-y-1 custom-scrollbar bg-[#161A28]">
                 {messages.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-16 text-center text-sm text-gray-500">
                     <p className="text-gray-400">No messages yet</p>
@@ -693,7 +693,7 @@ export const ProblemChatDialog = ({
                 <div ref={bottomRef} />
               </div>
 
-              <div className="shrink-0 overflow-visible border-t border-white/[0.08] bg-[#11141d]/95 px-3 py-3 sm:px-4">
+              <div className="shrink-0 overflow-visible border-t border-white/[0.08] bg-[#1A1E2C]/95 px-3 py-3 sm:px-4">
                 <div className="relative z-0 mx-auto max-w-full overflow-visible">
                   {showMentionList && (
                     <div className="absolute bottom-full left-0 z-30 mb-2 w-[min(100%,16rem)] max-h-40 overflow-y-auto rounded-xl border border-white/10 bg-[#1a1f2e] p-1 shadow-xl shadow-black/40 custom-scrollbar">
@@ -756,7 +756,7 @@ export const ProblemChatDialog = ({
                     </div>
                   )}
 
-                  <div className="overflow-visible rounded-xl border border-white/[0.1] bg-[#0d1019] shadow-inner shadow-black/20 focus-within:border-[#7cdcbd]/35 focus-within:ring-2 focus-within:ring-[#7cdcbd]/20">
+                  <div className="overflow-visible rounded-xl border border-white/[0.1] bg-[#161A28] shadow-inner shadow-black/20 focus-within:border-[#7cdcbd]/35 focus-within:ring-2 focus-within:ring-[#7cdcbd]/20">
                     <div className="overflow-hidden rounded-t-xl">
                       <Textarea
                         ref={textAreaRef}
@@ -790,7 +790,7 @@ export const ProblemChatDialog = ({
                       />
                     </div>
 
-                    <div className="relative z-10 flex items-center gap-2 overflow-visible rounded-b-xl border-t border-white/[0.06] bg-[#0a0c12]/90 px-2 py-1.5 sm:px-3">
+                    <div className="relative z-10 flex items-center gap-2 overflow-visible rounded-b-xl border-t border-white/[0.06] bg-[#141820]/90 px-2 py-1.5 sm:px-3">
                       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-0.5 sm:gap-1">
                         <button
                           type="button"
@@ -918,7 +918,7 @@ export const ProblemChatDialog = ({
                                           <Button
                                             type="button"
                                             size="sm"
-                                            className="h-8 bg-[#7cdcbd] text-xs text-[#0a0d17] hover:bg-[#5fbfaa]"
+                                            className="h-8 bg-[#7cdcbd] text-xs text-[#161A24] hover:bg-[#5fbfaa]"
                                             onClick={() => {
                                               const built = def.build(
                                                 mathBuilderFields,
@@ -977,12 +977,12 @@ export const ProblemChatDialog = ({
                         type="button"
                         disabled={!newMessage.trim() || isSending}
                         onClick={() => void handleSendMessage()}
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#7cdcbd] text-[#0a0d17] transition hover:bg-[#5fbfaa] disabled:bg-zinc-700 disabled:text-zinc-400"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#7cdcbd] text-[#161A24] transition hover:bg-[#5fbfaa] disabled:bg-zinc-700 disabled:text-zinc-400"
                         aria-label={isSending ? "Sending…" : "Send message"}
                       >
                         {isSending ? (
                           <Loader2
-                            className="h-4 w-4 animate-spin text-[#0a0d17]"
+                            className="h-4 w-4 animate-spin text-[#161A24]"
                             aria-hidden
                           />
                         ) : (

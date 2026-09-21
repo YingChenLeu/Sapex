@@ -214,76 +214,73 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D17] flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl relative bg-[#101320]/80 border border-[#1b1f30] rounded-2xl shadow-2xl overflow-hidden backdrop-blur-sm">
+    <div className="flex min-h-screen items-center justify-center bg-transparent p-4">
+      <div className="relative w-full max-w-md overflow-hidden rounded-overlay border border-rule bg-notice/80 shadow-e3 backdrop-blur-sm md:max-w-4xl">
         <div
-          className="absolute top-0 left-0 w-1/2 h-full z-10 transition-[transform,border-radius] duration-700 ease-in-out"
+          className="absolute top-0 left-0 z-10 hidden h-full w-1/2 transition-[transform,border-radius] duration-700 ease-in-out md:block"
           style={{
             transform: isLogin ? "translateX(0)" : "translateX(100%)",
             background:
-              "linear-gradient(135deg, #11141d 0%, #181c27 50%, #0d1019 100%)",
+              "linear-gradient(135deg, var(--overlay) 0%, var(--notice) 50%, var(--recess) 100%)",
             borderRadius: isLogin ? "0px 0px 250px 0px" : "200px 0px 0px 0px",
           }}
         />
 
-        <div className="relative min-h-[500px]">
+        <div className="relative md:min-h-[500px]">
           {/* Login Form */}
           <div
-            className={`absolute top-0 left-0 w-full px-8 transition-all duration-700 ease-in-out transform ${
+            className={`w-full px-6 pb-4 pt-10 transition-all duration-700 ease-in-out md:absolute md:top-0 md:left-0 md:px-8 md:pt-16 ${
               isLogin
-                ? "translate-x-0 z-20 opacity-100"
-                : "-translate-x-full z-10 opacity-0"
+                ? "relative z-20 translate-x-0 opacity-100"
+                : "hidden -translate-x-full opacity-0 md:block"
             }`}
           >
-            <div className="text-slate-100 max-w-sm mx-auto pt-16">
-              <div className="flex items-center gap-2 mb-8">
-                <LogIn className="w-8 h-8 text-[#7CDCBD]" />
-                <h2 className="text-3xl font-bold text-white">Login</h2>
+            <div className="mx-auto max-w-sm pt-16 text-chalk">
+              <div className="mb-8 flex items-center gap-2">
+                <LogIn className="h-7 w-7 text-sage" />
+                <h2 className="display-3 text-chalk">Login</h2>
               </div>
-              {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+              {error && (
+                <p className="mb-4 text-sm text-clay" role="alert">
+                  {error}
+                </p>
+              )}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email-login" className="text-slate-300">
-                    Email
-                  </Label>
+                  <Label htmlFor="email-login">Email</Label>
                   <Input
                     id="email-login"
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password-login" className="text-slate-300">
-                    Password
-                  </Label>
+                  <Label htmlFor="password-login">Password</Label>
                   <Input
                     id="password-login"
                     type="password"
                     placeholder="••••••••"
-                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
                   />
                 </div>
                 <Button
-                  className="w-full bg-[#7CDCBD] text-[#0A0D17] hover:bg-[#5FBFAA] font-semibold"
+                  className="w-full"
                   onClick={handleEmailLogin}
                   disabled={loading}
+                  loading={loading}
                 >
-                  {loading ? "Logging in..." : "Login"}
+                  {loading ? "Logging in…" : "Login"}
                 </Button>
                 <div className="flex items-center gap-3 pt-2">
-                  <span className="text-xs text-slate-500">
-                    Or continue with
-                  </span>
+                  <span className="text-xs text-chalk-3">Or continue with</span>
                   <button
                     onClick={handleClick}
                     type="button"
-                    className="rounded-full border border-[#7CDCBD]/50 bg-[#181c27] text-white hover:bg-[#7CDCBD]/10 flex items-center justify-center transition p-2.5"
+                    className="flex items-center justify-center rounded-full border border-sage/40 bg-recess p-2.5 text-chalk transition hover:bg-sage-wash"
                     aria-label="Sign in with Google"
                   >
                     <FcGoogle size={20} />
@@ -295,64 +292,60 @@ const Auth = () => {
 
           {/* Sign Up Form */}
           <div
-            className={`absolute top-0 left-0 w-full px-8 transition-all duration-700 ease-in-out transform ${
+            className={`w-full px-6 pb-4 pt-10 transition-all duration-700 ease-in-out md:absolute md:top-0 md:left-0 md:px-8 md:pt-16 ${
               isLogin
-                ? "translate-x-full z-10 opacity-0"
-                : "translate-x-0 z-20 opacity-100"
+                ? "hidden translate-x-full opacity-0 md:block"
+                : "relative z-20 translate-x-0 opacity-100"
             }`}
           >
-            <div className="text-slate-100 max-w-sm mx-auto pt-16">
-              <div className="flex items-center gap-2 mb-8">
-                <UserRound className="w-8 h-8 text-[#7CDCBD]" />
-                <h2 className="text-3xl font-bold text-white">Sign Up</h2>
+            <div className="mx-auto max-w-sm pt-16 text-chalk">
+              <div className="mb-8 flex items-center gap-2">
+                <UserRound className="h-7 w-7 text-sage" />
+                <h2 className="display-3 text-chalk">Sign up</h2>
               </div>
-              {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+              {error && (
+                <p className="mb-4 text-sm text-clay" role="alert">
+                  {error}
+                </p>
+              )}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-slate-300">
-                    Full Name
-                  </Label>
+                  <Label htmlFor="name">Full name</Label>
                   <Input
                     id="name"
                     placeholder="Enter your name"
-                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email-signup" className="text-slate-300">
-                    Email
-                  </Label>
+                  <Label htmlFor="email-signup">Email</Label>
                   <Input
                     id="email-signup"
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password-signup" className="text-slate-300">
-                    Password
-                  </Label>
+                  <Label htmlFor="password-signup">Password</Label>
                   <Input
                     id="password-signup"
                     type="password"
                     placeholder="••••••••"
-                    className="bg-[#181c27] border-[#1b1f30] text-white placeholder:text-slate-500 focus-visible:ring-[#7CDCBD]"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
                   />
                 </div>
                 <Button
-                  className="w-full bg-[#7CDCBD] text-[#0A0D17] hover:bg-[#5FBFAA] font-semibold"
+                  className="w-full"
                   onClick={handleEmailSignup}
                   disabled={loading}
+                  loading={loading}
                 >
-                  {loading ? "Signing up..." : "Sign Up"}
+                  {loading ? "Signing up…" : "Sign up"}
                 </Button>
               </div>
             </div>
@@ -362,7 +355,7 @@ const Auth = () => {
         {/* Switch Button */}
         <button
           onClick={toggleForm}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-slate-300 hover:text-[#7CDCBD] transition-colors z-30 text-sm font-medium"
+          className="relative z-30 mx-auto mb-8 block text-center text-sm font-medium text-chalk-2 transition-colors hover:text-sage md:absolute md:bottom-8 md:left-1/2 md:mb-0 md:-translate-x-1/2"
         >
           {isLogin
             ? "Need an account? Sign Up"

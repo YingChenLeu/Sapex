@@ -27,7 +27,7 @@ export default function ActionWordsMarquee({
   return (
     <div
       aria-hidden
-      className={`relative w-full overflow-hidden border-y border-white/5 bg-[#0A0D17] py-5 sm:py-7 ${className}`}
+      className={`relative w-full overflow-hidden border-y border-[#A8D3CC]/10 bg-transparent py-5 sm:py-6 ${className}`}
       style={{
         maskImage:
           "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePlaybackSpeed } from "./playbackSpeed";
 
 export type TypingSequence = {
   /** Text that should be typed out. */
@@ -37,6 +38,7 @@ const TypedInput = ({
 }: TypedInputProps) => {
   const [shown, setShown] = useState("");
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const speed = usePlaybackSpeed();
 
   useEffect(() => {
     const timers: number[] = [];
@@ -50,7 +52,7 @@ const TypedInput = ({
             setShown(seq.text.slice(0, charIdx + 1));
             setActiveIdx(i);
           },
-          (seq.typeStart + (charIdx + 1) * charDelay) * 1000,
+          ((seq.typeStart + (charIdx + 1) * charDelay) * 1000) / speed,
         );
         timers.push(t);
       });
@@ -59,7 +61,7 @@ const TypedInput = ({
         const t = window.setTimeout(() => {
           setShown("");
           setActiveIdx(null);
-        }, seq.clearAt * 1000);
+        }, (seq.clearAt * 1000) / speed);
         timers.push(t);
       }
     });
@@ -67,7 +69,7 @@ const TypedInput = ({
     return () => {
       timers.forEach((t) => window.clearTimeout(t));
     };
-  }, [sequences]);
+  }, [sequences, speed]);
 
   const isTyping = activeIdx !== null;
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePlaybackSpeed } from "./playbackSpeed";
 
 /**
  * Drives a scene index that cycles through `count` values, advancing every
@@ -7,15 +8,16 @@ import { useEffect, useState } from "react";
  */
 export function useSceneLoop(durations: number[], paused = false) {
   const [scene, setScene] = useState(0);
+  const speed = usePlaybackSpeed();
 
   useEffect(() => {
     if (paused) return;
-    const wait = durations[scene] ?? 3000;
+    const wait = (durations[scene] ?? 3000) / speed;
     const t = window.setTimeout(() => {
       setScene((s) => (s + 1) % durations.length);
     }, wait);
     return () => window.clearTimeout(t);
-  }, [scene, paused, durations]);
+  }, [scene, paused, durations, speed]);
 
   return scene;
 }
